@@ -1,9 +1,6 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 import org.slf4j.Logger;
@@ -23,11 +20,31 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            /**
+             * Request 처리
+             * */
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+            // Request Line을 읽는다
+            String line = inputReader.readLine();
+            logger.debug("request line : {}", line);
+
+            // Request Line에서 경로를 추출한다
+            // TODO 메서드 추출
+            String[] requestHeader = line.split(" ");
+            String path = requestHeader[1];
+
+            // Request Message를 읽고 로그를 출력한다
+            while (!line.equals("")) {
+                line = inputReader.readLine();
+                logger.debug("header : {}", line);
+            }
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -47,9 +64,12 @@ public class RequestHandler implements Runnable {
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
             dos.write(body, 0, body.length);
+            logger.info("body to String : {}" + body.toString());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
+
+
 }
