@@ -40,9 +40,16 @@ public class RequestHandler implements Runnable {
     }
 
     private void makeResponse(DataOutputStream dos, String url) throws IOException {
-        byte[] body = Files.readAllBytes(new File("./src/main/resources/templates" + url).toPath());
+        byte[] body = makeBody(url);
         response200Header(dos, body.length);
         responseBody(dos, body);
+    }
+
+    private byte[] makeBody(String url) throws IOException {
+        if (url.endsWith(".html")) {
+            return Files.readAllBytes(new File("./src/main/resources/templates" + url).toPath());
+        }
+        return Files.readAllBytes(new File("./src/main/resources/static" + url).toPath());
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
