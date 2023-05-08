@@ -23,7 +23,6 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String requestLine = br.readLine();
             String[] tokens = RequestParser.createTokens(requestLine);
@@ -34,12 +33,16 @@ public class RequestHandler implements Runnable {
                 logger.debug("Request : {}", requestLine);
             }
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File("./src/main/resources/templates" + url).toPath());
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            makeResponse(dos, url);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private void makeResponse(DataOutputStream dos, String url) throws IOException {
+        byte[] body = Files.readAllBytes(new File("./src/main/resources/templates" + url).toPath());
+        response200Header(dos, body.length);
+        responseBody(dos, body);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
