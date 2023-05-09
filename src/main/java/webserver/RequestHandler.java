@@ -4,6 +4,7 @@ import java.io.*;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             // 라인별로 http header 읽기
             String line = br.readLine();
+            String url = HttpRequest.separateUrl(line);
 
             // 어떤 스레드, 클래스에서 해당 로그를 출력하는지까지 다 출력
             log.debug("request line : {}", line);
@@ -37,9 +39,12 @@ public class RequestHandler implements Runnable {
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            // https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#readAllBytes-java.nio.file.Path-
+            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
+
             response200Header(dos, body.length);
             responseBody(dos, body);
+
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -51,6 +56,7 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
+
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -60,6 +66,7 @@ public class RequestHandler implements Runnable {
         try {
             dos.write(body, 0, body.length);
             dos.flush();
+
         } catch (IOException e) {
             log.error(e.getMessage());
         }
