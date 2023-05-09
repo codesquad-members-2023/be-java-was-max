@@ -1,8 +1,6 @@
-# java-was-2023
+# java-was-2023 Step1
 
-Java Web Application Server 2023
+### 📌 5 / 8 학습계획
 
-## 프로젝트 정보 
-
-이 프로젝트는 우아한 테크코스 박재성님의 허가를 받아 https://github.com/woowacourse/jwp-was 
-를 참고하여 작성되었습니다.
+- [ ] 개인공부
+- [ ] Http Request 내용 출력하기
