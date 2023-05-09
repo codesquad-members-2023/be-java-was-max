@@ -33,6 +33,7 @@ public class HttpRequest {
     private final String referer;
     private final String acceptEncoding;
     private final String acceptLanguage;
+    private final String cookie;
 
     private HttpRequest(Builder builder) {
         this.method = builder.method;
@@ -56,6 +57,7 @@ public class HttpRequest {
         this.acceptLanguage = builder.acceptLanguage;
         this.upgradeInsecureRequests = builder.upgradeInsecureRequests;
         this.secFetchUser = builder.secFetchUser;
+        this.cookie = builder.cookie;
     }
 
     public String getAccept() {
@@ -146,6 +148,9 @@ public class HttpRequest {
         return acceptLanguage;
     }
 
+    public String getCookie() {
+        return cookie;
+    }
 
     static HttpRequest getHttpRequest(InputStream in)
             throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -216,6 +221,7 @@ public class HttpRequest {
         private String acceptEncoding;
         private String acceptLanguage;
         private String secFetchUser;
+        private String cookie;
 
         public Builder() {
         }
@@ -225,6 +231,10 @@ public class HttpRequest {
             return this;
         }
 
+        public Builder cookie(String cookie) {
+            this.cookie = cookie;
+            return this;
+        }
         public Builder url(String url) {
             this.url = url;
             return this;

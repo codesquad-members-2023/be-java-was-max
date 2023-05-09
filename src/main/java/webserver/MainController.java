@@ -2,6 +2,7 @@ package webserver;
 
 import annotation.Controller;
 import annotation.RequestMapping;
+import db.Database;
 
 @Controller
 public class MainController {
@@ -23,4 +24,11 @@ public class MainController {
     public String viewIndex() {
         return "/index.html";
     }
+
+    @RequestMapping("/user/form.html")
+    public String viewUserForm() {
+        return "/user/form.html";
+    }
+
+
 }
