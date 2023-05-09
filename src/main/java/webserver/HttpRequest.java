@@ -1,19 +1,12 @@
 package webserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private final String method;
     private final String url;
+    private final Map<String, String> parameters;
     private final String httpVersion;
     private final String host;
     private final String connection;
@@ -58,6 +51,7 @@ public class HttpRequest {
         this.upgradeInsecureRequests = builder.upgradeInsecureRequests;
         this.secFetchUser = builder.secFetchUser;
         this.cookie = builder.cookie;
+        this.parameters = builder.parameters;
     }
 
     public String getAccept() {
@@ -152,51 +146,8 @@ public class HttpRequest {
         return cookie;
     }
 
-    static HttpRequest getHttpRequest(InputStream in)
-            throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        String line = reader.readLine();
-        HttpRequest.Builder builder = new HttpRequest.Builder();
-        if (line != null && !line.isBlank()) {
-            buildHTTPMethod(line, builder);
-        }
-        line = reader.readLine();
-        while (!line.isBlank()) {
-            line = buildHeaderInfo(reader, line, builder);
-        }
-        return builder.build();
-    }
-
-    private static String buildHeaderInfo(BufferedReader reader, String line, HttpRequest.Builder builder)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException {
-        logger.debug("requestHeader = {}", line);
-        String[] s = line.split(" ");
-        String header = s[0];
-        header = header.replace(":", "").toLowerCase();
-
-        if (header.contains("-")) {
-            String[] split = header.split("-");
-            StringBuilder sb = new StringBuilder(split[0]);
-            for (int i = 1; i < split.length; i++) {
-                sb.append(String.valueOf(split[i].charAt(0)).toUpperCase());
-                sb.append(split[i].substring(1));
-            }
-            header = sb.toString();
-        }
-
-
-        Method method = builder.getClass().getMethod(header, String.class);
-        method.invoke(builder, s[1]);
-        line = reader.readLine();
-        return line;
-    }
-
-    private static void buildHTTPMethod(String line, HttpRequest.Builder builder) {
-        logger.debug("requestHeader = {}", line);
-        String[] split = line.split(" ");
-        builder.method(split[0]);
-        builder.url(split[1]);
-        builder.httpVersion(split[2]);
+    public Map<String, String> getParameters() {
+        return parameters;
     }
 
     public static class Builder {
@@ -222,6 +173,7 @@ public class HttpRequest {
         private String acceptLanguage;
         private String secFetchUser;
         private String cookie;
+        private Map<String, String> parameters = new HashMap<>();
 
         public Builder() {
         }
@@ -235,6 +187,12 @@ public class HttpRequest {
             this.cookie = cookie;
             return this;
         }
+
+        public Builder parameters(Map<String, String> parameters) {
+            this.parameters = parameters;
+            return this;
+        }
+
         public Builder url(String url) {
             this.url = url;
             return this;
@@ -245,7 +203,7 @@ public class HttpRequest {
             return this;
         }
 
-        public Builder secFetchUser(String secFetchUser){
+        public Builder secFetchUser(String secFetchUser) {
             this.secFetchUser = secFetchUser;
             return this;
         }

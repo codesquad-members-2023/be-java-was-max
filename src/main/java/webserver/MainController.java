@@ -3,11 +3,12 @@ package webserver;
 import annotation.Controller;
 import annotation.RequestMapping;
 import db.Database;
+import model.User;
 
 @Controller
 public class MainController {
     private static final MainController mainController = new MainController();
-    
+
     private MainController() {
     }
 
@@ -30,5 +31,9 @@ public class MainController {
         return "/user/form.html";
     }
 
-
+    @RequestMapping("/user/create")
+    public String viewUserList(String userId, String password, String name, String email) {
+        Database.addUser(new User(userId, password, name, email));
+        return "/user/list.html";
+    }
 }

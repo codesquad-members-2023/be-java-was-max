@@ -1,7 +1,8 @@
 package webserver;
 
 public enum HttpMethod {
-    OK(200);
+    OK(200),
+    NOT_FOUND(404);
 
     private final int value;
 

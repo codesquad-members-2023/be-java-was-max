@@ -2,6 +2,7 @@ package webserver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 public class HandlerAdapter {
 
@@ -12,9 +13,15 @@ public class HandlerAdapter {
             throws InvocationTargetException, IllegalAccessException {
         Method method = mappingInfo.getMethod();
         Object object = mappingInfo.getObject();
-        if (mappingInfo.getUrl().startsWith("/static")) {
+        if (mappingInfo.isStatic()) {
             return mappingInfo.getUrl();
         }
-        return (String) method.invoke(object);
+
+        Map<String, String> params = mappingInfo.getParams();
+        if (params.isEmpty()) {
+            return (String) method.invoke(object);
+        } else {
+            return (String) method.invoke(object, params.values().toArray(new Object[0]));
+        }
     }
 }

@@ -13,7 +13,7 @@ public class ViewResolver {
     public static HttpResponse resolve(String result) throws IOException {
         byte[] body;
         if (result.startsWith("/static")) {
-            Path path = Paths.get("src/main/resources/" + result);
+            Path path = Paths.get("src/main/resources" + result);
             body = Files.readAllBytes(path);
         } else if (result.startsWith("/")) {
             Path path = Paths.get("src/main/resources/templates" + result);

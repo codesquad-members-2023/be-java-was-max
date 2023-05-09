@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpRequestUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,13 +25,14 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream()) {
-            HttpRequest httpRequest = HttpRequest.getHttpRequest(in);
+            HttpRequest httpRequest = HttpRequestUtils.parsingHttpRequest(in);
             MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
             String result = HandlerAdapter.process(mappingInfo);
             HttpResponse httpResponse = ViewResolver.resolve(result);
             ResponseHandler.response(httpResponse, connection);
         } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage());
+            ResponseHandler.response(new HttpResponse(HttpMethod.NOT_FOUND, new byte[0]), connection);
         }
     }
 }
