@@ -14,7 +14,7 @@ public final class HttpUtils {
 		String[] tokens = headerLine.split(": ");
 		String name = tokens[0];
 		List<String> values = Arrays.stream(tokens[1].split(", "))
-			.collect(Collectors.toUnmodifiableList());
+				.collect(Collectors.toUnmodifiableList());
 
 		return Map.of(name, values);
 	}

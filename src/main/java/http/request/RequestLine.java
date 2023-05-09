@@ -1,20 +1,22 @@
 package http.request;
 
+import http.HttpMethod;
+
 import java.net.URI;
 
 public class RequestLine {
 
-	private final String method;
+	private final HttpMethod method;
 	private final URI uri;
 	private final String httpVersion;
 
 	public RequestLine(String method, URI uri, String httpVersion) {
-		this.method = method;
+		this.method = HttpMethod.get(method);
 		this.uri = uri;
 		this.httpVersion = httpVersion;
 	}
 
-	public String getMethod() {
+	public HttpMethod getMethod() {
 		return method;
 	}
 
@@ -24,10 +26,10 @@ public class RequestLine {
 
 	@Override
 	public String toString() {
-		return method
-			+ " "
-			+ uri.toString()
-			+ " "
-			+ httpVersion;
+		return method.name()
+				+ " "
+				+ uri.toString()
+				+ " "
+				+ httpVersion;
 	}
 }

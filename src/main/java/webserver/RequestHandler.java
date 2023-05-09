@@ -1,17 +1,13 @@
 package webserver;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.Socket;
-
+import http.request.HttpRequest;
+import http.request.HttpRequestBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import http.request.HttpRequest;
-import http.request.HttpRequestBuilder;
+import java.io.*;
+import java.net.Socket;
+import java.nio.file.Files;
 
 public class RequestHandler implements Runnable {
 
@@ -25,16 +21,16 @@ public class RequestHandler implements Runnable {
 
 	public void run() {
 		logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-		             connection.getPort());
+				connection.getPort());
 
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		     OutputStream out = connection.getOutputStream()) {
-
 			HttpRequest httpRequest = HttpRequestBuilder.build(br);
+
 			logger.debug(httpRequest.toString());
 
 			DataOutputStream dos = new DataOutputStream(out);
-			byte[] body = "Hello World".getBytes();
+			byte[] body = Files.readAllBytes(new File("src/main/resources/templates/" + httpRequest.getUri()).toPath());
 			response200Header(dos, body.length);
 			responseBody(dos, body);
 		} catch (IOException e) {

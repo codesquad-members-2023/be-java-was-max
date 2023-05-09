@@ -3,6 +3,7 @@ package http.request;
 import java.net.URI;
 
 import http.HttpHeaders;
+import http.HttpMethod;
 
 public class HttpRequest {
 
@@ -12,6 +13,10 @@ public class HttpRequest {
 	public HttpRequest(final RequestLine requestLine, final HttpHeaders httpHeaders) {
 		this.requestLine = requestLine;
 		this.httpHeaders = httpHeaders;
+	}
+
+	public HttpMethod getHttpMethod() {
+		return requestLine.getMethod();
 	}
 
 	public URI getUri() {
