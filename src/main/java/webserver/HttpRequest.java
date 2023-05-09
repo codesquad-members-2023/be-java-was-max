@@ -8,8 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpRequestUtils;
 
 public class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,12 +33,19 @@ public class HttpRequest {
         String method = splitedLine[0];
         String url = splitedLine[1];
         String httpVersion = splitedLine[2];
-        requestHeader.append(line).append("\n");
+
         request.put("method", method);
         request.put("url", url);
         request.put("version", httpVersion);
 
-        while (!(line = br.readLine()).equals("")) {
+        requestHeader.append(method).append(" ").append(url).append("\n");
+        requestHeader.append(httpVersion).append("\n");
+
+        if (url.contains("/user/create")) { // 회원 가입 페이지에서 회원 정보를 받으면 실행
+            User user = createUser(url);
+        }
+
+        while (!(line = br.readLine()).equals("")) { // Request Header
             splitedLine = line.split(": ");
             request.put(splitedLine[0], splitedLine[1]); // Map에 request header 넣기
         }
@@ -44,6 +53,13 @@ public class HttpRequest {
         requestHeader.append("Host: ").append(request.get("Host")).append("\n");
         requestHeader.append("Connection: ").append(request.get("Connection")).append("\n");
         requestHeader.append("Accept: */*");
+    }
+
+    private User createUser(String url){
+        String[] splitedUrl = url.split("\\?");
+        HttpRequestUtils utils = new HttpRequestUtils();
+        Map<String, String> parsedStr = utils.parseQueryString(splitedUrl[1]);
+        return utils.createUser(parsedStr);
     }
 
     public String getRequestHeader(){

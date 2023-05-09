@@ -2,16 +2,11 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
 
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpRequestUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,14 +26,6 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = new HttpRequest(in);
             String requestHeader = httpRequest.getRequestHeader();
             String requestUrl = httpRequest.getUrl();
-            if (requestUrl.contains("/user/create")) {
-                String[] splitedUrl = requestUrl.split("\\?");
-                requestUrl = splitedUrl[0];
-                HttpRequestUtils utils = new HttpRequestUtils();
-                Map<String, String> parsedStr = utils.parseQueryString(splitedUrl[1]);
-                User user = utils.createUser(parsedStr);
-                System.out.println(user.toString());
-            }
 
             DataOutputStream dos = new DataOutputStream(out);
             String absolutePath = Paths.get("").toAbsolutePath().toString();
