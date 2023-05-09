@@ -26,12 +26,15 @@ public class HttpRequest {
 
     private void makeRequest(InputStream in) throws IOException { // request와 requestHeader 만들기
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        String line = br.readLine();  // method, url, (http)version
+        String line = br.readLine();  // method, url, httpVersion
         String[] splitedLine = line.split(" ");
-        request.put("method", splitedLine[0]);
-        request.put("url", splitedLine[1]);
-        request.put("version", splitedLine[2]);
+        String method = splitedLine[0];
+        String url = splitedLine[1];
+        String httpVersion = splitedLine[2];
         requestHeader.append(line).append("\n");
+        request.put("method", method);
+        request.put("url", url);
+        request.put("version", httpVersion);
 
         while (!(line = br.readLine()).equals("")) {
             splitedLine = line.split(": ");
