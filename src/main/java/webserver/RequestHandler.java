@@ -2,12 +2,14 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +28,23 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // HTTP Request 내용 출력
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String line = reader.readLine();
-            LOGGER.debug("Start Line : {}", line);
-            while (!line.equals("")) {
-                line = reader.readLine();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)); // HTTP Request 읽기
+            StringBuilder request = new StringBuilder(); // HTTP Request 저장
+            String startLine = reader.readLine(); // start line
+            request.append(startLine).append(System.lineSeparator()); // save start line
+            LOGGER.debug(startLine);
+
+            String line;
+            while (!(line = reader.readLine()).equals("")) {
+                request.append(line).append(System.lineSeparator());
                 LOGGER.debug(line);
             }
 
-            // TODO 사용자 요청 처리 구현
+            // 정적 HTML 파일 응답
+            String[] tokens = startLine.split(" "); // parse start line
+            String requestUrl = tokens[1];
+            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + requestUrl).toPath());
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
