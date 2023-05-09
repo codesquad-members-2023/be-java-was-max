@@ -2,14 +2,18 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import util.RequestUtil;
 
 public class RequestHandler implements Runnable {
 	private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -25,19 +29,17 @@ public class RequestHandler implements Runnable {
 			, connection.getInetAddress()
 			, connection.getPort());
 
-		try (InputStream in = connection.getInputStream();
-			 OutputStream out = connection.getOutputStream()) {
+		try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 			String line = br.readLine();
+			String path = RequestUtil.parseUrl(line);
 			log.debug("request line : {}", line);
-
-			while (!line.equals("")) {
-				line = br.readLine();
-				log.debug("header : {}", line);
+			if (line == null) {
+				return;
 			}
 			// TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 			DataOutputStream dos = new DataOutputStream(out);
-			byte[] body = "Hello World".getBytes();
+			byte[] body = Files.readAllBytes(new File("./src/main/resources/templates" + path).toPath());
 			response200Header(dos, body.length);
 			responseBody(dos, body);
 		} catch (IOException e) {
