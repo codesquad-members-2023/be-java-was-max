@@ -3,7 +3,6 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -29,17 +28,8 @@ public class RequestHandler implements Runnable {
             MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
             String result = HandlerAdapter.process(mappingInfo);
             HttpResponse httpResponse = ViewResolver.resolve(result);
-            response(httpResponse);
+            ResponseHandler.response(httpResponse, connection);
         } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response(HttpResponse httpResponse) {
-        try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
-            httpResponse.written(out);
-            out.flush();
-        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
