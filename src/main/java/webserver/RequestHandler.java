@@ -1,6 +1,5 @@
 package webserver;
 
-import annotation.RequestMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream()) {
             HttpRequest httpRequest = HttpRequest.getHttpRequest(in);
-            MappingInfo mappingInfo = HandlerMapping(httpRequest);
+            MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
             String result = HandlerAdapter(mappingInfo);
             HttpResponse httpResponse = viewResolver(result);
             response(httpResponse);
@@ -74,26 +73,4 @@ public class RequestHandler implements Runnable {
         return (String) method.invoke(object);
     }
 
-    private MappingInfo HandlerMapping(HttpRequest httpRequest) throws InvocationTargetException, IllegalAccessException,
-            IOException, NoSuchMethodException {
-        MainController mainController = MainController.getInInstance();
-        String url = httpRequest.getUrl();
-
-        if (url.startsWith("/static")) {
-            return new MappingInfo(url);
-        }
-
-        Method[] declaredMethods = mainController.getClass().getDeclaredMethods();
-
-        for (Method method : declaredMethods) {
-            if (method.isAnnotationPresent(RequestMapping.class)) {
-                RequestMapping annotation = method.getAnnotation(RequestMapping.class);
-                String value = annotation.value();
-                if (value.equals(url)) {
-                    return new MappingInfo(url, method, mainController);
-                }
-            }
-        }
-        throw new NoSuchMethodException();
-    }
 }

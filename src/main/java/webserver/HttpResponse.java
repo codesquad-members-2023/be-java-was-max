@@ -4,20 +4,25 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class HttpResponse {
+    private static final String DEFAULT_HTTP_VERSION = "HTTP/1.1";
+    private static final String CONTENT_LENGTH = "Content-Length: ";
+    private static final String DELIMITER = " ";
+    private static final String NEXT_LINE = "\r\n";
     private final HttpMethod httpMethod;
+    private final String httpVersion;
     private final byte[] body;
-    private final int contentLength;
 
     public HttpResponse(HttpMethod httpMethod, byte[] body) {
         this.httpMethod = httpMethod;
         this.body = body;
-        this.contentLength = body.length;
+        this.httpVersion = DEFAULT_HTTP_VERSION;
     }
 
     public void written(DataOutputStream out) throws IOException {
-        out.writeBytes("HTTP/1.1 " + httpMethod.getValue() + " " + httpMethod.name() + " \r\n");
-        out.writeBytes("Content-Length: " + contentLength + "\r\n");
-        out.writeBytes("\r\n");
+        out.writeBytes(httpVersion + DELIMITER + httpMethod.getValue() + DELIMITER + httpMethod.name() + DELIMITER+
+                NEXT_LINE);
+        out.writeBytes(CONTENT_LENGTH + body.length + NEXT_LINE);
+        out.writeBytes(NEXT_LINE);
         out.write(body, 0, body.length);
     }
 }
