@@ -24,14 +24,17 @@ public class HttpRequest {
         makeRequest(in);
     }
 
-    private void makeRequest(InputStream in) throws IOException {
+    private void makeRequest(InputStream in) throws IOException { // request와 requestHeader 만들기
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        String line = br.readLine();  //method, url, http-version
-        logger.debug("request line: {}", line);
+        String line = br.readLine();  // method, url, (http)version
+        String[] splitedLine = line.split(" ");
+        request.put("method", splitedLine[0]);
+        request.put("url", splitedLine[1]);
+        request.put("version", splitedLine[2]);
         requestHeader.append(line).append("\n");
 
         while (!(line = br.readLine()).equals("")) {
-            String[] splitedLine = line.split(": ");
+            splitedLine = line.split(": ");
             request.put(splitedLine[0], splitedLine[1]); // Map에 request header 넣기
         }
 
@@ -48,5 +51,9 @@ public class HttpRequest {
         for (String key: request.keySet()){
             logger.debug("{}: {}", key, request.get(key));
         }
+    }
+
+    public String getUrl(){
+        return request.get("url");
     }
 }
