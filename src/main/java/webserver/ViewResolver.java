@@ -7,16 +7,16 @@ import java.nio.file.Paths;
 
 public class ViewResolver {
 
+    public static final String SRC_MAIN_RESOURCES = "src/main/resources";
+    public static final String PREFIX = "/";
+
     private ViewResolver() {
     }
 
     public static HttpResponse resolve(String result) throws IOException {
         byte[] body;
-        if (result.startsWith("/static")) {
-            Path path = Paths.get("src/main/resources" + result);
-            body = Files.readAllBytes(path);
-        } else if (result.startsWith("/")) {
-            Path path = Paths.get("src/main/resources/templates" + result);
+        if (result.startsWith(PREFIX)) {
+            Path path = Paths.get(SRC_MAIN_RESOURCES + result);
             body = Files.readAllBytes(path);
         } else {
             body = result.getBytes();

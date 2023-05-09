@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 public class MappingInfo {
+    public static final String STATIC = "/static";
     private final String url;
     private Method method;
     private Object object;
@@ -37,6 +38,6 @@ public class MappingInfo {
     }
 
     public boolean isStatic() {
-        return url.startsWith("/static");
+        return url.startsWith(STATIC);
     }
 }

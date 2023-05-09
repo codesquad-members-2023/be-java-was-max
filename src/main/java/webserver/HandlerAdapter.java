@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class HandlerAdapter {
 
+    public static final String TEMPLATES = "/templates";
+
     private HandlerAdapter() {
     }
 
@@ -19,9 +21,9 @@ public class HandlerAdapter {
 
         Map<String, String> params = mappingInfo.getParams();
         if (params.isEmpty()) {
-            return (String) method.invoke(object);
+            return TEMPLATES + method.invoke(object);
         } else {
-            return (String) method.invoke(object, params.values().toArray(new Object[0]));
+            return TEMPLATES + method.invoke(object, params.values().toArray(new Object[0]));
         }
     }
 }

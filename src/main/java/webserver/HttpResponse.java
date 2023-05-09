@@ -19,10 +19,14 @@ public class HttpResponse {
     }
 
     public void written(DataOutputStream out) throws IOException {
-        out.writeBytes(httpVersion + DELIMITER + httpMethod.getValue() + DELIMITER + httpMethod.name() + DELIMITER+
-                NEXT_LINE);
+        out.writeBytes(getHttpMethodHeader());
         out.writeBytes(CONTENT_LENGTH + body.length + NEXT_LINE);
         out.writeBytes(NEXT_LINE);
         out.write(body, 0, body.length);
+    }
+
+    private String getHttpMethodHeader() {
+        return httpVersion + DELIMITER + httpMethod.getValue() + DELIMITER + httpMethod.name() + DELIMITER +
+                NEXT_LINE;
     }
 }
