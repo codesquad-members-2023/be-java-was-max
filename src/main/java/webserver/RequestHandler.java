@@ -1,5 +1,11 @@
 package webserver;
 
+import controller.UserController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import request.HttpRequest;
+import response.ContentType;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -11,13 +17,10 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class RequestHandler implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
-
-    private Socket connection;
+    private final UserController userController = new UserController();
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -29,34 +32,46 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)); // HTTP Request 읽기
-            StringBuilder request = new StringBuilder(); // HTTP Request 저장
             String startLine = reader.readLine(); // start line
-            request.append(startLine).append(System.lineSeparator()); // save start line
-            LOGGER.debug(startLine);
+            HttpRequest httpRequest = new HttpRequest(startLine);
+            LOGGER.debug("HTTP Request : {}", httpRequest);
 
             String line;
             while (!(line = reader.readLine()).equals("")) {
-                request.append(line).append(System.lineSeparator());
-                LOGGER.debug(line);
+                LOGGER.debug("Header : {}", line);
             }
 
-            // 정적 HTML 파일 응답
-            String[] tokens = startLine.split(" "); // parse start line
-            String requestUrl = tokens[1];
-            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + requestUrl).toPath());
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
+
+            String url = userController.requestMapping(httpRequest);
+            if (url.startsWith("redirect")) {
+                response302Header(dos, url);
+                return;
+            }
+
+            byte[] body = findFilePath(url);
+            response200Header(dos, body.length, findContentType(url));
             responseBody(dos, body);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK\r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + "\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    private void response302Header(DataOutputStream dos, String url) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 FOUND\r\n");
+            dos.writeBytes("Location: " + url.substring(url.indexOf("/")) + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
@@ -70,5 +85,34 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
+    }
+
+    private byte[] findFilePath(String url) throws IOException {
+        // Static
+        if (url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".ico") || url.endsWith(".png") || url.endsWith(".jpeg") || url.endsWith(".jpg")) { // 파일의 확장자로 구분
+            return Files.readAllBytes(new File("src/main/resources/static" + url).toPath());
+        }
+        // Templates
+        return Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
+    }
+
+    private String findContentType(String url) {
+        String extension = url.substring(url.lastIndexOf("."));
+        if (extension.equals(".js")) {
+            return ContentType.JS.getType();
+        }
+        if (extension.equals(".css")) {
+            return ContentType.CSS.getType();
+        }
+        if (extension.equals(".png")) {
+            return ContentType.PNG.getType();
+        }
+        if (extension.equals(".jpeg") || extension.equals(".jpg")) {
+            return ContentType.JPEG.getType();
+        }
+        if (extension.equals(".ttf") || extension.equals(".woff")) {
+            return ContentType.FONT.getType();
+        }
+        return ContentType.HTML.getType();
     }
 }
