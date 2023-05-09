@@ -7,7 +7,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -31,11 +30,10 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream()) {
             HttpRequest httpRequest = HttpRequest.getHttpRequest(in);
             MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
-            String result = HandlerAdapter(mappingInfo);
+            String result = HandlerAdapter.process(mappingInfo);
             HttpResponse httpResponse = viewResolver(result);
             response(httpResponse);
-        } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException |
-                 NoSuchFieldException e) {
+        } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage());
         }
     }
@@ -63,14 +61,5 @@ public class RequestHandler implements Runnable {
         return new HttpResponse(HttpMethod.OK, body);
     }
 
-    private String HandlerAdapter(MappingInfo mappingInfo)
-            throws InvocationTargetException, IllegalAccessException, NoSuchFieldException {
-        Method method = mappingInfo.getMethod();
-        Object object = mappingInfo.getObject();
-        if (mappingInfo.getUrl().startsWith("/static")) {
-            return mappingInfo.getUrl();
-        }
-        return (String) method.invoke(object);
-    }
 
 }
