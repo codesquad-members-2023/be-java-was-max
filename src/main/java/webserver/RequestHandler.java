@@ -26,6 +26,15 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            // HTTP Request 내용 출력
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            String line = reader.readLine();
+            LOGGER.debug("Start Line : {}", line);
+            while (!line.equals("")) {
+                line = reader.readLine();
+                LOGGER.debug(line);
+            }
+
             // TODO 사용자 요청 처리 구현
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
