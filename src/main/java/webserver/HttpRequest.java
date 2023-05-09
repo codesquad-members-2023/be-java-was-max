@@ -66,7 +66,7 @@ public class HttpRequest {
         return requestHeader.toString();
     }
 
-    public void printRequests(Map<String, String> request){
+    public void getRequests(Map<String, String> request){
         for (String key: request.keySet()){
             logger.debug("{}: {}", key, request.get(key));
         }
