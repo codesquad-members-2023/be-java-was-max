@@ -23,21 +23,12 @@ public final class RequestHandlerUtil {
 
     }
 
-    public static String readFile(RequestLine requestLine) {
+    public static byte[] readFile(RequestLine requestLine) {
         try {
             String requestURI = requestLine.getRequestURI();
             logger.debug("requestURI : {}", requestURI);
 
-            byte[] bytes = findFile(requestURI);
-
-            BufferedReader br =
-                new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line).append("\r\n");
-            }
-            return sb.toString().trim();
+            return findFile(requestURI);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

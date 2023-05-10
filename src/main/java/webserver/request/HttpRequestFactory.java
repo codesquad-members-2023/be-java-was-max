@@ -9,7 +9,7 @@ public final class HttpRequestFactory {
 
     private static final String EOF = "";
     private static final String REQUEST_LINE_SEPARATOR = " ";
-    private static final String SEPARATOR = ":";
+    private static final String SEPARATOR = ":\\s*";
 
     private HttpRequestFactory() {
 
