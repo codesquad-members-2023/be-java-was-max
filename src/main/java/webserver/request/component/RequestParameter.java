@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver.request.component;
 
 import java.util.Map;
 
@@ -16,6 +16,10 @@ public class RequestParameter {
 
     public void add(String key, String value) {
         parameter.put(key, value);
+    }
+
+    public void addParameter(Map<String, String> parameter) {
+        this.parameter.putAll(parameter);
     }
 
     @Override
