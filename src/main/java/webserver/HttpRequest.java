@@ -38,7 +38,7 @@ public class HttpRequest {
         request.put("HttpVersion", splitedLine[2]);
 
         if (url.contains("/user/create")) { // 회원 가입 페이지에서 회원 정보를 받으면 실행
-            User user = createUser(url);
+            Database.addUser(createUser(url)); // Database에 생성한 user 추가
         }
 
         while (!(line = br.readLine()).equals("")) { // Request Header
