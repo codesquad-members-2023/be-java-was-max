@@ -1,7 +1,10 @@
 package webserver;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +20,10 @@ class RequestHandlerUtilTest {
         String urlPath = "/sample.html";
         RequestLine requestLine = new RequestLine("GET", urlPath, null, "HTTP/1.0");
         //when
-        String actual = RequestHandlerUtil.readFile(requestLine);
+        byte[] bytes = RequestHandlerUtil.readFile(requestLine);
         //then
-        Assertions.assertThat(actual).isEqualTo("Hello World");
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(new ByteArrayInputStream(bytes)));
+        Assertions.assertThat(br.readLine()).isEqualTo("Hello World");
     }
 }

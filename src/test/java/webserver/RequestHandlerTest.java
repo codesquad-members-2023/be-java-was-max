@@ -39,18 +39,19 @@ class RequestHandlerTest {
         Socket socket = new Socket("localhost", 8080);
         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
         String requestLine = "GET /sample.html HTTP/1.0";
-        String host = "Host: localhost";
+        String host = "Host: localhost:8080";
+        String accept = "Accept: text/html";
         String eof = "";
-        String requestHeader = String.join("\r\n", requestLine, host, eof);
+        String requestHeader = String.join("\r\n", requestLine, host, accept, eof);
         writer.println(requestHeader);
         //then
         BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String response = IOutil.readFromInputStream(br);
         String statusLine = "HTTP/1.1 200 OK";
         String contentType = "Content-Type: text/html;charset=utf-8";
-        String contentLength = "Content-Length: " + "Hello World".length();
+        String contentLength = "Content-Length: 13";
         String messageBody = "Hello World";
-        String expect = String.join("\r\n", statusLine, contentType, contentLength, eof,
+        String expect = String.join("\r\n", statusLine, contentLength, contentType, eof,
             messageBody);
         Assertions.assertThat(response).isEqualTo(expect);
 
