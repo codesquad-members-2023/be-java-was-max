@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.RequestParser;
@@ -15,6 +16,7 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private final Map<String, String> startLine = new HashMap<>();
     private final Map<String, String> header = new HashMap<>();
+    private final URLHandler urlHandler = new URLHandler();
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -37,16 +39,20 @@ public class RequestHandler implements Runnable {
                     break;
                 }
                 RequestParser.parseHeader(buffer, header);
+                User user = urlHandler.createUser(startLine.get("URL"));
+                if (user != null) {
+                    logger.debug("User Created");
+                }
             }
             DataOutputStream dos = new DataOutputStream(out);
-            makeResponse(dos, startLine.get("Url"));
+            makeResponse(dos, startLine.get("URL"));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void makeResponse(DataOutputStream dos, String url) throws IOException {
-        byte[] body = makeBody(url);
+    private void makeResponse(DataOutputStream dos, String URL) throws IOException {
+        byte[] body = makeBody(URL);
         response200Header(dos, body.length);
         responseBody(dos, body);
     }
