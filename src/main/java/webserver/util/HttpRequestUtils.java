@@ -1,13 +1,13 @@
-package webserver;
+package webserver.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpRequest {
-    public HttpRequest() {
+public class HttpRequestUtils {
+    private HttpRequestUtils() {
     }
 
-    public static String separateUrl(String line) {
+    public static String parseUrl(String line) {
         String url = extractUrl(line);
 
         if (url.contains("?")) {
@@ -21,11 +21,11 @@ public class HttpRequest {
         return url;
     }
 
-    public static String separateMethod(String line) {
+    public static String parseMethod(String line) {
         return line.split(" ")[0];
     }
 
-    public static Map<String, String> separateParam(String line) {
+    public static Map<String, String> parseQueryString(String line) {
         String url = extractUrl(line);
 
         if (!url.contains("?")) {
@@ -34,13 +34,13 @@ public class HttpRequest {
 
         String[] params = url.split("\\?")[1].split("&");
 
-        Map<String, String> paramMap = new HashMap<>();
+        Map<String, String> quaryMap = new HashMap<>();
         for (String param : params) {
             String[] keyValue = param.split("=");
-            paramMap.put(keyValue[0], keyValue[1]);
+            quaryMap.put(keyValue[0], keyValue[1]);
         }
 
-        return paramMap;
+        return quaryMap;
     }
 
     private static String extractUrl(String line) {

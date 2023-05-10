@@ -10,6 +10,7 @@ import java.util.Map;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.util.HttpRequestUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -29,12 +30,12 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             // 라인별로 http header 읽기
             String line = br.readLine();
-            String url = HttpRequest.separateUrl(line);
-            String method = HttpRequest.separateMethod(line);
-            Map<String, String> paramMap = HttpRequest.separateParam(line);
+            String url = HttpRequestUtils.parseUrl(line);
+            String method = HttpRequestUtils.parseMethod(line);
+            Map<String, String> quaryMap = HttpRequestUtils.parseQueryString(line);
 
-            if (method.equals("GET") && paramMap != null) {
-                User user = new User(paramMap);
+            if (method.equals("GET") && quaryMap != null) {
+                User user = new User(quaryMap);
                 log.debug("user : {}", user);
             }
 
