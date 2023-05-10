@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import db.Database;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ public class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private Map<String, String> request;
     private StringBuilder requestHeader;
+    private String contentType;
 
     public HttpRequest(){}
 
@@ -30,16 +32,10 @@ public class HttpRequest {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         String line = br.readLine();  // method, url, httpVersion
         String[] splitedLine = line.split(" ");
-        String method = splitedLine[0];
         String url = splitedLine[1];
-        String httpVersion = splitedLine[2];
-
-        request.put("method", method);
-        request.put("url", url);
-        request.put("version", httpVersion);
-
-        requestHeader.append(method).append(" ").append(url).append("\n");
-        requestHeader.append(httpVersion).append("\n");
+        request.put("Method", splitedLine[0]);
+        request.put("Url", url);
+        request.put("HttpVersion", splitedLine[2]);
 
         if (url.contains("/user/create")) { // 회원 가입 페이지에서 회원 정보를 받으면 실행
             User user = createUser(url);
@@ -50,9 +46,16 @@ public class HttpRequest {
             request.put(splitedLine[0], splitedLine[1]); // Map에 request header 넣기
         }
 
+        makeRequestHeader(request);
+    }
+
+    private void makeRequestHeader(Map<String, String> request){
+        requestHeader.append(request.get("Method")).append(" ");
+        requestHeader.append(request.get("Url")).append(" ");
+        requestHeader.append(request.get("HttpVersion")).append("\n");
         requestHeader.append("Host: ").append(request.get("Host")).append("\n");
         requestHeader.append("Connection: ").append(request.get("Connection")).append("\n");
-        requestHeader.append("Accept: */*");
+        requestHeader.append("Accept: ").append(request.get("Accept"));
     }
 
     private User createUser(String url){
@@ -74,5 +77,9 @@ public class HttpRequest {
 
     public String getUrl(){
         return request.get("url");
+    }
+
+    public String getContentType(){
+        return contentType;
     }
 }
