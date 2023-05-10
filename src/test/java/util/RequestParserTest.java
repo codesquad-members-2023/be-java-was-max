@@ -2,6 +2,7 @@ package util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
@@ -11,24 +12,22 @@ class RequestParserTest {
     @Test
     void parseStartLineTest() {
         String startLine = ("GET /user/create HTTP/1.1");
+        Map<String, String> container = new HashMap<>();
 
-        Map<String, String> fragments = RequestParser.parseStartLine(startLine);
+        RequestParser.parseStartLine(startLine, container);
 
-        assertThat(fragments.get("Method")).isEqualTo("GET");
-        assertThat(fragments.get("Url")).isEqualTo("/user/create");
-        assertThat(fragments.get("Protocol")).isEqualTo("HTTP/1.1");
+        assertThat(container.get("Method")).isEqualTo("GET");
+        assertThat(container.get("Url")).isEqualTo("/user/create");
+        assertThat(container.get("Protocol")).isEqualTo("HTTP/1.1");
     }
 
     @Test
     void parseHeaderTest() {
-        String header = ("Host: localhost:8080\n" +
-                "Connection: keep-alive\n" +
-                "Accept: */*\n");
+        String header = ("Host: localhost:8080");
+        Map<String, String> container = new HashMap<>();
 
-        Map<String, String> parsedHeader = RequestParser.parseHeader(header);
+        RequestParser.parseHeader(header, container);
 
-        assertThat(parsedHeader.get("Host")).isEqualTo("localhost:8080");
-        assertThat(parsedHeader.get("Connection")).isEqualTo("keep-alive");
-        assertThat(parsedHeader.get("Accept")).isEqualTo("*/*");
+        assertThat(container.get("Host")).isEqualTo("localhost:8080");
     }
 }

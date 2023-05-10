@@ -5,24 +5,17 @@ import java.util.Map;
 
 public class RequestParser {
 
-    public static Map<String, String> parseStartLine (String startLine) {
-        Map<String, String> parsedStartLine = new HashMap<>();
-        String[] split = startLine.split(" ");
+    public static void parseStartLine (String startLine, Map<String, String> container) {
+        String[] splitLine = startLine.split(" ");
 
-        parsedStartLine.put("Method", split[0]);
-        parsedStartLine.put("Url", split[1]);
-        parsedStartLine.put("Protocol", split[2]);
-        return parsedStartLine;
+        container.put("Method", splitLine[0]);
+        container.put("Url", splitLine[1]);
+        container.put("Protocol", splitLine[2]);
     }
 
-    public static Map<String, String> parseHeader (String header) {
-        Map<String, String> parsedHeader = new HashMap<>();
-        String[] splitLine = header.split(System.lineSeparator());
+    public static void parseHeader (String header, Map<String, String> container) {
+        String[] splitLine = header.split(": ");
 
-        for (String line : splitLine) {
-            String[] split = line.split(": ");
-            parsedHeader.put(split[0], split[1]);
-        }
-        return parsedHeader;
+        container.put(splitLine[0], splitLine[1]);
     }
 }
