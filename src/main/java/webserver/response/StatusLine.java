@@ -2,30 +2,24 @@ package webserver.response;
 
 public class StatusLine {
 
-    private String httpVersion;
-    private int statusCode;
-    private String reasonPhrase;
+    private HttpVersion httpVersion;
+    private StatusCode statusCode;
 
-    public StatusLine(String httpVersion, int statusCode, String reasonPhrase) {
+    public StatusLine(HttpVersion httpVersion, StatusCode statusCode) {
         this.httpVersion = httpVersion;
         this.statusCode = statusCode;
-        this.reasonPhrase = reasonPhrase;
     }
 
-    public String getHttpVersion() {
+    public HttpVersion getHttpVersion() {
         return httpVersion;
     }
 
-    public int getStatusCode() {
+    public StatusCode getStatusCode() {
         return statusCode;
-    }
-
-    public String getReasonPhrase() {
-        return reasonPhrase;
     }
 
     @Override
     public String toString() {
-        return String.format("%s %d %s", httpVersion, statusCode, reasonPhrase);
+        return String.format("%s %s", httpVersion, statusCode);
     }
 }

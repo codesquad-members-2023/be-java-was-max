@@ -5,34 +5,30 @@ import java.util.Map;
 
 public class Response {
 
-    private StatusLine statusLine;
-    private Map<String, String> header;
-    private byte[] messageBody;
+    private final StatusLine statusLine;
+    private final ResponseHeader responseHeader;
+    private final byte[] messageBody;
 
-    public Response(StatusLine statusLine, Map<String, String> header, byte[] messageBody) {
+    public Response(StatusLine statusLine, ResponseHeader responseHeader, byte[] messageBody) {
         this.statusLine = statusLine;
-        this.header = header;
+        this.responseHeader = responseHeader;
         this.messageBody = messageBody;
-    }
-
-    public StatusLine getStatusLine() {
-        return statusLine;
-    }
-
-    public Map<String, String> getHeader() {
-        return header;
     }
 
     public byte[] getMessageBody() {
         return messageBody;
     }
 
-    public void addHeader(String key, String value) {
-        header.put(key, value);
+    public Object getHeaderValue(String key) {
+        return responseHeader.getHeaderValue(key);
+    }
+
+    public void addHeader(String key, Object value) {
+        responseHeader.addHeader(key, value);
     }
 
     @Override
     public String toString() {
-        return String.format("%s %s %s", statusLine, header, Arrays.toString(messageBody));
+        return String.format("%s\r\n%s\r\n\r\n", statusLine, responseHeader);
     }
 }
