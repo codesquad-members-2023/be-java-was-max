@@ -1,17 +1,13 @@
-package webserver.request;
+package webserver.util;
 
 import db.Database;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.request.component.RequestParameter;
 
 public final class RequestHandlerUtil {
 
@@ -23,33 +19,31 @@ public final class RequestHandlerUtil {
 
     }
 
-    public static byte[] readFile(RequestLine requestLine) {
+    public static byte[] readFile(String path) {
         try {
-            String requestURI = requestLine.getRequestURI();
-            logger.debug("requestURI : {}", requestURI);
-
-            return findFile(requestURI);
+            logger.debug("path : {}", path);
+            return findFile(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static boolean isStaticResource(String requestURI) throws URISyntaxException {
+    public static boolean isStaticResource(String path) {
         // static 디렉토리 탐색
-        File file = new File(STATIC_PATH + requestURI);
+        File file = new File(STATIC_PATH + path);
         if (file.exists()) {
             return true;
         }
 
         // template 디렉토리 탐색
-        file = new File(TEMPLATES_PATH + requestURI);
+        file = new File(TEMPLATES_PATH + path);
         if (file.exists()) {
             return true;
         }
         return false;
     }
 
-    private static byte[] findFile(String requestURI) throws IOException {
+    public static byte[] findFile(String requestURI) throws IOException {
         // static 디렉토리 탐색
         File file = new File(STATIC_PATH + requestURI);
         if (file.exists()) {
@@ -64,11 +58,11 @@ public final class RequestHandlerUtil {
         return null;
     }
 
-    public static void requestSignUp(RequestLine requestLine) {
-        String userId = requestLine.getRequestParameter().get("userId");
-        String password = requestLine.getRequestParameter().get("password");
-        String name = requestLine.getRequestParameter().get("name");
-        String email = requestLine.getRequestParameter().get("email");
+    public static void requestSignUp(RequestParameter requestParameter) {
+        String userId = requestParameter.get("userId");
+        String password = requestParameter.get("password");
+        String name = requestParameter.get("name");
+        String email = requestParameter.get("email");
         User user = new User(userId, password, name, email);
         logger.debug("user : {}", user);
         Database.addUser(user);
