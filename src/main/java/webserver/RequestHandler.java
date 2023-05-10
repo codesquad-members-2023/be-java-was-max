@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Map;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,13 @@ public class RequestHandler implements Runnable {
             // 라인별로 http header 읽기
             String line = br.readLine();
             String url = HttpRequest.separateUrl(line);
+            String method = HttpRequest.separateMethod(line);
+            Map<String, String> paramMap = HttpRequest.separateParam(line);
+
+            if (method.equals("GET") && paramMap != null) {
+                User user = new User(paramMap);
+                log.debug("user : {}", user);
+            }
 
             // 어떤 스레드, 클래스에서 해당 로그를 출력하는지까지 다 출력
             log.debug("request line : {}", line);
