@@ -1,5 +1,7 @@
 package webserver;
 
+import static org.assertj.core.api.Assertions.*;
+
 import db.Database;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +11,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 import model.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.RequestHandler;
+import webserver.handler.RequestHandler;
 import webserver.util.IOutil;
 
 class RequestHandlerTest {
@@ -24,7 +25,7 @@ class RequestHandlerTest {
 
     @Test
     @DisplayName("sample.html 요청시 html 파일 내용을 응답받는다.")
-    public void requestGet() throws IOException, InterruptedException {
+    void requestGet() throws IOException, InterruptedException {
         Thread serverThread = new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT)) {
                 Thread thread = new Thread(new RequestHandler(serverSocket.accept()));
@@ -35,7 +36,7 @@ class RequestHandlerTest {
         });
         serverThread.start();
 
-        //when
+        // when
         Socket socket = new Socket("localhost", 8080);
         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
         String requestLine = "GET /sample.html HTTP/1.0";
@@ -44,7 +45,7 @@ class RequestHandlerTest {
         String eof = "";
         String requestHeader = String.join("\r\n", requestLine, host, accept, eof);
         writer.println(requestHeader);
-        //then
+        // then
         BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String response = IOutil.readFromInputStream(br);
         String statusLine = "HTTP/1.1 200 OK";
@@ -53,7 +54,7 @@ class RequestHandlerTest {
         String messageBody = "Hello World";
         String expect = String.join("\r\n", statusLine, contentLength, contentType, eof,
             messageBody);
-        Assertions.assertThat(response).isEqualTo(expect);
+        assertThat(response).isEqualTo(expect);
 
         //cleanup
         socket.close();
@@ -62,8 +63,8 @@ class RequestHandlerTest {
 
     @Test
     @DisplayName("GET 방식으로 데이터를 전달하여 회원가입한다")
-    public void signup() throws IOException, InterruptedException {
-        //given
+    void signup() throws IOException, InterruptedException {
+        // given
         Thread serverThread = new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT)) {
                 Thread thread = new Thread(new RequestHandler(serverSocket.accept()));
@@ -73,7 +74,7 @@ class RequestHandlerTest {
             }
         });
         CompletableFuture<Void> future = CompletableFuture.runAsync(serverThread);
-        //when
+        // when
         Socket socket = new Socket("localhost", 8080);
         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
         String requestLine = "GET /user/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net HTTP/1.1";
@@ -84,10 +85,10 @@ class RequestHandlerTest {
         String requestHeader = String.join("\r\n", requestLine, host, connection, accept, eof);
         writer.println(requestHeader);
 
-        //then
+        // then
         future.thenRun(() -> {
             User user = Database.findUserById("javajigi");
-            Assertions.assertThat(user).isNotNull();
+            assertThat(user).isNotNull();
         });
         //cleanup
         socket.close();
@@ -96,8 +97,8 @@ class RequestHandlerTest {
 
     @Test
     @DisplayName("style.css 파일을 요청했을때 응답한다")
-    public void contentType() throws IOException {
-        //given
+    void contentType() throws IOException {
+        // given
         Thread serverThread = new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT)) {
                 Thread thread = new Thread(new RequestHandler(serverSocket.accept()));
@@ -107,7 +108,7 @@ class RequestHandlerTest {
             }
         });
         CompletableFuture<Void> future = CompletableFuture.runAsync(serverThread);
-        //when
+        // when
         Socket socket = new Socket("localhost", 8080);
         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
         String requestLine = "GET ./css/styles.css HTTP/1.1";
@@ -118,12 +119,12 @@ class RequestHandlerTest {
         String requestHeader = String.join("\r\n", requestLine, host, connection, accept, eof);
         writer.println(requestHeader);
 
-        //then
+        // then
         BufferedReader br = new BufferedReader(
             new InputStreamReader(socket.getInputStream()));
         String response = IOutil.readFromInputStream(br);
         String statusLine = response.split("\r\n")[0];
-        Assertions.assertThat(statusLine).isEqualTo("HTTP/1.1 200 OK");
+        assertThat(statusLine).isEqualTo("HTTP/1.1 200 OK");
         //cleanup
         socket.close();
     }
