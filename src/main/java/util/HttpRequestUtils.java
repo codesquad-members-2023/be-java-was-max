@@ -2,7 +2,7 @@ package util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.HttpRequest;
+import container.domain.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,13 +73,17 @@ public class HttpRequestUtils {
         if (head.contains(HEAD_CASE_DELIMITER)) {
             String[] split = head.split(HEAD_CASE_DELIMITER);
             StringBuilder sb = new StringBuilder(split[0]);
-            for (int i = 1; i < split.length; i++) {
-                sb.append(String.valueOf(split[i].charAt(0)).toUpperCase());
-                sb.append(split[i].substring(1));
-            }
+            appendHeader(split, sb);
             head = sb.toString();
         }
         return head;
+    }
+
+    private static void appendHeader(String[] split, StringBuilder sb) {
+        for (int i = 1; i < split.length; i++) {
+            sb.append(String.valueOf(split[i].charAt(0)).toUpperCase());
+            sb.append(split[i].substring(1));
+        }
     }
 
     public static HashMap<String, String> parseQueryString(String[] httpMethod) {

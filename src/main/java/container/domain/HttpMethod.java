@@ -1,4 +1,4 @@
-package webserver;
+package container.domain;
 
 public enum HttpMethod {
     OK(200),

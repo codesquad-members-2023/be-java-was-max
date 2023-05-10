@@ -1,5 +1,9 @@
-package webserver;
+package container;
 
+import container.domain.HttpMethod;
+import container.domain.HttpRequest;
+import container.domain.HttpResponse;
+import container.domain.MappingInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;

@@ -1,4 +1,4 @@
-package webserver;
+package container.domain;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

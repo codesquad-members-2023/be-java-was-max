@@ -1,4 +1,7 @@
-package webserver;
+package container;
+
+import container.domain.HttpMethod;
+import container.domain.HttpResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;

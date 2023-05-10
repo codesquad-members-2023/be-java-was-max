@@ -1,5 +1,6 @@
-package webserver;
+package container;
 
+import container.domain.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
