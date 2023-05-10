@@ -25,12 +25,16 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             HttpRequest httpRequest = new HttpRequest(in);
             String requestHeader = httpRequest.getRequestHeader();
-            String requestUrl = httpRequest.getUrl();
+            logger.debug("request header:\n{}", requestHeader);
 
             DataOutputStream dos = new DataOutputStream(out);
             String absolutePath = Paths.get("").toAbsolutePath().toString();
+            // TODO: new File().toPath()와 Paths.get()이 무슨 차이인지 알아보기
             byte[] body = Files.readAllBytes(new File(absolutePath
-                    + "/src/main/resources/templates" + requestUrl).toPath());
+                    + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl()).toPath());
+            System.out.println(absolutePath + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl());
+//            byte[] body = Files.readAllBytes(Paths.get(absolutePath
+//                  + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl()));
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {

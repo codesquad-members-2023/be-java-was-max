@@ -26,6 +26,8 @@ public class HttpRequest {
         this.request = new HashMap<>();
         this.requestHeader = new StringBuilder();
         makeRequest(in);
+        makeRequestHeader(request);
+        makeContentType(request.get("Url"));
     }
 
     private void makeRequest(InputStream in) throws IOException { // request와 requestHeader 만들기
@@ -45,8 +47,6 @@ public class HttpRequest {
             splitedLine = line.split(": ");
             request.put(splitedLine[0], splitedLine[1]); // Map에 request header 넣기
         }
-
-        makeRequestHeader(request);
     }
 
     private void makeRequestHeader(Map<String, String> request){
@@ -65,6 +65,18 @@ public class HttpRequest {
         return utils.createUser(parsedStr);
     }
 
+    private void makeContentType(String url){
+        String extension = url.substring(url.lastIndexOf("."));
+        String[] contentTypes = {".js", ".css", ".png", ".ico"}; // static 폴더에 존재하는 확장자(font 포함X)
+        for (String contentType : contentTypes) {
+            if (extension.equals(contentType)){ // url의 확장자가 static 폴더 안에 존재하는 확장자면
+                this.contentType = "/static";
+                return;
+            }
+        }
+        this.contentType = "/templates"; // 조건문을 통과했다면, templates 폴더 안에 있는 "html 파일"이다.
+    }
+
     public String getRequestHeader(){
         return requestHeader.toString();
     }
@@ -76,7 +88,7 @@ public class HttpRequest {
     }
 
     public String getUrl(){
-        return request.get("url");
+        return request.get("Url");
     }
 
     public String getContentType(){
