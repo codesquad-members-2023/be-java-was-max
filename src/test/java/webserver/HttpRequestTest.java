@@ -3,8 +3,9 @@ package webserver;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class HttpRequestTest {
     @Test
@@ -25,5 +26,28 @@ class HttpRequestTest {
         // URL이 "/"인 경우
         String url4 = HttpRequest.separateUrl("GET / HTTP/1.1");
         assertThat(url4).isEqualTo("/index.html");
+    }
+
+    @Test
+    @DisplayName("요청 메서드 추출 확인")
+    void testSeparateMethod() {
+        String line = "GET /index.html HTTP/1.1";
+        String method = HttpRequest.separateMethod(line);
+        assertThat(method).isEqualTo("GET");
+    }
+
+    @Test
+    @DisplayName("요청 URL에서 파라미터 추출 후 Map으로 반환 확인")
+    void testSeparateParam() {
+        String line = "GET /user/create?userId=sully&password=1234&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=sully1234%40naver.com HTTP/1.1";
+
+        Map<String, String> userMap = Map.of("userId", "sully",
+                "password", "1234",
+                "name", "%EB%B0%95%EC%9E%AC%EC%84%B1",
+                "email", "sully1234%40naver.com");
+
+        Map<String, String> paramMap = HttpRequest.separateParam(line);
+
+        assertThat(paramMap).isEqualTo(userMap);
     }
 }
