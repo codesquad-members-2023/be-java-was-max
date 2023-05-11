@@ -36,6 +36,7 @@ public class RequestHandler implements Runnable {
 			logger.debug("httpRequest URL : {}", httpRequest.getURL());
 			logger.debug("httpRequest QueryString : {}", httpRequest.getQueryString());
 			logger.debug("httpRequest httpVersion : {}", httpRequest.getHttpVersion());
+			logger.debug("httpRequest QueryParams : {}", httpRequest.getQueryParams());
 
 			DataOutputStream dos = new DataOutputStream(out);
 			byte[] body = Files.readAllBytes(new File(BASE_PATH + httpRequest.getURL()).toPath());
