@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.ContentType;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,12 +68,21 @@ public class RequestHandler implements Runnable {
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes(writeContentType());
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private String writeContentType() {
+        String contentType = startLine.get("URL");
+        String[] splitContentType = contentType.split("\\.");
+        String fileName = splitContentType[splitContentType.length - 1];
+        String upperFileName = fileName.toUpperCase();
+
+        return ContentType.valueOf(upperFileName).getTypeMessage();
     }
 
     private void responseBody(DataOutputStream dos, byte[] body) {
