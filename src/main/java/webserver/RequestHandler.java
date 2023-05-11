@@ -42,11 +42,26 @@ public class RequestHandler implements Runnable {
 				int index = url.indexOf("?");
 				String queryString = url.substring(index + 1);
 				Map<String, String> params = RequestUtil.parseQueryString(queryString);
-				User user = new User(params.get("userId"), params.get("password"),
-					params.get("name"), params.get("email"));
+				User user = new User(params.get("userId"), params.get("password"), params.get("name"),
+					params.get("email"));
+				log.debug("User : {}", user);
+				url = "/index.html";
+			} else if (url.endsWith(".css")) {
+				DataOutputStream dos = new DataOutputStream(out);
+				byte[] body = Files.readAllBytes(new File("./src/main/resources/static" + url).toPath());
+				response200HeaderWithCss(dos, body.length);
+				responseBody(dos, body);
+			} else if (url.endsWith(".js")) {
+				DataOutputStream dos = new DataOutputStream(out);
+				byte[] body = Files.readAllBytes(new File("./src/main/resources/static" + url).toPath());
+				response200HeaderWithJs(dos, body.length);
+				responseBody(dos, body);
+			} else if (url.endsWith(".ttf") || url.endsWith(".woff")) {
+				DataOutputStream dos = new DataOutputStream(out);
+				byte[] body = Files.readAllBytes(new File("./src/main/resources/static" + url).toPath());
+				response200HeaderWithFonts(dos, body.length);
+				responseBody(dos, body);
 			}
-			log.debug("request line : {}", line);
-			// TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 			DataOutputStream dos = new DataOutputStream(out);
 			byte[] body = Files.readAllBytes(new File("./src/main/resources/templates" + url).toPath());
 			response200Header(dos, body.length);
@@ -60,6 +75,39 @@ public class RequestHandler implements Runnable {
 		try {
 			dos.writeBytes("HTTP/1.1 200 OK \r\n");
 			dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+			dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+			dos.writeBytes("\r\n");
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+	}
+
+	private void response200HeaderWithCss(DataOutputStream dos, int lengthOfBodyContent) {
+		try {
+			dos.writeBytes("HTTP/1.1 200 OK \r\n");
+			dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
+			dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+			dos.writeBytes("\r\n");
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+	}
+
+	private void response200HeaderWithJs(DataOutputStream dos, int lengthOfBodyContent) {
+		try {
+			dos.writeBytes("HTTP/1.1 200 OK \r\n");
+			dos.writeBytes("Content-Type: text/js;charset=utf-8\r\n");
+			dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+			dos.writeBytes("\r\n");
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+	}
+
+	private void response200HeaderWithFonts(DataOutputStream dos, int lengthOfBodyContent) {
+		try {
+			dos.writeBytes("HTTP/1.1 200 OK \r\n");
+			dos.writeBytes("Content-Type: text/fonts;charset=utf-8\r\n");
 			dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
 			dos.writeBytes("\r\n");
 		} catch (IOException e) {
