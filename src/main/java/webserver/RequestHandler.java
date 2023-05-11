@@ -39,9 +39,10 @@ public class RequestHandler implements Runnable {
 			logger.debug("httpRequest httpVersion : {}", httpRequest.getHttpVersion());
 			logger.debug("httpRequest QueryParams : {}", httpRequest.getQueryParams());
 
-			userController.requestMapper(httpRequest);
+			String view = userController.requestMapper(httpRequest);
 
-			HttpResponse httpResponse = new HttpResponse(out, httpRequest.getURL());
+			new HttpResponse(out, view);
+			
 			logger.debug("end ------------------------------------------");
 		} catch (IOException e) {
 			logger.error(e.getMessage());

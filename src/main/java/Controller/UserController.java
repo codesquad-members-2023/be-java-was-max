@@ -12,15 +12,17 @@ public class UserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	public void requestMapper(HttpRequest httpRequest) {
+	public String requestMapper(HttpRequest httpRequest) {
 		if (httpRequest.getURL().contains("create")) {
-			save(httpRequest.getQueryParams());
+			return save(httpRequest.getQueryParams());
 		}
+		return httpRequest.getURL();
 	}
 
-	public void save(Map<String, String> queryParams) {
+	public String save(Map<String, String> queryParams) {
 		User user = new User(queryParams.get("userId"), queryParams.get("password"), queryParams.get("name"),
 			queryParams.get("email"));
 		logger.debug("user: {}", user);
+		return "/index.html";
 	}
 }

@@ -12,26 +12,26 @@ import utils.ContentType;
 public class HttpResponse {
 	private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
-	private View view;
+	private View myView;
 
-	public HttpResponse(OutputStream out, String URL) {
-		view = new View();
-		createResponseBody(out, URL);
+	public HttpResponse(OutputStream out, String view) {
+		myView = new View();
+		createResponseBody(out, view);
 	}
 
-	public void createResponseBody(OutputStream out, String viewPath) {
+	public void createResponseBody(OutputStream out, String view) {
 		DataOutputStream dos = new DataOutputStream(out);
-		String contentType = ContentType.getByExtension(extractFileExtensionFromURL(viewPath));
+		String contentType = ContentType.getByExtension(extractFileExtensionFromView(view));
 		logger.debug("contentType : {}", contentType);
 
-		byte[] body = view.readResource(viewPath, contentType);
+		byte[] body = myView.readResource(view, contentType);
 
 		response200Header(dos, body.length, contentType);
 		responseBody(dos, body);
 	}
 
-	private String extractFileExtensionFromURL(String URL) {
-		String[] tokens = URL.split("\\.");
+	private String extractFileExtensionFromView(String view) {
+		String[] tokens = view.split("\\.");
 		return tokens[tokens.length - 1];
 	}
 

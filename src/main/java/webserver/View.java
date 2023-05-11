@@ -18,8 +18,8 @@ public class View {
 		);
 	}
 
-	public byte[] readResource(String viewPath, String contentType) {
-		viewPath = resolveViewPath(viewPath, contentType);
+	public byte[] readResource(String view, String contentType) {
+		String viewPath = resolveViewPath(view, contentType);
 		byte[] body = new byte[0];
 		try {
 			body = Files.readAllBytes(new File(viewPath).toPath());
