@@ -89,7 +89,7 @@ public class RequestHandler implements Runnable {
 
     private byte[] findFilePath(String url) throws IOException {
         // Static
-        if (url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".ico") || url.endsWith(".png") || url.endsWith(".jpeg") || url.endsWith(".jpg")) { // 파일의 확장자로 구분
+        if (url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".ico") || url.endsWith(".png") || url.endsWith(".jpeg") || url.endsWith(".jpg") || url.startsWith("/fonts")) { // 파일의 확장자로 구분
             return Files.readAllBytes(new File("src/main/resources/static" + url).toPath());
         }
         // Templates
