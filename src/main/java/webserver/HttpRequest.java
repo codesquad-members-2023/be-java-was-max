@@ -1,5 +1,7 @@
 package webserver;
 
+import static utils.HttpRequestUtils.*;
+
 public class HttpRequest {
 
 	private final String method;
@@ -21,7 +23,7 @@ public class HttpRequest {
 
 	private String extractURL(String startLine) {
 		String[] tokens = startLine.split(" ");
-		return tokens[1];
+		return decodeURL(tokens[1]);
 	}
 
 	private String extractQueryString() {
