@@ -1,16 +1,16 @@
 package webserver;
 
-import java.io.*;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Map;
-
+import model.Line;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.util.HttpRequestUtils;
+import webserver.util.HttpResponseUtils;
+
+import java.io.*;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class RequestHandler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -30,17 +30,12 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             // 라인별로 http header 읽기
             String line = br.readLine();
-            String url = HttpRequestUtils.parseUrl(line);
-            String method = HttpRequestUtils.parseMethod(line);
-            Map<String, String> quaryMap = HttpRequestUtils.parseQueryString(line);
+            Line requestLine = HttpRequestUtils.parseLine(line);
 
-            if (method.equals("GET") && quaryMap != null) {
-                User user = new User(quaryMap);
+            if (requestLine.getMethod().equals("GET") && requestLine.getQueryMap() != null) {
+                User user = new User(requestLine.getQueryMap());
                 log.debug("user : {}", user);
             }
-
-            // 어떤 스레드, 클래스에서 해당 로그를 출력하는지까지 다 출력
-            log.debug("request line : {}", line);
 
             // request 마지막에 빈 공백 문자열이 들어오니 그때까지 반복
             while (!line.equals("")) {
@@ -50,32 +45,9 @@ public class RequestHandler implements Runnable {
 
             DataOutputStream dos = new DataOutputStream(out);
             // https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#readAllBytes-java.nio.file.Path-
-            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
+            byte[] body = Files.readAllBytes(new File(requestLine.separateAbsolutePath()).toPath());
 
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
+            HttpResponseUtils.responseBody(dos, body, requestLine);
 
         } catch (IOException e) {
             log.error(e.getMessage());

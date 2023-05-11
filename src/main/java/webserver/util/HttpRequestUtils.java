@@ -1,10 +1,16 @@
 package webserver.util;
 
+import model.Line;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequestUtils {
     private HttpRequestUtils() {
+    }
+
+    public static Line parseLine(String line) {
+        return new Line(parseMethod(line), parseUrl(line), parseQueryString(line));
     }
 
     public static String parseUrl(String line) {
