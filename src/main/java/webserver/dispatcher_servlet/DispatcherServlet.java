@@ -1,6 +1,6 @@
 package webserver.dispatcher_servlet;
 
-import static http.common.HttpStatus.MOVED_PERMANENTLY;
+import static http.common.HttpStatus.FOUND;
 import static http.common.HttpVersion.HTTP_1_1;
 import static webserver.dispatcher_servlet.RequestMappingParser.scanRequestMapping;
 
@@ -58,6 +58,6 @@ public class DispatcherServlet implements HttpServlet {
 
     private void processRedirection(String location, final HttpServletResponse response) {
         response.addHeader("location", location);
-        response.setStatusLine(new StatusLine(HTTP_1_1, MOVED_PERMANENTLY));
+        response.setStatusLine(new StatusLine(HTTP_1_1, FOUND));
     }
 }

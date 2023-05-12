@@ -45,14 +45,14 @@ public class RequestHandler implements Runnable {
                 try {
                     staticResourceHandler.process(file, response);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    logger.error(e.getMessage());
                 }
             }, () -> {
                 try {
                     DispatcherServlet dispatcherServlet = new DispatcherServlet();
                     dispatcherServlet.doDispatch(request, response);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    logger.error(e.getMessage());
                 }
             });
 
