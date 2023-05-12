@@ -1,6 +1,6 @@
 package cafe.errors.errorcode;
 
-import webserver.common.HttpStatus;
+import http.common.HttpStatus;
 
 public enum LoginErrorCode implements ErrorCode {
 
