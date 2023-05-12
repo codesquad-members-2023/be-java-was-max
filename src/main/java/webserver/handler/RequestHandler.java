@@ -1,28 +1,22 @@
 package webserver.handler;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static webserver.request.common.HttpMethod.*;
+import static util.FileUtils.getFile;
 
+import http.request.HttpRequestFactory;
+import http.request.HttpServletRequest;
+import http.response.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URISyntaxException;
-import java.util.HashMap;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.common.ContentType;
-import webserver.request.HttpRequest;
-import webserver.request.factory.HttpRequestFactory;
-import webserver.request.component.RequestHeader;
-import webserver.request.component.RequestLine;
-import webserver.request.component.RequestParameter;
-import webserver.request.component.RequestURI;
-import webserver.response.HttpVersion;
-import webserver.response.Response;
-import webserver.response.ResponseFactory;
-import webserver.util.RequestHandlerUtil;
+import webserver.dispatcher_servlet.DispatcherServlet;
 
 public class RequestHandler implements Runnable {
 
@@ -36,60 +30,54 @@ public class RequestHandler implements Runnable {
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}",
-            connection.getInetAddress(),
-            connection.getPort());
+            connection.getInetAddress(), connection.getPort());
 
-        try (BufferedReader br =
-            new BufferedReader(new InputStreamReader(connection.getInputStream(), UTF_8));
-            DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
-            HttpRequest httpRequest = HttpRequestFactory.create(br);
-            byte[] messageBody = handleHttpRequest(httpRequest);
+        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            DataOutputStream dos = new DataOutputStream(out);
+            HttpServletRequest request = HttpRequestFactory.create(br);
+            HttpServletResponse response = new HttpServletResponse();
+            StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
 
-            ContentType contentType = ContentType.of(httpRequest.getPath());
-            Response response = ResponseFactory.ok(messageBody);
-            response.addHeader("Content-Type", contentType);
-            response.addHeader("Content-Length", String.valueOf(response.getMessageBody().length));
+            Optional<File> optionalStaticResource = getFile(request.getPath());
+
+            optionalStaticResource.ifPresentOrElse(file -> {
+                try {
+                    staticResourceHandler.process(file, response);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }, () -> {
+                try {
+                    DispatcherServlet dispatcherServlet = new DispatcherServlet();
+                    dispatcherServlet.doDispatch(request, response);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
 
             response200Header(dos, response);
             responseBody(dos, response);
-
-            logger.debug("httpRequest : {}", httpRequest);
+            logger.debug("httpRequest : {}", request);
             logger.debug("httpResponse : {}", response);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private byte[] handleHttpRequest(HttpRequest httpRequest) throws URISyntaxException {
-        String path = httpRequest.getPath();
-        RequestParameter parameter = httpRequest.getParameter();
-
-        if (RequestHandlerUtil.isStaticResource(path)) {
-            return RequestHandlerUtil.readFile(path);
-        } else if (path.equals("/user/create")) {
-            RequestHandlerUtil.requestSignUp(parameter);
-            RequestParameter requestParameter = new RequestParameter(new HashMap<>());
-            RequestURI requestURI = new RequestURI("/user/login.html", requestParameter);
-            RequestLine requestLine = new RequestLine(GET, requestURI, new HttpVersion(1.0));
-            httpRequest = new HttpRequest(requestLine, new RequestHeader(new HashMap<>()));
-            path = httpRequest.getPath();
-            return RequestHandlerUtil.readFile(path);
-        }
-
-        return new byte[0];
-    }
-
-    private void response200Header(DataOutputStream dos, Response response) {
+    private void response200Header(DataOutputStream dos, HttpServletResponse httpServletResponse) {
         try {
-            dos.writeBytes(response.toString());
+            dos.writeBytes(httpServletResponse.toString());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, Response response) {
+    private void responseBody(DataOutputStream dos, HttpServletResponse httpServletResponse) {
         try {
-            byte[] messageBody = response.getMessageBody();
+            byte[] messageBody = httpServletResponse.getMessageBody();
             dos.write(messageBody, 0, messageBody.length);
             dos.flush();
         } catch (IOException e) {
