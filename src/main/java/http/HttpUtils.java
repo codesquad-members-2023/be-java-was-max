@@ -1,6 +1,7 @@
 package http;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,5 +18,14 @@ public final class HttpUtils {
 				.collect(Collectors.toUnmodifiableList());
 
 		return Map.of(name, values);
+	}
+
+	public static Map<String, String> parseQueryString(final String queryString) {
+		Map<String, String> queryParameter = new HashMap<>();
+		for (String entry : queryString.split("&")) {
+			String[] tokens = entry.split("=");
+			queryParameter.put(tokens[0], tokens[1]);
+		}
+		return queryParameter;
 	}
 }
