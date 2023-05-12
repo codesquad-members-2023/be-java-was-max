@@ -1,19 +1,19 @@
-package webserver.request.component;
+package http.request.component;
 
-import webserver.request.common.HttpMethod;
-import webserver.response.HttpVersion;
+import http.common.HttpMethod;
+import http.common.ProtocolVersion;
 
 public class RequestLine {
 
     private final HttpMethod httpMethod;
     private final RequestURI requestURI;
-    private final HttpVersion httpVersion;
+    private final ProtocolVersion protocolVersion;
 
     public RequestLine(HttpMethod httpMethod, RequestURI requestURI,
-        HttpVersion httpVersion) {
+        ProtocolVersion protocolVersion) {
         this.httpMethod = httpMethod;
         this.requestURI = requestURI;
-        this.httpVersion = httpVersion;
+        this.protocolVersion = protocolVersion;
     }
 
     public HttpMethod getHttpMethod() {
@@ -24,12 +24,12 @@ public class RequestLine {
         return requestURI;
     }
 
-    public HttpVersion getHttpVersion() {
-        return httpVersion;
+    public ProtocolVersion getProtocolVersion() {
+        return protocolVersion;
     }
 
     @Override
     public String toString() {
-        return String.format("%s %s %s", httpMethod, requestURI, httpVersion);
+        return String.format("%s %s %s", httpMethod, requestURI, protocolVersion);
     }
 }

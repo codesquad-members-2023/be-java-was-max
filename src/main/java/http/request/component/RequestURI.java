@@ -1,4 +1,4 @@
-package webserver.request.component;
+package http.request.component;
 
 public class RequestURI {
 

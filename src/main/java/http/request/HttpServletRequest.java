@@ -1,18 +1,18 @@
-package webserver.request;
+package http.request;
 
-import webserver.request.common.HttpMethod;
-import webserver.request.component.RequestHeader;
-import webserver.request.component.RequestLine;
-import webserver.request.component.RequestParameter;
-import webserver.request.component.RequestURI;
-import webserver.response.HttpVersion;
+import http.common.HttpMethod;
+import http.common.ProtocolVersion;
+import http.request.component.RequestHeader;
+import http.request.component.RequestLine;
+import http.request.component.RequestParameter;
+import http.request.component.RequestURI;
 
-public class HttpRequest {
+public class HttpServletRequest {
 
     private final RequestLine requestLine;
     private final RequestHeader requestHeader;
 
-    public HttpRequest(RequestLine requestLine, RequestHeader requestHeader) {
+    public HttpServletRequest(RequestLine requestLine, RequestHeader requestHeader) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
     }
@@ -33,8 +33,8 @@ public class HttpRequest {
         return getRequestURI().getParameter();
     }
 
-    public HttpVersion getHttpVersion() {
-        return requestLine.getHttpVersion();
+    public ProtocolVersion getProtocolVersion() {
+        return requestLine.getProtocolVersion();
     }
 
     public Object getHeader(String key) {
