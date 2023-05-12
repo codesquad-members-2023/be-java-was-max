@@ -31,21 +31,22 @@ public class RequestHandler implements Runnable {
             String absolutePath = Paths.get("").toAbsolutePath().toString();
             // TODO: new File().toPath()와 Paths.get()이 무슨 차이인지 알아보기
             byte[] body = Files.readAllBytes(new File(absolutePath
-                    + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl()).toPath());
-            System.out.println(absolutePath + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl());
+                    + "/src/main/resources" + httpRequest.getPathPrefix() + httpRequest.getPath()).toPath());
+            System.out.println(absolutePath + "/src/main/resources" + httpRequest.getPathPrefix() + httpRequest.getPath());
+            httpRequest.getRequests();
 //            byte[] body = Files.readAllBytes(Paths.get(absolutePath
 //                  + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl()));
-            response200Header(dos, body.length);
+            response200Header(dos, body.length, httpRequest.getContentType());
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
