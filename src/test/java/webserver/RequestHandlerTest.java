@@ -1,8 +1,10 @@
 package webserver;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import db.Database;
+import cafe.app.user.entity.User;
+import cafe.app.user.repository.MemoryUserRepository;
+import cafe.app.user.repository.UserRepository;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,18 +12,25 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
-import model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handler.RequestHandler;
-import webserver.util.IOutil;
 
 class RequestHandlerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandlerTest.class);
     private static final int DEFAULT_PORT = 8080;
+
+    private static String readFromInputStream(BufferedReader br) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\r\n");
+        }
+        return sb.toString().trim();
+    }
 
     @Test
     @DisplayName("sample.html 요청시 html 파일 내용을 응답받는다.")
@@ -47,7 +56,7 @@ class RequestHandlerTest {
         writer.println(requestHeader);
         // then
         BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String response = IOutil.readFromInputStream(br);
+        String response = readFromInputStream(br);
         String statusLine = "HTTP/1.1 200 OK";
         String contentType = "Content-Type: text/html;charset=utf-8";
         String contentLength = "Content-Length: 13";
@@ -63,7 +72,7 @@ class RequestHandlerTest {
 
     @Test
     @DisplayName("GET 방식으로 데이터를 전달하여 회원가입한다")
-    void signup() throws IOException, InterruptedException {
+    void signup() throws IOException {
         // given
         Thread serverThread = new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT)) {
@@ -86,8 +95,9 @@ class RequestHandlerTest {
         writer.println(requestHeader);
 
         // then
+        UserRepository userRepository = new MemoryUserRepository();
         future.thenRun(() -> {
-            User user = Database.findUserById("javajigi");
+            User user = userRepository.findByUserId("javajigi").orElseThrow();
             assertThat(user).isNotNull();
         });
         //cleanup
@@ -120,9 +130,8 @@ class RequestHandlerTest {
         writer.println(requestHeader);
 
         // then
-        BufferedReader br = new BufferedReader(
-            new InputStreamReader(socket.getInputStream()));
-        String response = IOutil.readFromInputStream(br);
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String response = readFromInputStream(br);
         String statusLine = response.split("\r\n")[0];
         assertThat(statusLine).isEqualTo("HTTP/1.1 200 OK");
         //cleanup
