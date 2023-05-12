@@ -14,7 +14,7 @@ public class Line {
     }
 
     public String separateAbsolutePath() {
-        if (url.startsWith("/css") || url.startsWith("/js") || url.startsWith("/fonts") || url.endsWith(".ico") || url.endsWith(".png")) {
+        if (isStaticFile()) {
             return "src/main/resources/static" + url;
         }
 
@@ -25,6 +25,10 @@ public class Line {
         return "src/main/resources/templates" + url;
     }
 
+    private boolean isStaticFile() {
+        return url.startsWith("/css") || url.startsWith("/js") || url.startsWith("/fonts") || url.endsWith(".ico") || url.endsWith(".png");
+    }
+
     public String separateRequestType() {
         int start = url.indexOf("/") + 1;  // 첫 번째 "/" 위치
         int end = url.indexOf("/", start);  // 두 번째 "/" 위치
@@ -32,7 +36,7 @@ public class Line {
         // 두번쨰 "/"를 찾았다면
         if (end != -1) {
             String requestType = url.substring(start, end);
-            if (requestType.equals("css") || requestType.equals("js") || requestType.equals("fonts")) {
+            if (isStaticResource(requestType)) {
                 return requestType;
             }
 
@@ -40,6 +44,10 @@ public class Line {
         }
 
         return "html";
+    }
+
+    private boolean isStaticResource(String requestType) {
+        return requestType.equals("css") || requestType.equals("js") || requestType.equals("fonts");
     }
 
     public String getMethod() {
