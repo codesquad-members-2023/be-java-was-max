@@ -26,33 +26,30 @@ public class HttpResponse {
 
 		byte[] body = myView.readResource(view, contentType);
 
-		response200Header(dos, body.length, contentType);
-		responseBody(dos, body);
+		try {
+			response200Header(dos, body.length, contentType);
+			responseBody(dos, body);
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			throw new RuntimeException(e);
+		}
 	}
 
 	private String extractFileExtensionFromView(String view) {
-		String[] tokens = view.split("\\.");
-		return tokens[tokens.length - 1];
+		return view.substring(view.lastIndexOf(".") + 1);
 	}
 
-	private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
-		try {
-			dos.writeBytes("HTTP/1.1 200 OK \r\n");
-			dos.writeBytes(
-				"Content-Type: " + contentType + (contentType.contains("text") ? ";charset=utf-8" : "") + "\r\n");
-			dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-			dos.writeBytes("\r\n");
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-		}
+	private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) throws
+		IOException {
+		dos.writeBytes("HTTP/1.1 200 OK \r\n");
+		dos.writeBytes(
+			"Content-Type: " + contentType + (contentType.contains("text") ? ";charset=utf-8" : "") + "\r\n");
+		dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+		dos.writeBytes("\r\n");
 	}
 
-	private void responseBody(DataOutputStream dos, byte[] body) {
-		try {
-			dos.write(body, 0, body.length);
-			dos.flush();
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-		}
+	private void responseBody(DataOutputStream dos, byte[] body) throws IOException {
+		dos.write(body, 0, body.length);
+		dos.flush();
 	}
 }

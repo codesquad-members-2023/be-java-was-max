@@ -9,14 +9,12 @@ public class HttpRequest {
 	private final String method;
 	private final String URL;
 	private final String queryString;
-	private final String httpVersion;
 	private final Map<String, String> queryParams;
 
 	public HttpRequest(String startLine) {
 		this.method = extractMethod(startLine);
 		this.URL = extractURL(startLine);
 		this.queryString = extractQueryString();
-		this.httpVersion = extractHttpVersion(startLine);
 		this.queryParams = parseQueryString(queryString);
 	}
 
@@ -35,11 +33,6 @@ public class HttpRequest {
 		return query.length > 1 ? query[1] : "";
 	}
 
-	private String extractHttpVersion(String startLine) {
-		String[] tokens = startLine.split(" ");
-		return tokens[2];
-	}
-
 	public String getMethod() {
 		return method;
 	}
@@ -50,10 +43,6 @@ public class HttpRequest {
 
 	public String getQueryString() {
 		return queryString;
-	}
-
-	public String getHttpVersion() {
-		return httpVersion;
 	}
 
 	public Map<String, String> getQueryParams() {

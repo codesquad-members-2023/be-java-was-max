@@ -1,11 +1,10 @@
 package webserver;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +33,9 @@ class HttpResponseTest {
 
 		// then
 		String actualResponse = out.toString();
-		String expectedResponse = getExpectedResponse("/templates/index.html");
+		byte[] expectedResponse = getExpectedResponse("/templates/index.html");
 		Assertions.assertThat(actualResponse.contains(expectedContentType));
-		Assertions.assertThat(actualResponse.contains(expectedResponse));
+		Assertions.assertThat(actualResponse.contains(expectedResponse.toString()));
 	}
 
 	@Test
@@ -51,14 +50,12 @@ class HttpResponseTest {
 
 		// then
 		String actualResponse = out.toString();
-		String expectedResponse = getExpectedResponse("/static/css/styles.css");
+		byte[] expectedResponse = getExpectedResponse("/static/css/styles.css");
 		Assertions.assertThat(actualResponse.contains(expectedContentType));
-		Assertions.assertThat(actualResponse.contains(expectedResponse));
+		Assertions.assertThat(actualResponse.contains(expectedResponse.toString()));
 	}
 
-	private String getExpectedResponse(String fileName) throws IOException {
-		Path filePath = Paths.get(BASE_PATH, fileName);
-		byte[] fileBytes = Files.readAllBytes(filePath);
-		return new String(fileBytes);
+	private byte[] getExpectedResponse(String fileName) throws IOException {
+		return Files.readAllBytes(new File(BASE_PATH + fileName).toPath());
 	}
 }

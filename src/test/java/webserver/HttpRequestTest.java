@@ -22,7 +22,6 @@ class HttpRequestTest {
 		//then
 		assertThat(httpRequest.getMethod()).isEqualTo("GET");
 		assertThat(httpRequest.getURL()).isEqualTo("/index.html?name=charlie");
-		assertThat(httpRequest.getHttpVersion()).isEqualTo("HTTP/1.1");
 		assertThat(httpRequest.getQueryString()).isEqualTo("name=charlie");
 		assertThat(httpRequest.getQueryParams()).isEqualTo(expectedMap);
 	}

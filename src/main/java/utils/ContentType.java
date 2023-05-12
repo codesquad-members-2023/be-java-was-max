@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Arrays;
+
 public enum ContentType {
 
 	HTML("text/html", "html"),
@@ -28,12 +30,11 @@ public enum ContentType {
 	}
 
 	public static String getByExtension(String extension) {
-		for (ContentType contentType : values()) {
-			if (contentType.getExtension().equalsIgnoreCase(extension)) {
-				return contentType.getValue();
-			}
-		}
-		return HTML.getValue();
+		return Arrays.stream(values())
+			.filter(contentType -> contentType.getExtension().equalsIgnoreCase(extension))
+			.findFirst()
+			.map(ContentType::getValue)
+			.orElse(HTML.getValue());
 	}
 
 }

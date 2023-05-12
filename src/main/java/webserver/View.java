@@ -20,13 +20,11 @@ public class View {
 
 	public byte[] readResource(String view, String contentType) {
 		String viewPath = resolveViewPath(view, contentType);
-		byte[] body = new byte[0];
 		try {
-			body = Files.readAllBytes(new File(viewPath).toPath());
+			return Files.readAllBytes(new File(viewPath).toPath());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return body;
 	}
 
 	private String resolveViewPath(String viewPath, String contentType) {
