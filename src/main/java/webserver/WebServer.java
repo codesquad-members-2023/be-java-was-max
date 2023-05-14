@@ -1,33 +1,70 @@
 package webserver;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WebServer {
-    private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
 
-    public static void main(String args[]) throws Exception {
-        int port = 0;
-        if (args == null || args.length == 0) {
-            port = DEFAULT_PORT;
-        } else {
-            port = Integer.parseInt(args[0]);
+    public static void main(String[] args) throws Exception {
+        final ThreadPoolExecutor executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        final int port = getPort(args);
+        final ServerSocket serverSocket = new ServerSocket(port);
+
+        while (isConnected(serverSocket)) {
+            LOGGER.info("Active Thread: " + executorService.getActiveCount());
+
+            Socket clientSocket = serverSocket.accept();
+
+            CompletableFuture.runAsync(toRequestHandler(clientSocket), executorService)
+                    .thenRunAsync(closeSocket(clientSocket))
+                    .exceptionally(printException());
         }
 
-        // 서버소켓을 생성한다. 웹서버는 기본적으로 8080번 포트를 사용한다.
-        try (ServerSocket listenSocket = new ServerSocket(port)) {
-            logger.info("Web Application Server started {} port.", port);
+        executorService.shutdown();
+        serverSocket.close();
+    }
 
-            // 클라이언트가 연결될때까지 대기한다.
-            Socket connection;
-            while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+
+    private static RequestHandler toRequestHandler(Socket clientSocket) throws IOException {
+            return new RequestHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+    }
+
+    private static Runnable closeSocket(Socket clientSocket) {
+        return () -> {
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        };
+    }
+
+    private static Function<Throwable, Void> printException() {
+        return ex -> {
+            LOGGER.error(ex.getMessage());
+            return null;
+        };
+    }
+
+    private static int getPort(String[] args) {
+        if (args != null && args.length > 0) {
+            return Integer.parseInt(args[0]);
         }
+
+        return DEFAULT_PORT;
+    }
+
+    private static boolean isConnected(ServerSocket serverSocket) {
+        return !serverSocket.isClosed();
     }
 }
