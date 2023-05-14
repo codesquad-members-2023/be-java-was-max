@@ -1,10 +1,22 @@
 package model;
 
+import java.util.Map;
+
 public class User {
     private String userId;
     private String password;
     private String name;
     private String email;
+
+    private User() {
+    }
+
+    public User(Map<String, String> paramMap) {
+        this.userId = paramMap.get("userId");
+        this.password = paramMap.get("password");
+        this.name = paramMap.get("name");
+        this.email = paramMap.get("email");
+    }
 
     public User(String userId, String password, String name, String email) {
         this.userId = userId;
