@@ -2,20 +2,17 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import db.Database;
-import model.User;
+import utils.HttpRequestUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -32,40 +29,22 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String line = br.readLine();
-            String[] tokens = line.split(" ");
-            String url = tokens[1];
-            logger.debug("request line: {}", line);
-            while (!line.equals("")) {
-                line = br.readLine();
-                logger.debug("{}", line);
-            }
+            HttpRequestUtils httpRequestUtils = new HttpRequestUtils(br);
+            httpRequestUtils.debug(logger);
+            httpRequestUtils.move();
 
             DataOutputStream dos = new DataOutputStream(out);
-            String[] queries = url.split("\\?");
-            byte[] body;
-            if(queries.length > 1) {
-                String[] query = queries[1].split("&");
-                Database.addUser(new User(splitQuery(query[0]), splitQuery(query[1]), splitQuery(query[2]), splitQuery(query[3])));
-                body = Files.readAllBytes(new File("src/main/resources/templates/index.html").toPath());
-            } else {
-                body = Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
-            }
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            response200Header(dos, httpRequestUtils.getBody().length, httpRequestUtils.getContentType());
+            responseBody(dos, httpRequestUtils.getBody());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private String splitQuery(String query) {
-        return query.split("=")[1];
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: text/" + contentType + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
