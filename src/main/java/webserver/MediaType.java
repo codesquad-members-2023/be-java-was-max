@@ -13,8 +13,8 @@ public enum MediaType {
     FONT_WOFF("woff", "application/font-woff"),
     FONT_WOFF2("woff2", "font/woff2");
 
-    private final String TEMPLATES_PATH = "./src/main/resources/templates";
-    private final String STATIC_PATH = "./src/main/resources/static";
+    private static final String TEMPLATES_PATH = "./src/main/resources/templates";
+    private static final String STATIC_PATH = "./src/main/resources/static";
 
     public final String extension;
     public final String contentType;
