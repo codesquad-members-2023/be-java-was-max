@@ -1,6 +1,6 @@
 package webserver;
 
-import model.Line;
+import model.RequestLine;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             // 라인별로 http header 읽기
             String line = br.readLine();
-            Line requestLine = HttpRequestUtils.parseLine(line);
+            RequestLine requestLine = HttpRequestUtils.parseLine(line);
 
             if (requestLine.getMethod().equals("GET") && requestLine.getQueryMap() != null) {
                 User user = new User(requestLine.getQueryMap());
@@ -45,7 +45,7 @@ public class RequestHandler implements Runnable {
 
             DataOutputStream dos = new DataOutputStream(out);
             // https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#readAllBytes-java.nio.file.Path-
-            byte[] body = Files.readAllBytes(new File(requestLine.separateAbsolutePath()).toPath());
+            byte[] body = Files.readAllBytes(new File(requestLine.getPath()).toPath());
 
             HttpResponseUtils.responseBody(dos, body, requestLine);
 
