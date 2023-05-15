@@ -7,7 +7,9 @@ public enum ContentType {
     JS("Content-Type: application/javascript\r\n"),
     ICO("Content-Type: image/x-icon\r\n"),
     PNG("Content-Type: image/png\r\n"),
-    JPG("Content-Type: image/jpg\r\n");
+    JPG("Content-Type: image/jpg\r\n"),
+    WOFF("Content-Type: application/woff\r\n"),
+    TTF("Content-Type: application/x-font-ttf\r\n");
 
     private final String typeMessage;
 
