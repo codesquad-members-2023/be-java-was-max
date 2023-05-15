@@ -24,9 +24,14 @@ public class HttpResponse {
         if(!contentValue.equals("html")){
             path = "src/main/resources/static";
         }
+        if(url.split(":")[0].equals("redirect")) {
+            url = url.split(":")[1];
+            response302Header(dos,url);
+        } else {
             byte[] body = Files.readAllBytes(new File(path+url).toPath());
             response200Header(dos, body.length, contentType);
             responseBody(dos, body);
+        }
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {
@@ -39,6 +44,18 @@ public class HttpResponse {
             logger.error(e.getMessage());
         }
     }
+
+    private void response302Header(DataOutputStream dos, String url) {
+        String redirectUrl[] = url.split(":");
+        try {
+            dos.writeBytes("HTTP/1.1 302 FOUND\r\n");
+            dos.writeBytes("Location: " + redirectUrl[0] + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
             dos.write(body, 0, body.length);
@@ -48,3 +65,4 @@ public class HttpResponse {
         }
     }
 }
+

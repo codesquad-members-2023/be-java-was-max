@@ -27,15 +27,15 @@ public class RequestHandler implements Runnable {
             String line = bufferedReader.readLine();
             logger.debug("request line : {} ", line);
             HttpRequest request = new HttpRequest(line);
+            UserController userController = new UserController();
             while (!line.equals("")) {
                 line = bufferedReader.readLine();
                 logger.debug("header : {} ", line);
             }
             HttpResponse response = new HttpResponse();
-            response.response(out, request.getUrl());
+            response.response(out,userController.mapper(request));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
-
 }
