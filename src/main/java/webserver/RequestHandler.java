@@ -1,5 +1,6 @@
 package webserver;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,20 +30,37 @@ public class RequestHandler implements Runnable {
 		try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 			HttpRequest httpRequest = new HttpRequest(in);
 
-			logger.debug("start ------------------------------------------");
-			logger.debug("httpRequest Method : {}", httpRequest.getMethod());
-			logger.debug("httpRequest URL : {}", httpRequest.getURL());
-			logger.debug("httpRequest QueryParams: {}", httpRequest.getQueryParams());
-			logger.debug("httpRequest getContentLength : {}", httpRequest.getContentLength());
-			logger.debug("httpRequest body : {}", httpRequest.getBody());
+			logHttpRequestInfo(httpRequest);
 
 			String view = userController.requestMapper(httpRequest);
+			View myView = new View(view);
 
-			new HttpResponse(out, view);
+			HttpResponse httpResponse = new HttpResponse(view, myView.getBody());
 
-			logger.debug("end ------------------------------------------");
+			DataOutputStream dos = new DataOutputStream(out);
+			sendHttpResponse(dos, httpResponse);
+
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
+	}
+
+	public void sendHttpResponse(DataOutputStream dos, HttpResponse httpResponse) {
+		try {
+			dos.write(httpResponse.toString().getBytes());
+			dos.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void logHttpRequestInfo(HttpRequest httpRequest) {
+		logger.debug("start ------------------------------------------");
+		logger.debug("httpRequest Method : {}", httpRequest.getMethod());
+		logger.debug("httpRequest URL : {}", httpRequest.getURL());
+		logger.debug("httpRequest QueryParams: {}", httpRequest.getQueryParams());
+		logger.debug("httpRequest getContentLength : {}", httpRequest.getContentLength());
+		logger.debug("httpRequest body : {}", httpRequest.getBody());
+		logger.debug("end ------------------------------------------");
 	}
 }

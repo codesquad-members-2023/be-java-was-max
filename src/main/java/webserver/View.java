@@ -10,16 +10,28 @@ public class View {
 	private static final String BASE_PATH = "src/main/resources";
 	private static final String WELCOME_PAGE = "/templates/index.html";
 	private static Map<String, String> folderMappingMap;
+	private final byte[] body;
 
-	public View() {
+	public View(String view) {
 		folderMappingMap = Map.of(
-			"text/html", "/templates",
-			"image/x-icon", "/static"
+			"html", "/templates",
+			"ico", "/static"
 		);
+		this.body = readResource(view);
 	}
 
-	public byte[] readResource(String view, String contentType) {
-		String viewPath = resolveViewPath(view, contentType);
+	private String extractFileExtensionFromView(String view) {
+		return view.substring(view.lastIndexOf(".") + 1);
+	}
+
+	public byte[] readResource(String view) {
+		String type = extractFileExtensionFromView(view);
+
+		if (view.contains("redirect")) {
+			return new byte[0];
+		}
+
+		String viewPath = resolveViewPath(view, type);
 		try {
 			return Files.readAllBytes(new File(viewPath).toPath());
 		} catch (IOException e) {
@@ -27,11 +39,15 @@ public class View {
 		}
 	}
 
-	private String resolveViewPath(String viewPath, String contentType) {
-		if (viewPath.equals("/")) {
+	private String resolveViewPath(String view, String type) {
+		if (view.equals("/")) {
 			return BASE_PATH + WELCOME_PAGE;
 		}
-		String folder = folderMappingMap.getOrDefault(contentType, "");
-		return BASE_PATH + folder + viewPath;
+		String folder = folderMappingMap.getOrDefault(type, "");
+		return BASE_PATH + folder + view;
+	}
+
+	public byte[] getBody() {
+		return body;
 	}
 }
