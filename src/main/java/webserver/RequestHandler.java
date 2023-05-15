@@ -2,9 +2,12 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
+
+import contorller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.request.HttpRequest;
+import util.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -23,36 +26,16 @@ public class RequestHandler implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String line = bufferedReader.readLine();
             logger.debug("request line : {} ", line);
+            HttpRequest request = new HttpRequest(line);
             while (!line.equals("")) {
                 line = bufferedReader.readLine();
                 logger.debug("header : {} ", line);
             }
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File("src/main/resources/templates"+"/index.html").toPath());
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            HttpResponse response = new HttpResponse();
+            response.response(out, request.getUrl());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }
