@@ -23,6 +23,6 @@ public class UserController {
 		User user = new User(queryParams.get("userId"), queryParams.get("password"), queryParams.get("name"),
 			queryParams.get("email"));
 		logger.debug("user: {}", user);
-		return "/index.html";
+		return "redirect:/index.html";
 	}
 }
