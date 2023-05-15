@@ -1,17 +1,15 @@
 package webserver;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import Controller.UserController;
+import webserver.httpRequest.HttpRequest;
 
 public class RequestHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,14 +26,14 @@ public class RequestHandler implements Runnable {
 			connection.getPort());
 
 		try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-			BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-			HttpRequest httpRequest = new HttpRequest(br.readLine());
+			HttpRequest httpRequest = new HttpRequest(in);
 
 			logger.debug("start ------------------------------------------");
 			logger.debug("httpRequest Method : {}", httpRequest.getMethod());
 			logger.debug("httpRequest URL : {}", httpRequest.getURL());
-			logger.debug("httpRequest QueryString : {}", httpRequest.getQueryString());
-			logger.debug("httpRequest QueryParams : {}", httpRequest.getQueryParams());
+			logger.debug("httpRequest QueryParams: {}", httpRequest.getQueryParams());
+			logger.debug("httpRequest getContentLength : {}", httpRequest.getContentLength());
+			logger.debug("httpRequest body : {}", httpRequest.getBody());
 
 			String view = userController.requestMapper(httpRequest);
 
