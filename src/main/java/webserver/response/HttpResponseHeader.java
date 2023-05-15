@@ -1,4 +1,4 @@
-package webserver.httpResponse;
+package webserver.response;
 
 import utils.ContentType;
 

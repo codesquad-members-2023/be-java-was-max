@@ -1,4 +1,4 @@
-package webserver.httpRequest.exception;
+package webserver.request.exception;
 
 public class HttpRequestParsingException extends RuntimeException {
 

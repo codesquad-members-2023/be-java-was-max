@@ -1,4 +1,4 @@
-package webserver.httpRequest;
+package webserver.request;
 
 import static utils.HttpRequestUtils.*;
 

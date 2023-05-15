@@ -1,4 +1,4 @@
-package webserver.httpResponse;
+package webserver.response;
 
 public class HttpResponseStatusLine {
 
@@ -28,7 +28,7 @@ public class HttpResponseStatusLine {
 			httpStatusMessage = "OK";
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return HTTP_VERSION + " " + httpStatusCode + " " + httpStatusMessage + " " + "\r\n";

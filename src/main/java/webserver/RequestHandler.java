@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import Controller.UserController;
-import webserver.httpRequest.HttpRequest;
-import webserver.httpResponse.HttpResponse;
+import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
