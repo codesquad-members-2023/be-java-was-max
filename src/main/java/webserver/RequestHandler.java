@@ -14,6 +14,9 @@ import java.nio.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import db.Database;
+import model.User;
+
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
@@ -39,12 +42,24 @@ public class RequestHandler implements Runnable {
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
+            String[] queries = url.split("\\?");
+            byte[] body;
+            if(queries.length > 1) {
+                String[] query = queries[1].split("&");
+                Database.addUser(new User(splitQuery(query[0]), splitQuery(query[1]), splitQuery(query[2]), splitQuery(query[3])));
+                body = Files.readAllBytes(new File("src/main/resources/templates/index.html").toPath());
+            } else {
+                body = Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
+            }
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private String splitQuery(String query) {
+        return query.split("=")[1];
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
