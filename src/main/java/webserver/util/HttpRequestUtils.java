@@ -1,23 +1,26 @@
 package webserver.util;
 
-import model.Line;
+import model.RequestLine;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequestUtils {
+    private static final int METHOD_INDEX = 0;
+    private static final int URL_INDEX = 1;
+
     private HttpRequestUtils() {
     }
 
-    public static Line parseLine(String line) {
-        return new Line(parseMethod(line), parseUrl(line), parseQueryString(line));
+    public static RequestLine parseLine(String requestLine) {
+        return new RequestLine(parseMethod(requestLine), parseUrl(requestLine), parseQueryString(requestLine));
     }
 
-    public static String parseUrl(String line) {
-        String url = extractUrl(line);
+    public static String parseUrl(String requestLine) {
+        String url = extractUrl(requestLine);
 
         if (url.contains("?")) {
-            url = url.split("\\?")[0];
+            url = url.split("\\?")[METHOD_INDEX];
         }
 
         if (url.equals("/")) {
@@ -27,29 +30,29 @@ public class HttpRequestUtils {
         return url;
     }
 
-    public static String parseMethod(String line) {
-        return line.split(" ")[0];
+    public static String parseMethod(String requestLine) {
+        return requestLine.split(" ")[METHOD_INDEX];
     }
 
-    public static Map<String, String> parseQueryString(String line) {
-        String url = extractUrl(line);
+    public static Map<String, String> parseQueryString(String requestLine) {
+        String url = extractUrl(requestLine);
 
         if (!url.contains("?")) {
             return null;
         }
 
-        String[] params = url.split("\\?")[1].split("&");
+        String[] params = url.split("\\?")[URL_INDEX].split("&");
 
-        Map<String, String> quaryMap = new HashMap<>();
+        Map<String, String> queryMap = new HashMap<>();
         for (String param : params) {
             String[] keyValue = param.split("=");
-            quaryMap.put(keyValue[0], keyValue[1]);
+            queryMap.put(keyValue[METHOD_INDEX], keyValue[URL_INDEX]);
         }
 
-        return quaryMap;
+        return queryMap;
     }
 
-    private static String extractUrl(String line) {
-        return line.split(" ")[1];
+    private static String extractUrl(String requestLine) {
+        return requestLine.split(" ")[URL_INDEX];
     }
 }
