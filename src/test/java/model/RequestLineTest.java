@@ -7,16 +7,16 @@ import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class LineTest {
+public class RequestLineTest {
     @Test
     @DisplayName("css 경로 반환 확인")
     void testRequestCss() {
         String url = "/css/bootstrap.mis.css";
         String expectedUrl = "src/main/resources/static" + url;
-        Line line = new Line("", url, Map.of());
+        RequestLine requestLine = new RequestLine("", url, Map.of());
 
-        assertThat(expectedUrl).isEqualTo(line.separateAbsolutePath());
-        assertThat("css").isEqualTo(line.separateRequestType());
+        assertThat(expectedUrl).isEqualTo(requestLine.separateAbsolutePath());
+        assertThat("css").isEqualTo(requestLine.separateRequestType());
     }
 
     @Test
@@ -24,9 +24,9 @@ public class LineTest {
     void testRequestHtml() {
         String url = "/";
         String expectedUrl = "src/main/resources/templates" + "/index.html";
-        Line line = new Line("", url, Map.of());
+        RequestLine requestLine = new RequestLine("", url, Map.of());
 
-        assertThat(expectedUrl).isEqualTo(line.separateAbsolutePath());
-        assertThat("html").isEqualTo(line.separateRequestType());
+        assertThat(expectedUrl).isEqualTo(requestLine.separateAbsolutePath());
+        assertThat("html").isEqualTo(requestLine.separateRequestType());
     }
 }
