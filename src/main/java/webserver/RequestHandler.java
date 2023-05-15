@@ -18,6 +18,7 @@ public class RequestHandler implements Runnable {
     private final Map<String, String> startLine = new HashMap<>();
     private final Map<String, String> header = new HashMap<>();
     private final URLHandler urlHandler = new URLHandler();
+    private final Responsor responsor = new Responsor();
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -45,49 +46,10 @@ public class RequestHandler implements Runnable {
                     logger.debug("User Created");
                 }
             }
+
             DataOutputStream dos = new DataOutputStream(out);
-            makeResponse(dos, startLine.get("URL"));
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void makeResponse(DataOutputStream dos, String URL) throws IOException {
-        byte[] body = makeBody(URL);
-        response200Header(dos, body.length);
-        responseBody(dos, body);
-    }
-
-    private byte[] makeBody(String url) throws IOException {
-        if (url.endsWith(".html")) {
-            return Files.readAllBytes(new File("./src/main/resources/templates" + url).toPath());
-        }
-        return Files.readAllBytes(new File("./src/main/resources/static" + url).toPath());
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes(writeContentType());
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private String writeContentType() {
-        String contentType = startLine.get("URL");
-        String[] splitContentType = contentType.split("\\.");
-        String fileName = splitContentType[splitContentType.length - 1];
-        String upperFileName = fileName.toUpperCase();
-
-        return ContentType.valueOf(upperFileName).getTypeMessage();
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
+            byte[] response = responsor.makeResponse(startLine.get("URL"));
+            dos.write(response);
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
