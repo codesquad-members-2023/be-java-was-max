@@ -18,7 +18,7 @@ public class HttpRequestUtils {
 			.collect(Collectors.toMap(a -> a[0], a -> a.length > 1 ? a[1] : ""));
 	}
 
-	public static String decodeURL(String URL) {
+	public static String decode(String URL) {
 		return URLDecoder.decode(URL, StandardCharsets.UTF_8);
 	}
 }

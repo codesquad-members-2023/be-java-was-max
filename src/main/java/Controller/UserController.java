@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import model.User;
-import webserver.HttpRequest;
+import webserver.httpRequest.HttpRequest;
 
 public class UserController {
 
