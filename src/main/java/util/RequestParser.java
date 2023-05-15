@@ -7,18 +7,25 @@ import java.util.Map;
 
 public class RequestParser {
 
-    public static void parseStartLine (String startLine, Map<String, String> container) {
+    public static Map<String, String> parseStartLine (String startLine) {
+        Map<String, String> container = new HashMap<>();
         String[] splitLine = startLine.split(" ");
 
         container.put("Method", splitLine[0]);
         container.put("URL", splitLine[1]);
         container.put("Protocol", splitLine[2]);
+        return container;
     }
 
-    public static void parseHeader (String header, Map<String, String> container) {
-        String[] splitLine = header.split(": ");
+    public static Map<String, String> parseHeader (String header) {
+        Map<String, String> container = new HashMap<>();
+        String[] splitLine = header.split(":");
 
+        for (String line : splitLine) {
+            line = line.trim();
+        }
         container.put(splitLine[0], splitLine[1]);
+        return container;
     }
 
     public static Map<String, String> parseURL(String URL) throws UnsupportedEncodingException {
