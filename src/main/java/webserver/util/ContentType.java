@@ -2,17 +2,24 @@ package webserver.util;
 
 import java.util.Arrays;
 
-public enum ContentType {
+import static webserver.util.ContentType.Url.BASE_URL;
 
-    HTML("src/main/resources/templates", "text/html;charset=utf-8", ".html"),
-    CSS("src/main/resources/static", "text/css", ".css"),
-    JS("src/main/resources/static", "application/javascript", ".js"),
-    FONTS("src/main/resources/static", "application/octet-stream", ".woff"),
-    ICO("src/main/resources/static", "image/avi", ".ico"),
-    PNG("src/main/resources/static", "image/png", ".png");
+
+public enum ContentType {
+    HTML(BASE_URL + "/templates", "text/html;charset=utf-8", ".html"),
+    CSS(BASE_URL + "/static", "text/css", ".css"),
+    JS(BASE_URL + "/static", "application/javascript", ".js"),
+    FONTS(BASE_URL + "/static", "application/octet-stream", ".woff"),
+    ICO(BASE_URL + "/static", "image/avi", ".ico"),
+    PNG(BASE_URL + "/static", "image/png", ".png");
+
+    static class Url {
+        public static final String BASE_URL = "src/main/resources";
+    }
 
     private final String path;
     private final String contentType;
+
     private final String fileExtension;
 
     ContentType(String path, String contentType, String fileExtension) {
