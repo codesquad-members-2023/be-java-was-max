@@ -49,8 +49,16 @@ public class RequestHandler implements Runnable {
 
             HttpResponseUtils.responseBody(dos, body, requestLine);
 
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
             log.error(e.getMessage());
+            // TODO: 500 에러 처리
+            /*
+            try {
+                DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            */
         }
     }
 }
