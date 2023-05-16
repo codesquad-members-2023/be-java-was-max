@@ -1,4 +1,4 @@
-package container.domain;
+package servlet.domain;
 
 import java.util.HashMap;
 import java.util.Map;

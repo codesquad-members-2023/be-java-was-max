@@ -1,8 +1,8 @@
-package container;
+package servlet;
 
 import annotation.RequestMapping;
-import container.domain.HttpRequest;
-import container.domain.MappingInfo;
+import servlet.domain.HttpRequest;
+import servlet.domain.MappingInfo;
 import controller.MainController;
 
 import java.io.IOException;

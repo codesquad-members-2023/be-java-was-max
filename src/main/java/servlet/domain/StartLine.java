@@ -1,4 +1,4 @@
-package container.domain;
+package servlet.domain;
 
 public class StartLine {
     private final HttpRequestMethod httpRequestMethod;

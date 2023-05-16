@@ -1,4 +1,4 @@
-package container.domain.request.target;
+package servlet.domain.request.target;
 
 public class Url {
     private final String url;

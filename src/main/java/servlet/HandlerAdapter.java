@@ -1,6 +1,6 @@
-package container;
+package servlet;
 
-import container.domain.MappingInfo;
+import servlet.domain.MappingInfo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

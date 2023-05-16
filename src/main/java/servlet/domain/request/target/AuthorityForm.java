@@ -1,4 +1,4 @@
-package container.domain.request.target;
+package servlet.domain.request.target;
 
 // The authority component of a URL, consisting of the domain name and optionally the port (prefixed by a ':'),
 // is called the authority form. It is only used with CONNECT when setting up an HTTP tunnel.

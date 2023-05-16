@@ -1,4 +1,4 @@
-package container.domain;
+package servlet.domain;
 
 public class Header {
     private final String name;

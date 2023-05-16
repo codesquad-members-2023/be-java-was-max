@@ -1,4 +1,4 @@
-package container.domain;
+package servlet.domain;
 
 import java.lang.reflect.Method;
 import java.util.Map;

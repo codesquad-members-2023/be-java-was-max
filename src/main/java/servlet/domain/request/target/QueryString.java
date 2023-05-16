@@ -1,4 +1,4 @@
-package container.domain.request.target;
+package servlet.domain.request.target;
 
 import java.util.Map;
 

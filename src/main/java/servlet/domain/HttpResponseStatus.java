@@ -1,4 +1,4 @@
-package container.domain;
+package servlet.domain;
 
 // Spring HttpStatus 참조
 public enum HttpResponseStatus {

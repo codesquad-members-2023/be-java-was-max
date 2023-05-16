@@ -1,6 +1,6 @@
-package container;
+package servlet;
 
-import container.domain.HttpResponse;
+import servlet.domain.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

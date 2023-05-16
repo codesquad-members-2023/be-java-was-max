@@ -1,4 +1,4 @@
-package container.domain.request.target;
+package servlet.domain.request.target;
 
 // A complete URL, known as the absolute form, is mostly used with GET when connected to a proxy.
 // GET https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages HTTP/1.1

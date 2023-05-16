@@ -1,4 +1,4 @@
-package container.domain.request.target;
+package servlet.domain.request.target;
 
 
 // The asterisk form, a simple asterisk ('*') is used with OPTIONS, representing the server as a whole.

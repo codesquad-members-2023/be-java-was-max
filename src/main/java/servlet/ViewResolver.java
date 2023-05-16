@@ -1,7 +1,7 @@
-package container;
+package servlet;
 
-import container.domain.HttpResponseStatus;
-import container.domain.HttpResponse;
+import servlet.domain.HttpResponseStatus;
+import servlet.domain.HttpResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,9 +1,9 @@
-package container;
+package servlet;
 
-import container.domain.HttpResponseStatus;
-import container.domain.HttpRequest;
-import container.domain.HttpResponse;
-import container.domain.MappingInfo;
+import servlet.domain.HttpResponseStatus;
+import servlet.domain.HttpRequest;
+import servlet.domain.HttpResponse;
+import servlet.domain.MappingInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;

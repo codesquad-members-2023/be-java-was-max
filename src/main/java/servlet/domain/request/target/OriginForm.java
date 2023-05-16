@@ -1,4 +1,4 @@
-package container.domain.request.target;
+package servlet.domain.request.target;
 
 // An absolute path, ultimately followed by a '?' and query string.
 // This is the most common form, known as the origin form, and is used with GET, POST, HEAD, and OPTIONS methods.

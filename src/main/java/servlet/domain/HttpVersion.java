@@ -1,4 +1,4 @@
-package container.domain;
+package servlet.domain;
 
 public enum HttpVersion {
     HTTP_1_0("HTTP/1.0"),
