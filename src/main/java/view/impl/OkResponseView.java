@@ -16,8 +16,8 @@ public class OkResponseView extends View {
 	}
 
 	@Override
-	public byte[] render(String view) {
-		String type = extractFileExtensionFromView(view);
+	public byte[] render(String viewName) {
+		String type = extractFileExtensionFromView(viewName);
 
 		String viewPath = viewResolver(type);
 		try {

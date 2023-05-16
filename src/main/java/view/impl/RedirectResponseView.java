@@ -10,7 +10,7 @@ public class RedirectResponseView extends View {
 	}
 
 	@Override
-	public byte[] render(String view) {
+	public byte[] render(String viewName) {
 		return new byte[0];
 	}
 }

@@ -4,20 +4,25 @@ import webserver.response.header.HttpResponseHeader;
 
 public class RedirectHeader implements HttpResponseHeader {
 
-	private String actualView;
+	private String redirectLocation;
 	private String header;
 
-	public RedirectHeader(String view) {
-		this.actualView = parseViewPath(view);
+	public RedirectHeader(String viewName) {
+		this.redirectLocation = extractSubstringAfterColon(viewName);
 		createRedirectHeader();
 	}
 
-	private String parseViewPath(String view) {
+	/**
+	 * redirect 할 location을 추출한다.
+	 * @param view
+	 * @return
+	 */
+	private String extractSubstringAfterColon(String view) {
 		return view.substring(view.indexOf(":") + 1);
 	}
 
 	private void createRedirectHeader() {
-		header = "Location: " + actualView + "\r\n";
+		header = "Location: " + redirectLocation + "\r\n";
 	}
 
 	@Override

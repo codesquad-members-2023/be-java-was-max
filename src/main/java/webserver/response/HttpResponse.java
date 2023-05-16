@@ -14,13 +14,13 @@ public class HttpResponse {
 	private final HttpResponseBody httpResponseBody;
 	private static final String REDIRECT = "redirect";
 
-	public HttpResponse(String view, byte[] body) {
-		if (view.contains(REDIRECT)) {
+	public HttpResponse(String viewName, byte[] body) {
+		if (viewName.contains(REDIRECT)) {
 			httpResponseStatusLine = new RedirectStatusLine();
-			httpResponseHeader = new RedirectHeader(view);
+			httpResponseHeader = new RedirectHeader(viewName);
 		} else {
 			httpResponseStatusLine = new OkStatusLine();
-			httpResponseHeader = new OkHeader(view, body.length);
+			httpResponseHeader = new OkHeader(viewName, body.length);
 		}
 		httpResponseBody = new HttpResponseBody(body);
 	}
@@ -28,7 +28,7 @@ public class HttpResponse {
 	public String getStatusLine() {
 		return httpResponseStatusLine.toString();
 	}
-	
+
 	public String getHeader() {
 		return httpResponseHeader.toString();
 	}

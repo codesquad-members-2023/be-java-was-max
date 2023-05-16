@@ -35,10 +35,15 @@ public class HttpRequest {
 		return httpRequestLine.getURL();
 	}
 
-	public Map<String, String> getQueryParams() {
+	/**
+	 * GET 요청일때는 쿼리파라미터를 가져오며
+	 * POST 요청일때는 form-data 를 가져온다.
+	 * @return
+	 */
+	public Map<String, String> getParameters() {
 		return GET.equals(httpRequestLine.getMethod())
 			? httpRequestLine.getQueryParams()
-			: httpRequestBody.getQueryParams();
+			: httpRequestBody.getFormData();
 	}
 
 	public int getContentLength() {

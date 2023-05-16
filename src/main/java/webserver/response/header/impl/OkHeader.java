@@ -11,8 +11,8 @@ public class OkHeader implements HttpResponseHeader {
 	private int contentLength;
 	private String header;
 
-	public OkHeader(String view, int contentLength) {
-		this.contentType = ContentType.getByExtension(extractFileExtensionFromView(view));
+	public OkHeader(String viewName, int contentLength) {
+		this.contentType = ContentType.getByExtension(extractFileExtensionFromView(viewName));
 		this.contentLength = contentLength;
 		createResponse200Header();
 	}

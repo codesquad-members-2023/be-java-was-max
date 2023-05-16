@@ -22,6 +22,10 @@ public class HttpRequestHeader {
 		}
 	}
 
+	/**
+	 * contentLength를 header에서 가져오는 작업을 하는 메서드이다.
+	 * @param headerLine
+	 */
 	private void extractContentLength(String headerLine) {
 		if (headerLine.startsWith(CONTENT_LENGTH)) {
 			contentLength = Integer.parseInt(headerLine.substring(CONTENT_LENGTH_PREFIX_LENGTH));

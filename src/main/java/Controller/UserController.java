@@ -14,7 +14,7 @@ public class UserController {
 
 	public String requestMapper(HttpRequest httpRequest) {
 		if (httpRequest.getURL().contains("create")) {
-			return save(httpRequest.getQueryParams());
+			return save(httpRequest.getParameters());
 		}
 		return httpRequest.getURL();
 	}

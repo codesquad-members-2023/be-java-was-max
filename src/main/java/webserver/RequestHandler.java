@@ -59,7 +59,7 @@ public class RequestHandler implements Runnable {
 		logger.debug("start ------------------------------------------");
 		logger.debug("httpRequest Method : {}", httpRequest.getMethod());
 		logger.debug("httpRequest URL : {}", httpRequest.getURL());
-		logger.debug("httpRequest QueryParams: {}", httpRequest.getQueryParams());
+		logger.debug("httpRequest QueryParams: {}", httpRequest.getParameters());
 		logger.debug("httpRequest getContentLength : {}", httpRequest.getContentLength());
 		logger.debug("httpRequest body : {}", httpRequest.getBody());
 		logger.debug("end ------------------------------------------");

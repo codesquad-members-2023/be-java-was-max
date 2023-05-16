@@ -18,6 +18,11 @@ public abstract class View {
 		this.viewName = viewName;
 	}
 
+	/**
+	 * viewName 을가지고 해당 view의 경로를 찾는 메서드 이다.
+	 * @param type
+	 * @return
+	 */
 	protected String viewResolver(String type) {
 		if (viewName.equals("/")) {
 			return BASE_PATH + WELCOME_PAGE;
@@ -26,7 +31,12 @@ public abstract class View {
 		return BASE_PATH + folder + viewName;
 	}
 
-	protected abstract byte[] render(String view);
+	/**
+	 * viewResolver에서 찾은 경로를 통해 해당 파일을 읽어온다.
+	 * @param viewName
+	 * @return
+	 */
+	protected abstract byte[] render(String viewName);
 
 	public byte[] getBody() {
 		return body;
