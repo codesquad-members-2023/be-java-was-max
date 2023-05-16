@@ -1,38 +1,36 @@
 package webserver.request;
 
+import static utils.HttpRequestUtils.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpRequestHeader {
 
-	private int contentLength;
-
 	private static final String CONTENT_LENGTH = "Content-Length";
-
-	private static final int CONTENT_LENGTH_PREFIX_LENGTH = 16;
+	private Map<String, String> headerParams;
 
 	public HttpRequestHeader(BufferedReader header) throws IOException {
+		this.headerParams = new HashMap<>();
 		parseHeader(header);
 	}
 
 	private void parseHeader(BufferedReader br) throws IOException {
+		StringBuilder sb = new StringBuilder();
 		String headerLine;
 		while (!(headerLine = br.readLine()).equals("")) {
-			extractContentLength(headerLine);
+			sb.append(headerLine);
+			sb.append("\n");
 		}
-	}
-
-	/**
-	 * contentLength를 header에서 가져오는 작업을 하는 메서드이다.
-	 * @param headerLine
-	 */
-	private void extractContentLength(String headerLine) {
-		if (headerLine.startsWith(CONTENT_LENGTH)) {
-			contentLength = Integer.parseInt(headerLine.substring(CONTENT_LENGTH_PREFIX_LENGTH));
-		}
+		headerParams = parseHeaderParams(sb.toString());
 	}
 
 	public int getContentLength() {
-		return contentLength;
+		if (headerParams.get(CONTENT_LENGTH) == null) {
+			return 0;
+		}
+		return Integer.parseInt(headerParams.get(CONTENT_LENGTH));
 	}
 }
