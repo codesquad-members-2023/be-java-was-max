@@ -1,8 +1,8 @@
-package webserver.util;
+package model;
 
 import java.util.Arrays;
 
-import static webserver.util.ContentType.Url.BASE_URL;
+import static model.ContentType.Url.BASE_URL;
 
 
 public enum ContentType {

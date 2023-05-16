@@ -1,5 +1,6 @@
 package webserver.util;
 
+import model.ContentType;
 import model.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

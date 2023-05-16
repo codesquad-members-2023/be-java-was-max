@@ -1,7 +1,5 @@
 package model;
 
-import webserver.util.ContentType;
-
 import java.util.Map;
 
 public class RequestLine {
