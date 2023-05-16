@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import Controller.UserController;
+import view.View;
+import view.impl.OkResponseView;
+import view.impl.RedirectResponseView;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -33,7 +36,7 @@ public class RequestHandler implements Runnable {
 			logHttpRequestInfo(httpRequest);
 
 			String view = userController.requestMapper(httpRequest);
-			View myView = new View(view);
+			View myView = initView(view);
 
 			HttpResponse httpResponse = new HttpResponse(view, myView.getBody());
 
@@ -52,6 +55,13 @@ public class RequestHandler implements Runnable {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public View initView(String view) {
+		if (view.startsWith("redirect")) {
+			return new RedirectResponseView(view);
+		}
+		return new OkResponseView(view);
 	}
 
 	private void logHttpRequestInfo(HttpRequest httpRequest) {
