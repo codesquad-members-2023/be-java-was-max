@@ -2,7 +2,7 @@ package view;
 
 import http.response.ContentType;
 import http.response.HttpResponse;
-import http.response.ResponseLine;
+import http.response.StatusLine;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,12 +25,12 @@ public class ViewResolver {
 	}
 
 	private void redirect(final String viewName, final HttpResponse httpResponse) {
-		httpResponse.setResponseLine(new ResponseLine("HTTP/1.1", 302, "FOUND"));
+		httpResponse.setResponseLine(new StatusLine("HTTP/1.1", 302, "FOUND"));
 		httpResponse.setContentType(ContentType.findContentType(viewName.replace(REDIRECT_VIEW, "")));
 	}
 
 	private void forward(final String viewName, final HttpResponse httpResponse) throws IOException {
-		httpResponse.setResponseLine(new ResponseLine("HTTP/1.1", 200, "OK"));
+		httpResponse.setResponseLine(new StatusLine("HTTP/1.1", 200, "OK"));
 		httpResponse.setContentType(ContentType.findContentType(viewName));
 
 		if (isDynamicRequest(viewName)) {
