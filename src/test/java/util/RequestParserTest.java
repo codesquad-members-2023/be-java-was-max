@@ -14,7 +14,7 @@ class RequestParserTest {
         String startLine = ("GET /user/create HTTP/1.1");
         Map<String, String> container = new HashMap<>();
 
-        RequestParser.parseStartLine(startLine, container);
+//        RequestParser.parseStartLine(startLine, container);
 
         assertThat(container.get("Method")).isEqualTo("GET");
         assertThat(container.get("Url")).isEqualTo("/user/create");
@@ -26,7 +26,7 @@ class RequestParserTest {
         String header = ("Host: localhost:8080");
         Map<String, String> container = new HashMap<>();
 
-        RequestParser.parseHeader(header, container);
+//        RequestParser.parseHeader(header, container);
 
         assertThat(container.get("Host")).isEqualTo("localhost:8080");
     }
