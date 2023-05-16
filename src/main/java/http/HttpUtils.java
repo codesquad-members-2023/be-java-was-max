@@ -12,9 +12,12 @@ public final class HttpUtils {
 	}
 
 	public static Map<String, List<String>> parseHeader(final String headerLine) {
-		String[] tokens = headerLine.split(": ");
+		String[] tokens = Arrays.stream(headerLine.split(":"))
+				.map(String::trim)
+				.toArray(String[]::new);
 		String name = tokens[0];
-		List<String> values = Arrays.stream(tokens[1].split(", "))
+		List<String> values = Arrays.stream(tokens[1].split(","))
+				.map(String::trim)
 				.collect(Collectors.toUnmodifiableList());
 
 		return Map.of(name, values);
