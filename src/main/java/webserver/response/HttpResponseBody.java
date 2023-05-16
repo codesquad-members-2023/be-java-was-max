@@ -8,8 +8,7 @@ public class HttpResponseBody {
 		this.body = body;
 	}
 
-	@Override
-	public String toString() {
-		return new String(body);
+	public byte[] getBody() {
+		return body;
 	}
 }

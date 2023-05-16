@@ -25,8 +25,15 @@ public class HttpResponse {
 		httpResponseBody = new HttpResponseBody(body);
 	}
 
-	@Override
-	public String toString() {
-		return httpResponseStatusLine.toString() + httpResponseHeader + httpResponseBody;
+	public String getStatusLine() {
+		return httpResponseStatusLine.toString();
+	}
+	
+	public String getHeader() {
+		return httpResponseHeader.toString();
+	}
+
+	public byte[] getBody() {
+		return httpResponseBody.getBody();
 	}
 }
