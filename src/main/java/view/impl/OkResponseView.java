@@ -19,7 +19,7 @@ public class OkResponseView extends View {
 	public byte[] render(String view) {
 		String type = extractFileExtensionFromView(view);
 
-		String viewPath = resolveViewPath(type);
+		String viewPath = viewResolver(type);
 		try {
 			return Files.readAllBytes(new File(viewPath).toPath());
 		} catch (IOException e) {

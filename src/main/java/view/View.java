@@ -6,9 +6,9 @@ public abstract class View {
 
 	private static final String BASE_PATH = "src/main/resources";
 	private static final String WELCOME_PAGE = "/templates/index.html";
-	private static Map<String, String> folderMappingMap;
+	private final Map<String, String> folderMappingMap;
+	private final String viewName;
 	private byte[] body;
-	private String viewName;
 
 	public View(String viewName) {
 		folderMappingMap = Map.of(
@@ -18,7 +18,7 @@ public abstract class View {
 		this.viewName = viewName;
 	}
 
-	protected String resolveViewPath(String type) {
+	protected String viewResolver(String type) {
 		if (viewName.equals("/")) {
 			return BASE_PATH + WELCOME_PAGE;
 		}
