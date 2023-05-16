@@ -4,8 +4,8 @@ import cafe.app.user.repository.MemoryUserRepository;
 import cafe.app.user.service.UserService;
 import cafe.app.user.validator.UserValidator;
 import http.common.HttpMethod;
-import http.request.HttpServletRequest;
-import http.response.HttpServletResponse;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -20,11 +20,16 @@ public class Servlet {
         this.method.setAccessible(true);
     }
 
-    public String invoke(HttpServletRequest request, HttpServletResponse response)
+    public String invoke(HttpRequest request, HttpResponse response)
         throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
-        Object instance = method.getDeclaringClass().getDeclaredConstructor(UserService.class)
+        Object instance = method.getDeclaringClass()
+            .getDeclaredConstructor(UserService.class)
             .newInstance(new UserService(new MemoryUserRepository(), new UserValidator()));
         return (String) method.invoke(instance, request, response);
+    }
+
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
     }
 
     @Override

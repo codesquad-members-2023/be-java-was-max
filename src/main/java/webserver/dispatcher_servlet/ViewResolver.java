@@ -1,6 +1,6 @@
 package webserver.dispatcher_servlet;
 
-import http.response.HttpServletResponse;
+import http.response.HttpResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -21,7 +21,7 @@ public class ViewResolver {
         return prefix + viewName + suffix;
     }
 
-    public void render(String viewPath, final HttpServletResponse response) {
+    public void render(String viewPath, final HttpResponse response) {
         StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
         Optional<File> optionalFile = FileUtils.getFile(viewPath);
         optionalFile.ifPresent(file -> {

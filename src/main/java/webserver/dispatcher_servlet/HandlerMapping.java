@@ -1,8 +1,8 @@
 package webserver.dispatcher_servlet;
 
-import http.request.HttpServletRequest;
+import http.request.HttpRequest;
 
 public interface HandlerMapping {
 
-    Servlet getHandler(HttpServletRequest request);
+    Servlet getHandler(HttpRequest request);
 }

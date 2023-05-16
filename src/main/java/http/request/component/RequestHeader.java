@@ -5,24 +5,30 @@ import java.util.stream.Collectors;
 
 public class RequestHeader {
 
-    private final Map<String, Object> header;
+    private final Map<String, String> header;
 
-    public RequestHeader(Map<String, Object> header) {
+    public RequestHeader(Map<String, String> header) {
         this.header = header;
     }
 
-    public Object getHeader(String key) {
+    public String getHeader(String key) {
         return header.get(key);
     }
 
-    public void addHeader(String key, Object value) {
+    public boolean containsKey(String key) {
+        return header.containsKey(key);
+    }
+
+    public void addHeader(String key, String value) {
         header.put(key, value);
     }
 
     @Override
     public String toString() {
-        return header.keySet().stream()
+        return header.keySet()
+            .stream()
             .map(key -> String.format("%s: %s", key, header.get(key)))
-            .collect(Collectors.joining("\r\n")).trim();
+            .collect(Collectors.joining("\r\n"))
+            .trim();
     }
 }

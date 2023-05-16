@@ -1,7 +1,7 @@
-package http.response;
+package http.response.component;
 
 import http.common.HttpStatus;
-import http.common.ProtocolVersion;
+import http.common.version.ProtocolVersion;
 
 public class StatusLine {
 

@@ -1,7 +1,7 @@
 package http.request.component;
 
 import http.common.HttpMethod;
-import http.common.ProtocolVersion;
+import http.common.version.ProtocolVersion;
 
 public class RequestLine {
 

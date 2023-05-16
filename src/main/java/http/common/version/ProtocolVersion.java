@@ -1,4 +1,4 @@
-package http.common;
+package http.common.version;
 
 import java.util.Objects;
 

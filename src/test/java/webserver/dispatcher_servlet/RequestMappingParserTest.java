@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class RequestMappingParserTest {
 
     @Test
-    @DisplayName("특정 패키지의 RequestMapping 가지고 있는 컨트롤러를 탐색한다")
+    @DisplayName("특정 패키지의 RequestMapping 애노테이션을 가지고 있는 컨트롤러 클래스를 탐색한다")
     public void scanRequestMapping() throws IOException {
         // given
         String packageName = "cafe.app.user.controller";

@@ -2,9 +2,9 @@ package webserver.handler;
 
 import static util.FileUtils.getFile;
 
-import http.request.HttpRequestFactory;
-import http.request.HttpServletRequest;
-import http.response.HttpServletResponse;
+import http.request.HttpRequest;
+import http.request.parser.HttpRequestParser;
+import http.response.HttpResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -35,8 +35,8 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             DataOutputStream dos = new DataOutputStream(out);
-            HttpServletRequest request = HttpRequestFactory.create(br);
-            HttpServletResponse response = new HttpServletResponse();
+            HttpRequest request = HttpRequestParser.parse(br);
+            HttpResponse response = new HttpResponse();
             StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
 
             Optional<File> optionalStaticResource = getFile(request.getPath());
@@ -67,17 +67,17 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private void response200Header(DataOutputStream dos, HttpServletResponse httpServletResponse) {
+    private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.writeBytes(httpServletResponse.toString());
+            dos.writeBytes(httpResponse.toString());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void responseBody(DataOutputStream dos, HttpServletResponse httpServletResponse) {
+    private void responseBody(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            byte[] messageBody = httpServletResponse.getMessageBody();
+            byte[] messageBody = httpResponse.getMessageBody();
             dos.write(messageBody, 0, messageBody.length);
             dos.flush();
         } catch (IOException e) {

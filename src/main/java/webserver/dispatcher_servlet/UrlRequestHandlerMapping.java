@@ -1,6 +1,6 @@
 package webserver.dispatcher_servlet;
 
-import http.request.HttpServletRequest;
+import http.request.HttpRequest;
 import java.util.Map;
 
 public class UrlRequestHandlerMapping implements HandlerMapping {
@@ -12,9 +12,12 @@ public class UrlRequestHandlerMapping implements HandlerMapping {
     }
 
     @Override
-    public Servlet getHandler(HttpServletRequest request) {
+    public Servlet getHandler(HttpRequest request) {
         for (String key : mappingMap.keySet()) {
-            if (request.getPath().equals(key)) {
+            Servlet servlet = mappingMap.get(key);
+            if (request.getPath()
+                .equals(key) && servlet.getHttpMethod()
+                .equals(request.getHttpMethod())) {
                 return mappingMap.get(key);
             }
         }
