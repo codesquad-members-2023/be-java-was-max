@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class DispatcherServlet {
 
-	private static final ViewResolver VIEW_RESOLVER = new ViewResolver();
+	private static final ViewResolver viewResolver = new ViewResolver();
 
 	public void dispatch(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
 		String path = httpRequest.getUri().getPath();
@@ -21,6 +21,6 @@ public class DispatcherServlet {
 			viewName = new UserJoinServlet().join(httpRequest, httpResponse);
 		}
 
-		VIEW_RESOLVER.resolve(viewName, httpResponse);
+		viewResolver.resolve(viewName, httpResponse);
 	}
 }
