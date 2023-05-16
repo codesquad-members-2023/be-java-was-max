@@ -1,20 +1,24 @@
 package http.request;
 
 import http.common.HttpMethod;
-import http.common.ProtocolVersion;
+import http.common.version.ProtocolVersion;
 import http.request.component.RequestHeader;
 import http.request.component.RequestLine;
+import http.request.component.RequestMessageBody;
 import http.request.component.RequestParameter;
 import http.request.component.RequestURI;
 
-public class HttpServletRequest {
+public class HttpRequest {
 
     private final RequestLine requestLine;
     private final RequestHeader requestHeader;
+    private final RequestMessageBody messageBody;
 
-    public HttpServletRequest(RequestLine requestLine, RequestHeader requestHeader) {
+    public HttpRequest(RequestLine requestLine, RequestHeader requestHeader,
+        RequestMessageBody messageBody) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
+        this.messageBody = messageBody;
     }
 
     public HttpMethod getHttpMethod() {
@@ -41,12 +45,13 @@ public class HttpServletRequest {
         return requestHeader.getHeader(key);
     }
 
-    public void addHeader(String key, Object value) {
-        requestHeader.addHeader(key, value);
+    public RequestMessageBody getMessageBody() {
+        return messageBody;
     }
 
     @Override
     public String toString() {
-        return String.format("%s\r\n%s", requestLine, requestHeader);
+        return String.join("\r\n", requestLine.toString(), requestHeader.toString(),
+            messageBody.toString());
     }
 }
