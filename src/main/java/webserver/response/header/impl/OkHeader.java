@@ -5,13 +5,13 @@ import static utils.HttpResponseUtils.*;
 import utils.ContentType;
 import webserver.response.header.HttpResponseHeader;
 
-public class Response200Header implements HttpResponseHeader {
+public class OkHeader implements HttpResponseHeader {
 
 	private String contentType;
 	private int contentLength;
 	private String header;
 
-	public Response200Header(String view, int contentLength) {
+	public OkHeader(String view, int contentLength) {
 		this.contentType = ContentType.getByExtension(extractFileExtensionFromView(view));
 		this.contentLength = contentLength;
 		createResponse200Header();
