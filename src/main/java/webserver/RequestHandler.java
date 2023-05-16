@@ -9,21 +9,19 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Controller.UserController;
+import servlet.DispatcherServlet;
 import view.View;
-import view.impl.OkResponseView;
-import view.impl.RedirectResponseView;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-	private final UserController userController;
+	private final DispatcherServlet dispatcherServlet;
 	private final Socket connection;
 
 	public RequestHandler(Socket connectionSocket) {
 		this.connection = connectionSocket;
-		this.userController = new UserController();
+		this.dispatcherServlet = new DispatcherServlet();
 	}
 
 	public void run() {
@@ -35,33 +33,24 @@ public class RequestHandler implements Runnable {
 
 			logHttpRequestInfo(httpRequest);
 
-			String view = userController.requestMapper(httpRequest);
-			View myView = initView(view);
+			View myView = dispatcherServlet.doDispatch(httpRequest);
 
-			HttpResponse httpResponse = new HttpResponse(view, myView.getBody());
+			HttpResponse httpResponse = new HttpResponse(myView.getViewName(), myView.getBody());
 
-			DataOutputStream dos = new DataOutputStream(out);
-			sendHttpResponse(dos, httpResponse);
-
+			sendHttpResponse(out, httpResponse);
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
 	}
 
-	public void sendHttpResponse(DataOutputStream dos, HttpResponse httpResponse) {
+	public void sendHttpResponse(OutputStream out, HttpResponse httpResponse) {
+		DataOutputStream dos = new DataOutputStream(out);
 		try {
 			dos.write(httpResponse.toString().getBytes());
 			dos.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public View initView(String view) {
-		if (view.startsWith("redirect")) {
-			return new RedirectResponseView(view);
-		}
-		return new OkResponseView(view);
 	}
 
 	private void logHttpRequestInfo(HttpRequest httpRequest) {

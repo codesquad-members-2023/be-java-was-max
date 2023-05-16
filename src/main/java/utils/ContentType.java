@@ -11,6 +11,7 @@ public enum ContentType {
 	PNG("image/png", "png"),
 	JPG("image/jpeg", "jpg"),
 	WOFF("application/octet-stream", "woff"),
+	WOFF2("application/octet-stream", "woff2"),
 	TTF("application/octet-stream", "ttf");
 
 	private final String value;

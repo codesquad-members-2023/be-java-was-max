@@ -4,8 +4,9 @@ import view.View;
 
 public class RedirectResponseView extends View {
 
-	public RedirectResponseView(String view) {
-		setBody(render(view));
+	public RedirectResponseView(String viewName) {
+		super(viewName);
+		setBody(render(viewName));
 	}
 
 	@Override

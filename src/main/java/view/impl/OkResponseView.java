@@ -10,15 +10,16 @@ import view.View;
 
 public class OkResponseView extends View {
 
-	public OkResponseView(String view) {
-		setBody(render(view));
+	public OkResponseView(String viewName) {
+		super(viewName);
+		setBody(render(viewName));
 	}
 
 	@Override
 	public byte[] render(String view) {
 		String type = extractFileExtensionFromView(view);
 
-		String viewPath = resolveViewPath(view, type);
+		String viewPath = resolveViewPath(type);
 		try {
 			return Files.readAllBytes(new File(viewPath).toPath());
 		} catch (IOException e) {
