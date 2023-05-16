@@ -18,7 +18,7 @@ public class OkHeader implements HttpResponseHeader {
 	}
 
 	private void createResponse200Header() {
-		header = "Content-Type: " + contentType + (contentType.contains("text") ? ";charset=utf-8" : "") + "\r\n" +
+		header = "Content-Type: " + contentType + "\r\n" +
 			"Content-Length: " + contentLength + "\r\n" +
 			"\r\n";
 	}

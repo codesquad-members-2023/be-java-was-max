@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public enum ContentType {
 
-	HTML("text/html", "html"),
-	CSS("text/css", "css"),
+	HTML("text/html;charset=utf-8", "html"),
+	CSS("text/css;charset=utf-8", "css"),
 	JAVASCRIPT("application/javascript", "js"),
 	ICO("image/x-icon", "ico"),
 	PNG("image/png", "png"),
