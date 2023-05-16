@@ -1,5 +1,7 @@
 package webserver.response.header.impl;
 
+import static utils.HttpResponseUtils.*;
+
 import utils.ContentType;
 import webserver.response.header.HttpResponseHeader;
 
@@ -13,10 +15,6 @@ public class Response200Header implements HttpResponseHeader {
 		this.contentType = ContentType.getByExtension(extractFileExtensionFromView(view));
 		this.contentLength = contentLength;
 		createResponse200Header();
-	}
-
-	private String extractFileExtensionFromView(String view) {
-		return view.substring(view.lastIndexOf(".") + 1);
 	}
 
 	private void createResponse200Header() {

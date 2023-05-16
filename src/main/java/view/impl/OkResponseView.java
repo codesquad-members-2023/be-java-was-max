@@ -1,5 +1,7 @@
 package view.impl;
 
+import static utils.HttpResponseUtils.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

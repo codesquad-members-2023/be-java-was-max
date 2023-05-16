@@ -16,10 +16,6 @@ public abstract class View {
 		);
 	}
 
-	protected String extractFileExtensionFromView(String view) {
-		return view.substring(view.lastIndexOf(".") + 1);
-	}
-
 	protected String resolveViewPath(String view, String type) {
 		if (view.equals("/")) {
 			return BASE_PATH + WELCOME_PAGE;

@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 public class HttpRequestUtils {
 
+	private HttpRequestUtils() {
+	}
+
 	public static Map<String, String> parseQueryString(String queryString) {
 		if (queryString.equals("")) {
 			return new HashMap<>();
