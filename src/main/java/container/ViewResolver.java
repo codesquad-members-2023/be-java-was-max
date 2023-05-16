@@ -1,6 +1,6 @@
 package container;
 
-import container.domain.HttpMethod;
+import container.domain.HttpResponseStatus;
 import container.domain.HttpResponse;
 
 import java.io.IOException;
@@ -24,6 +24,6 @@ public class ViewResolver {
         } else {
             body = result.getBytes();
         }
-        return new HttpResponse(HttpMethod.OK, body);
+        return new HttpResponse(HttpResponseStatus.OK, body);
     }
 }

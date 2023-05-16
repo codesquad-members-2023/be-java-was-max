@@ -1,6 +1,6 @@
 package container;
 
-import container.domain.HttpMethod;
+import container.domain.HttpResponseStatus;
 import container.domain.HttpRequest;
 import container.domain.HttpResponse;
 import container.domain.MappingInfo;
@@ -36,7 +36,7 @@ public class RequestHandler implements Runnable {
             ResponseHandler.response(httpResponse, connection);
         } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage());
-            ResponseHandler.response(new HttpResponse(HttpMethod.NOT_FOUND, new byte[0]), connection);
+            ResponseHandler.response(new HttpResponse(HttpResponseStatus.NOT_FOUND, new byte[0]), connection);
         }
     }
 }
