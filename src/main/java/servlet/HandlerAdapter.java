@@ -22,11 +22,11 @@ public class HandlerAdapter {
             return mappingInfo.getUrl();
         }
 
-        Map<String, String> params = mappingInfo.getParams();
-        if (params.isEmpty()) {
-            return getResult((String) method.invoke(object));
-        } else {
+        if (mappingInfo.hasPrams()) {
+            Map<String, String> params = mappingInfo.getParams();
             return getResult((String) method.invoke(object, params.values().toArray(new Object[0])));
+        } else {
+            return getResult((String) method.invoke(object));
         }
     }
 

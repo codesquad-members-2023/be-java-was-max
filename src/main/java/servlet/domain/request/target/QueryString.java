@@ -9,7 +9,7 @@ public class QueryString {
     private static final String QUERY_KEY_VALUE_DELIMITER = "=";
     private final Map<String, String> queryParamMap;
 
-    public QueryString(Map<String, String> queryParamMap) {
+    private QueryString(Map<String, String> queryParamMap) {
         this.queryParamMap = queryParamMap;
     }
 
@@ -35,6 +35,10 @@ public class QueryString {
     }
 
     public Map<String, String> getQueryParamMap() {
-        return queryParamMap;
+        return queryParamMap == null ? new HashMap<>() : queryParamMap;
+    }
+
+    public boolean isSameCount(int parameterCount) {
+        return this.queryParamMap.size() == parameterCount;
     }
 }

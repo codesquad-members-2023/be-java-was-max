@@ -14,4 +14,8 @@ public class Path {
     public String getPath() {
         return path;
     }
+
+    public boolean isSame(String path) {
+        return this.path.equals(path);
+    }
 }

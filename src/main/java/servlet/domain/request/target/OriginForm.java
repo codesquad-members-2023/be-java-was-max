@@ -15,7 +15,7 @@ public class OriginForm {
     private final Path path;
     private QueryString queryString;
 
-    public OriginForm(Path path) {
+    private OriginForm(Path path) {
         this.path = path;
     }
 
@@ -40,15 +40,23 @@ public class OriginForm {
         return path;
     }
 
-    public QueryString getQueryString() {
-        return queryString;
-    }
-
     public String getUrl() {
         return path.getPath();
     }
 
     public Map<String, String> getParameters() {
         return queryString.getQueryParamMap();
+    }
+
+    public boolean isSamePath(String path) {
+        return this.path.isSame(path);
+    }
+
+    public boolean isSameParameterCount(int parameterCount) {
+        return queryString.isSameCount(parameterCount);
+    }
+
+    public boolean hasParameter() {
+        return queryString != null;
     }
 }

@@ -1,6 +1,7 @@
 package servlet.domain;
 
 import servlet.domain.request.target.OriginForm;
+import servlet.domain.request.target.Path;
 
 import java.util.Map;
 
@@ -28,23 +29,27 @@ public class StartLine {
         return new StartLine(httpMethodInfo, originForm, httpVersion);
     }
 
-    public HttpRequestMethod getHttpRequestMethod() {
-        return httpRequestMethod;
-    }
-
-    public OriginForm getOriginForm() {
-        return originForm;
-    }
-
-    public HttpVersion getHttpVersion() {
-        return httpVersion;
-    }
-
     public String getUrl() {
         return originForm.getUrl();
     }
 
     public Map<String, String> getParameters() {
         return originForm.getParameters();
+    }
+
+    public Path getPath() {
+        return originForm.getPath();
+    }
+
+    public boolean isSamePath(String path) {
+        return originForm.isSamePath(path);
+    }
+
+    public boolean isSameParameterCount(int parameterCount) {
+        return originForm.isSameParameterCount(parameterCount);
+    }
+
+    public boolean hasParameter() {
+        return originForm.hasParameter();
     }
 }
