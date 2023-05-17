@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RequestParser {
 
@@ -20,8 +23,10 @@ public class RequestParser {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             Map<String, String> requestLine = readNParseRequestLine(br);
             Map<String, String> header = readNParseHeader(br);
+            String body = readBody(br, header);
             request.addRequestLine(requestLine);
             request.addHeader(header);
+            request.setBody(body);
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage());
         } catch (IOException e) {
@@ -32,6 +37,7 @@ public class RequestParser {
 
     private Map<String, String> readNParseRequestLine(BufferedReader br) throws IOException {
         String requestLine = br.readLine().trim();
+        logger.debug("Request Line : {}", requestLine);
         Map<String,String> parsedRequestLine = parseStartLine(requestLine);
 
         return parsedRequestLine;
@@ -48,6 +54,16 @@ public class RequestParser {
         return parsedHeader;
     }
 
+    private String readBody(BufferedReader br, Map<String, String> header) throws IOException {
+        int input;
+        StringBuffer sb = new StringBuffer();
+
+        while ((input = br.read()) > 0) {
+            sb.append((char) input);
+        }
+        return sb.toString();
+    }
+
 
     public static Map<String, String> parseStartLine (String startLine) {
         Map<String, String> container = new HashMap<>();
@@ -62,11 +78,9 @@ public class RequestParser {
     public static Map<String, String> parseHeader (String header) {
         Map<String, String> container = new HashMap<>();
         String[] splitLine = header.split(":");
+        List<String> trimmed= Arrays.stream(splitLine).map(s -> s.trim()).collect(Collectors.toList());
 
-        for (String line : splitLine) {
-            line = line.trim();
-        }
-        container.put(splitLine[0], splitLine[1]);
+        container.put(trimmed.get(0), trimmed.get(1));
         return container;
     }
 
