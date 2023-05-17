@@ -5,16 +5,22 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
+    private final UserController userController;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
+        this.userController = new UserController();
     }
 
     public void run() {
@@ -46,8 +52,29 @@ public class RequestHandler implements Runnable {
              * Response 처리
              * */
             // Request Line에서 요청된 파일의 경로, 확장자, 컨텐트 타입을 추출한다
-            String URI = requestHeader[1];
-            String extension = URI.substring(URI.lastIndexOf(".") + 1);
+            String requestedURI = requestHeader[1];
+            String extension = requestedURI.substring(requestedURI.lastIndexOf(".") + 1);
+
+            if (requestedURI.contains("user/create")) {
+                logger.debug("회원가입 " + requestedURI);
+
+                try {
+                    URI uri = new URI(requestedURI);
+                    String query = uri.getQuery();
+
+                    Map<String, String> queryMap = parseQuery(query);
+                    String userId = queryMap.get("userId");
+                    String password = queryMap.get("password");
+                    String name = queryMap.get("name");
+                    String email = queryMap.get("email");
+
+                    userController.join(userId, password, name, email);
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+
             MediaType mediaType; // enum
             String path = "";
             String contentType = "";
@@ -56,7 +83,7 @@ public class RequestHandler implements Runnable {
                 if (type.getExtension().equals(extension)) {
                     mediaType = type;
                     contentType = mediaType.getContentType();
-                    path = mediaType.getPath() + URI;
+                    path = mediaType.getPath() + requestedURI;
                     break;
                 }
             }
@@ -89,11 +116,27 @@ public class RequestHandler implements Runnable {
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
             dos.write(body, 0, body.length);
-            // TODO toString()
-            logger.info(body.toString());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private static Map<String, String> parseQuery(String query) {
+        Map<String, String> queryMap = new HashMap<>();
+
+        if (query != null && !query.isEmpty()) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                String[] keyValue = param.split("=");
+                if (keyValue.length == 2) {
+                    String key = keyValue[0];
+                    String value = keyValue[1];
+                    queryMap.put(key, value);
+                }
+            }
+        }
+
+        return queryMap;
     }
 }
