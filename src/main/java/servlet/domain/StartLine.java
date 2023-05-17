@@ -2,6 +2,8 @@ package servlet.domain;
 
 import servlet.domain.request.target.OriginForm;
 
+import java.util.Map;
+
 public class StartLine {
     private static final String LINE_DELIMITER = " ";
     public static final int HTTP_METHOD_INDEX = 0;
@@ -36,5 +38,13 @@ public class StartLine {
 
     public HttpVersion getHttpVersion() {
         return httpVersion;
+    }
+
+    public String getUrl() {
+        return originForm.getUrl();
+    }
+
+    public Map<String, String> getParameters() {
+        return originForm.getParameters();
     }
 }

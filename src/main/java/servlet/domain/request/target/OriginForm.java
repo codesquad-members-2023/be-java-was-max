@@ -1,5 +1,7 @@
 package servlet.domain.request.target;
 
+import java.util.Map;
+
 // An absolute path, ultimately followed by a '?' and query string.
 // This is the most common form, known as the origin form, and is used with GET, POST, HEAD, and OPTIONS methods.
 // POST / HTTP/1.1
@@ -40,5 +42,13 @@ public class OriginForm {
 
     public QueryString getQueryString() {
         return queryString;
+    }
+
+    public String getUrl() {
+        return path.getPath();
+    }
+
+    public Map<String, String> getParameters() {
+        return queryString.getQueryParamMap();
     }
 }
