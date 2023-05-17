@@ -23,10 +23,10 @@ public class RequestParser {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             Map<String, String> requestLine = readNParseRequestLine(br);
             Map<String, String> header = readNParseHeader(br);
-            String body = readBody(br, header);
+//            String body = readBody(br, header);
             request.addRequestLine(requestLine);
             request.addHeader(header);
-            request.setBody(body);
+//            request.setBody(body);
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage());
         } catch (IOException e) {
@@ -92,6 +92,18 @@ public class RequestParser {
         for (String element : form) {
             String[] field = element.split("=");
             dto.put(field[0], URLDecoder.decode(field[1], "UTF-8"));
+        }
+        return dto;
+    }
+
+    public static Map<String, String> parseBody(String body) throws UnsupportedEncodingException {
+        Map<String, String> dto = new HashMap<>();
+        String decodedBody = URLDecoder.decode(body, "UTF-8");
+        String[] form = decodedBody.split("&");
+
+        for (String element : form) {
+            String[] field = element.split("=");
+            dto.put(field[0], field[1]);
         }
         return dto;
     }
