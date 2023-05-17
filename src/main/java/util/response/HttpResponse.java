@@ -2,7 +2,6 @@ package util.response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.request.HttpRequestUtil;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -15,20 +14,20 @@ public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
 
-    public void response(OutputStream out , String url) throws IOException {
+    public void response(OutputStream out, String url) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
-        String contentValue = url.substring(url.lastIndexOf(".")+1);
+        String contentValue = url.substring(url.lastIndexOf(".") + 1);
         String contentType = ContentType.equalsValue(contentValue);
         logger.debug("type : {} ", contentType);
         String path = "src/main/resources/templates";
-        if(!contentValue.equals("html")){
+        if (!contentValue.equals("html")) {
             path = "src/main/resources/static";
         }
-        if(url.split(":")[0].equals("redirect")) {
+        if (url.split(":")[0].equals("redirect")) {
             url = url.split(":")[1];
-            response302Header(dos,url);
+            response302Header(dos, url);
         } else {
-            byte[] body = Files.readAllBytes(new File(path+url).toPath());
+            byte[] body = Files.readAllBytes(new File(path + url).toPath());
             response200Header(dos, body.length, contentType);
             responseBody(dos, body);
         }
@@ -66,4 +65,3 @@ public class HttpResponse {
         }
     }
 }
-

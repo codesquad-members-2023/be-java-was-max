@@ -11,7 +11,7 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     public String mapper(HttpRequest httpRequest) {
-        Map<String,String> queryParam = httpRequest.getQueryParam();
+        Map<String,String> queryParam = httpRequest.getHeaders().getBodyParam();
         if(httpRequest.getUrl().contains("create")) {
             return signUp(queryParam);
         }

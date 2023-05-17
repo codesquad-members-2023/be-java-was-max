@@ -6,6 +6,7 @@ import java.net.Socket;
 import contorller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.request.HttpHeader;
 import util.request.HttpRequest;
 import util.response.HttpResponse;
 
@@ -24,14 +25,9 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            String line = bufferedReader.readLine();
-            logger.debug("request line : {} ", line);
-            HttpRequest request = new HttpRequest(line);
+            HttpHeader headers = new HttpHeader(bufferedReader);
+            HttpRequest request = new HttpRequest(headers);
             UserController userController = new UserController();
-            while (!line.equals("")) {
-                line = bufferedReader.readLine();
-                logger.debug("header : {} ", line);
-            }
             HttpResponse response = new HttpResponse();
             response.response(out,userController.mapper(request));
         } catch (IOException e) {
