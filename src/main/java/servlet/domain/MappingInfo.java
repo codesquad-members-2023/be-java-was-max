@@ -34,7 +34,7 @@ public class MappingInfo {
     }
 
     public static MappingInfo staticOf(Path path) {
-        return new MappingInfo(STATIC + path.getPath());
+        return new MappingInfo(STATIC + path.getValue());
     }
 
     public static MappingInfo of(Method method, HttpRequest httpRequest, MainController mainController) {

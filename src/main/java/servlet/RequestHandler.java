@@ -1,11 +1,11 @@
 package servlet;
 
-import servlet.domain.HttpResponseStatus;
-import servlet.domain.HttpRequest;
-import servlet.domain.HttpResponse;
-import servlet.domain.MappingInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.domain.HttpRequest;
+import servlet.domain.HttpResponse;
+import servlet.domain.HttpResponseStatus;
+import servlet.domain.MappingInfo;
 import util.HttpRequestMessageParser;
 
 import java.io.IOException;
@@ -25,8 +25,7 @@ public class RequestHandler implements Runnable {
 
     public void run() {
         InetAddress inetAddress = connection.getInetAddress();
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", inetAddress,
-                connection.getPort());
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", inetAddress, connection.getPort());
 
         try (InputStream in = connection.getInputStream()) {
             HttpRequest httpRequest = HttpRequestMessageParser.parsingHttpRequest(in);

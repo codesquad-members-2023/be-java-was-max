@@ -11,7 +11,8 @@ import java.util.Map;
 public class OriginForm {
     public static final int PATH_INDEX = 0;
     public static final int QUERY_STRING_INDEX = 1;
-    public static final String PATH_QUERYSTRING_DELIMITER = "\\?";
+    public static final String PATH_QUERYSTRING_SPIT_DELIMITER = "\\?";
+    public static final String PATH_QUERYSTRING_DELIMITER = "?";
     private final Path path;
     private QueryString queryString;
 
@@ -19,29 +20,29 @@ public class OriginForm {
         this.path = path;
     }
 
-    public OriginForm(Path path, QueryString queryString) {
+    private OriginForm(Path path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
     }
 
     public static OriginForm from(String requestTarget) {
         if (hasQuery(requestTarget)) {
-            String[] target = requestTarget.split(PATH_QUERYSTRING_DELIMITER);
+            String[] target = requestTarget.split(PATH_QUERYSTRING_SPIT_DELIMITER);
             return new OriginForm(Path.of(target[PATH_INDEX]), QueryString.of(target[QUERY_STRING_INDEX]));
         }
         return new OriginForm(Path.of(requestTarget));
     }
 
     private static boolean hasQuery(String url) {
-        return url.contains(PATH_QUERYSTRING_DELIMITER);
+        return url.contains(OriginForm.PATH_QUERYSTRING_DELIMITER);
     }
 
     public Path getPath() {
         return path;
     }
 
-    public String getUrl() {
-        return path.getPath();
+    public String getPathValue() {
+        return path.getValue();
     }
 
     public Map<String, String> getParameters() {
@@ -58,5 +59,9 @@ public class OriginForm {
 
     public boolean hasParameter() {
         return queryString != null;
+    }
+
+    public boolean containsParam(String key, String value) {
+        return queryString.contains(key, value);
     }
 }

@@ -41,4 +41,9 @@ public class QueryString {
     public boolean isSameCount(int parameterCount) {
         return this.queryParamMap.size() == parameterCount;
     }
+
+
+    public boolean contains(String key, String value) {
+        return queryParamMap.containsKey(key) && queryParamMap.get(key).equals(value);
+    }
 }

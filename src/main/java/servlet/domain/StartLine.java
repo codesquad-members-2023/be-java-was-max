@@ -30,7 +30,7 @@ public class StartLine {
     }
 
     public String getUrl() {
-        return originForm.getUrl();
+        return originForm.getPathValue();
     }
 
     public Map<String, String> getParameters() {
