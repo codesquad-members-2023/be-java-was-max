@@ -26,7 +26,7 @@ public class HttpRequestBody {
 		if (contentLength > 0) {
 			char[] buffer = new char[contentLength];
 			br.read(buffer, 0, contentLength);
-			body = new String(buffer);
+			body = String.valueOf(buffer);
 			body = decode(body);
 			this.formData = parseQueryString(body);
 		}
