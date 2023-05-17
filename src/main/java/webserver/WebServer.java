@@ -11,7 +11,7 @@ public class WebServer {
     private static final int DEFAULT_PORT = 8080; // 기본 포트 값 설정
 
     public static void main(String[] args) throws Exception {
-        int port = 0; // port 0으로 초기화
+        int port;
         if (args == null || args.length == 0) { // 인자가 없는 경우
             port = DEFAULT_PORT; // DEFAULT_PORT 상수 값을 port에 대입
         } else { // 인자가 하나 이상 있는 경우
