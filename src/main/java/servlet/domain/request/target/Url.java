@@ -1,13 +1,20 @@
 package servlet.domain.request.target;
 
 public class Url {
-    private final String url;
+    private final Path path;
 
-    public Url(String url) {
-        this.url = url;
+    private final String prefix;
+
+    public Url(Path path, String prefix) {
+        this.path = path;
+        this.prefix = prefix;
     }
 
-    public String getUrl() {
-        return url;
+    public Path getPath() {
+        return path;
+    }
+
+    public String getPrefix() {
+        return prefix;
     }
 }

@@ -8,11 +8,27 @@ package servlet.domain.request.target;
 // OPTIONS /anypage.html HTTP/1.0
 public class OriginForm {
     private final Path path;
-    private final QueryString queryString;
+    private QueryString queryString;
+
+    public OriginForm(Path path) {
+        this.path = path;
+    }
 
     public OriginForm(Path path, QueryString queryString) {
         this.path = path;
         this.queryString = queryString;
+    }
+
+    public static OriginForm parse(String requestTarget) {
+        if (hasQuery(requestTarget)) {
+            String[] target = requestTarget.split("\\?");
+            return new OriginForm(Path.of(target[0]), QueryString.of(target[1]));
+        }
+        return new OriginForm(Path.of(requestTarget));
+    }
+
+    private static boolean hasQuery(String url) {
+        return url.contains("?");
     }
 
     public Path getPath() {

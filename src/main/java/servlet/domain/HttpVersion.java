@@ -1,5 +1,7 @@
 package servlet.domain;
 
+import java.util.Arrays;
+
 public enum HttpVersion {
     HTTP_1_0("HTTP/1.0"),
     HTTP_1_1("HTTP/1.1"),
@@ -9,6 +11,12 @@ public enum HttpVersion {
 
     HttpVersion(String version) {
         this.version = version;
+    }
+
+    public static HttpVersion parse(String version) {
+        return Arrays.stream(values())
+                .filter(httpVersion -> httpVersion.version.equals(version))
+                .findFirst().orElseThrow();
     }
 
     public String getVersion() {

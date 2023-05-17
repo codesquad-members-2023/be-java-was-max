@@ -6,7 +6,7 @@ import servlet.domain.HttpResponse;
 import servlet.domain.MappingInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpRequestUtils;
+import util.HttpRequestMessageParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +29,7 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream()) {
-            HttpRequest httpRequest = HttpRequestUtils.parsingHttpRequest(in);
+            HttpRequest httpRequest = HttpRequestMessageParser.parsingHttpRequest(in);
             MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
             String result = HandlerAdapter.process(mappingInfo);
             HttpResponse httpResponse = ViewResolver.resolve(result);
