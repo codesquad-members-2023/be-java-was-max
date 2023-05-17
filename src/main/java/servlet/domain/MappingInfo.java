@@ -1,7 +1,6 @@
 package servlet.domain;
 
 import controller.MainController;
-import servlet.domain.request.target.Path;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -33,8 +32,8 @@ public class MappingInfo {
         this.object = object;
     }
 
-    public static MappingInfo staticOf(Path path) {
-        return new MappingInfo(STATIC + path.getValue());
+    public static MappingInfo staticOf(String path) {
+        return new MappingInfo(STATIC + path);
     }
 
     public static MappingInfo of(Method method, HttpRequest httpRequest, MainController mainController) {

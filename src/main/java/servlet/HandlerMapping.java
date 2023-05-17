@@ -29,7 +29,7 @@ public class HandlerMapping {
             }
         }
 
-        return MappingInfo.staticOf(httpRequest.getPath());
+        return MappingInfo.staticOf(httpRequest.getUrl());
     }
 
     private static Optional<MappingInfo> getMappingInfo(HttpRequest httpRequest,
