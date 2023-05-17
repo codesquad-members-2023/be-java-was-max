@@ -21,15 +21,11 @@ public class ViewResolver {
         return prefix + viewName + suffix;
     }
 
-    public void render(String viewPath, final HttpResponse response) {
+    public void render(String viewPath, final HttpResponse response) throws IOException {
         StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
         Optional<File> optionalFile = FileUtils.getFile(viewPath);
-        optionalFile.ifPresent(file -> {
-            try {
-                staticResourceHandler.process(file, response);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        if (optionalFile.isPresent()) {
+            staticResourceHandler.process(optionalFile.get(), response);
+        }
     }
 }

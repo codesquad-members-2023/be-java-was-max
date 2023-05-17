@@ -3,43 +3,44 @@ package webserver.dispatcher_servlet;
 import static http.common.HttpStatus.FOUND;
 import static http.common.header.ResponseHeaderType.LOCATION;
 import static http.common.version.HttpVersion.HTTP_1_1;
-import static webserver.dispatcher_servlet.RequestMappingParser.scanRequestMapping;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.component.StatusLine;
 import java.io.IOException;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DispatcherServlet implements HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
+    private static final String PACKAGE_NAME = "cafe.app.user.controller";
+    private static final String DEFAULT_VIEW_RESOLVER_PREFIX = "/";
+    private static final String DEFAULT_VIEW_RESOLVER_POSTFIX = ".html";
 
-    private HandlerMapping handlerMapping;
-    private HandlerAdapter handlerAdapter;
-    private ViewResolver viewResolver;
+    private final HandlerMapping handlerMapping;
+    private final HandlerAdapter handlerAdapter;
+    private final ViewResolver viewResolver;
 
-    public DispatcherServlet() throws IOException {
-        Map<String, Servlet> mappingMap = scanRequestMapping("cafe.app.user.controller");
-        this.handlerMapping = new UrlRequestHandlerMapping(mappingMap);
-        handlerAdapter = new HandlerAdapter();
-        viewResolver = new ViewResolver("/", ".html");
+    public DispatcherServlet() throws IOException, InvocationTargetException, IllegalAccessException {
+        DependencyInjectionContainer container = new DependencyInjectionContainer(new UserAppConfig());
+        RequestMappingExplorer explorer = new RequestMappingExplorer(container);
+        this.handlerMapping = explorer.scanRequestMapping(PACKAGE_NAME);
+        this.handlerAdapter = new HandlerAdapter();
+        this.viewResolver = new ViewResolver(DEFAULT_VIEW_RESOLVER_PREFIX, DEFAULT_VIEW_RESOLVER_POSTFIX);
     }
 
     @Override
-    public void doDispatch(final HttpRequest request, final HttpResponse response)
-        throws Exception {
+    public void doDispatch(final HttpRequest request, final HttpResponse response) throws Exception {
 
         // 핸들러 가져오기
-        Servlet mappedHandler = getHandler(request);
-        logger.debug("mappedHandler : {}", mappedHandler);
+        Handler handler = handlerMapping.getHandler(request);
 
         // 핸들러 위임 실행
-        String viewName = handlerAdapter.handle(request, response, mappedHandler);
+        String viewName = handlerAdapter.handle(request, response, handler);
 
-        // 리다이렉션인 경우 리다이렉션 수행
+        // "redirect:"로 시작하는 경우 리다이렉션 수행
         if (viewName.startsWith("redirect:")) {
             String location = viewResolver.getView(viewName.replace("redirect:", ""));
             processRedirection(location, response);
@@ -52,10 +53,6 @@ public class DispatcherServlet implements HttpServlet {
 
         // viewPath에 따른 파일 렌더링
         viewResolver.render(viewPath, response);
-    }
-
-    private Servlet getHandler(HttpRequest request) {
-        return handlerMapping.getHandler(request);
     }
 
     private void processRedirection(String location, final HttpResponse response) {
