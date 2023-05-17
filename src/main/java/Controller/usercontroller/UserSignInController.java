@@ -23,8 +23,20 @@ public class UserSignInController implements Controller {
 	@Override
 	public String process(HttpRequest request) {
 		Map<String, String> queryParams = request.getParameters();
-		User user = userRepository.findUserById(queryParams.get("userId"));
+
+		String requestId = queryParams.get("userId");
+		String requestPassword = queryParams.get("password");
+
+		User user = userRepository.findUserById(requestId);
+
+		if (isSignInFailed(requestPassword, user)) {
+			return "redirect:login_failed.html";
+		}
 		logger.debug("savedUser : {}", user);
 		return "redirect:/";
+	}
+
+	private static boolean isSignInFailed(String requestPassword, User user) {
+		return user == null || !user.isPasswordValid(requestPassword);
 	}
 }
