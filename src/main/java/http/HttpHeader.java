@@ -1,12 +1,10 @@
 package http;
 
-import com.google.common.collect.Maps;
-
 import java.util.List;
 import java.util.Map;
 
 public class HttpHeader {
-    private Map<String, String> headers = Maps.newHashMap();
+    private final Map<String, String> headers;
 
     public HttpHeader(List<String> headers) {
         this.headers = HttpUtils.parseHeader(headers);
