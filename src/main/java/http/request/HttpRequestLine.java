@@ -1,4 +1,7 @@
-package request;
+package http.request;
+
+import http.HttpMethod;
+import http.HttpUtils;
 
 public class HttpRequestLine {
     private static final int METHOD_INDEX = 0;
@@ -6,14 +9,14 @@ public class HttpRequestLine {
     private static final int PROTOCOL_INDEX = 2;
     private static final String  START_LINE_DIVIDER = " ";
     private static final String QUERY_STRING = "?";
-    private final String method;
+    private final HttpMethod method;
     private final String url;
     private QueryString queryString;
     private final String protocol;
 
     public HttpRequestLine(String startLine) {
         String[] tokens = startLine.split(START_LINE_DIVIDER);
-        this.method = tokens[METHOD_INDEX];
+        this.method = HttpUtils.getMethodType(tokens[METHOD_INDEX]);
         this.protocol = tokens[PROTOCOL_INDEX];
 
         if (startLine.contains(QUERY_STRING)) { // if queryString exists
@@ -25,7 +28,7 @@ public class HttpRequestLine {
         this.url = tokens[URL_INDEX];
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 

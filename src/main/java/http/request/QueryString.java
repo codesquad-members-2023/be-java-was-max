@@ -1,4 +1,6 @@
-package request;
+package http.request;
+
+import http.HttpUtils;
 
 import java.util.Map;
 
@@ -6,7 +8,7 @@ public class QueryString {
     private final Map<String, String> queryStrings;
 
     public QueryString(String queryString) {
-        this.queryStrings = HttpRequestUtils.parseQueryString(queryString);
+        this.queryStrings = HttpUtils.parseQueryString(queryString);
     }
 
     public String findValueByKey(String key) {
@@ -15,6 +17,6 @@ public class QueryString {
 
     @Override
     public String toString() {
-        return "QueryString [" + queryStrings.entrySet() + "]";
+        return "QueryString " + queryStrings.entrySet();
     }
 }
