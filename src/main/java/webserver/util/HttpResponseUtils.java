@@ -28,7 +28,7 @@ public class HttpResponseUtils {
 
     private static String response200Header(ContentType contentType, int lengthOfBodyContent) {
         return "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: " + contentType.getContentType() + "\r\n" +
+                "Content-Type: " + contentType.getMimeType() + "\r\n" +
                 "Content-Length: " + lengthOfBodyContent + "\r\n" +
                 "\r\n";
     }

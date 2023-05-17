@@ -18,19 +18,20 @@ public enum ContentType {
     }
 
     private final String path;
-    private final String contentType;
+    private final String mimeType;
 
     private final String fileExtension;
 
-    ContentType(String path, String contentType, String fileExtension) {
+    ContentType(String path, String mimeType, String fileExtension) {
         this.path = path;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
         this.fileExtension = fileExtension;
     }
 
+    // TODO: RequestLine으로 변경 다시 해보자
     public static ContentType findByUrl(String url) {
         return Arrays.stream(values())
-                .filter(contentType -> url.endsWith(contentType.fileExtension))
+                .filter(mimeType -> url.endsWith(mimeType.fileExtension))
                 .findAny()
                 // TODO: 예외 던졌으니 처리 필요함 (호눅스 피드백)
                 .orElseThrow(() -> new RuntimeException("Unknown file extension: " + url));
@@ -44,7 +45,7 @@ public enum ContentType {
         return path + url;
     }
 
-    public String getContentType() {
-        return contentType;
+    public String getMimeType() {
+        return mimeType;
     }
 }
