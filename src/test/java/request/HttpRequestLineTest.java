@@ -1,5 +1,7 @@
 package request;
 
+import http.HttpMethod;
+import http.request.HttpRequestLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +16,7 @@ class HttpRequestLineTest {
         String startLine = "GET /user/create?userId=yeon&password=1234&name=yeon&email=yeonise%40code.com HTTP/1.1";
         HttpRequestLine httpRequestLine = new HttpRequestLine(startLine);
 
-        assertAll(() -> assertThat(httpRequestLine.getMethod()).isEqualTo("GET"),
+        assertAll(() -> assertThat(httpRequestLine.getMethod()).isEqualTo(HttpMethod.GET),
                   () -> assertThat(httpRequestLine.getUrl()).isEqualTo("/user/create"),
                   () -> assertThat(httpRequestLine.getQueryString().findValueByKey("userId")).isEqualTo("yeon"),
                   () -> assertThat(httpRequestLine.getQueryString().findValueByKey("password")).isEqualTo("1234"),
