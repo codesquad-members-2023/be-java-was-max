@@ -1,5 +1,6 @@
 package view;
 
+import http.HttpHeaders;
 import http.response.ContentType;
 import http.response.HttpResponse;
 import http.response.StatusLine;
@@ -8,6 +9,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
 
 public class ViewResolver {
 
@@ -18,7 +21,7 @@ public class ViewResolver {
 
 	public void resolve(final String viewName, final HttpResponse httpResponse) throws IOException {
 		if (viewName.startsWith(REDIRECT_VIEW)) {
-			redirect(viewName, httpResponse);
+			redirect(viewName.replaceAll(REDIRECT_VIEW, ""), httpResponse);
 			return;
 		}
 		forward(viewName, httpResponse);
@@ -26,7 +29,9 @@ public class ViewResolver {
 
 	private void redirect(final String viewName, final HttpResponse httpResponse) {
 		httpResponse.setResponseLine(new StatusLine("HTTP/1.1", 302, "FOUND"));
-		httpResponse.setContentType(ContentType.findContentType(viewName.replace(REDIRECT_VIEW, "")));
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.addHeader(Map.of("Location", List.of(viewName)));
+		httpResponse.setHttpHeaders(httpHeaders);
 	}
 
 	private void forward(final String viewName, final HttpResponse httpResponse) throws IOException {

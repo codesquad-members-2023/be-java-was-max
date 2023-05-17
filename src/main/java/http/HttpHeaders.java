@@ -20,8 +20,8 @@ public class HttpHeaders {
 	@Override
 	public String toString() {
 		return headersMap.entrySet()
-			.stream()
-			.map(entry -> entry.getKey() + ": " + entry.getValue())
-			.collect(Collectors.joining("\n"));
+				.stream()
+				.map(entry -> entry.getKey() + ": " + String.join(", ", entry.getValue()))
+				.collect(Collectors.joining("\n"));
 	}
 }

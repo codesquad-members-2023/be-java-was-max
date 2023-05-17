@@ -51,6 +51,9 @@ public class RequestHandler implements Runnable {
 			if (httpResponse.getBody() != null) {
 				dos.writeBytes("Content-Length: " + httpResponse.getBody().length + "\r\n");
 			}
+			if (httpResponse.getHttpHeaders() != null) {
+				dos.writeBytes(httpResponse.getHttpHeaders().toString());
+			}
 			dos.writeBytes("\r\n");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
@@ -59,6 +62,10 @@ public class RequestHandler implements Runnable {
 
 	private void responseBody(DataOutputStream dos, byte[] body) {
 		try {
+			if (body == null) {
+				return;
+			}
+
 			dos.write(body, 0, body.length);
 			dos.flush();
 		} catch (IOException e) {
