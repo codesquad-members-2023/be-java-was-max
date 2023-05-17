@@ -12,7 +12,7 @@ public class Headers {
         this.headers = headers;
     }
 
-    public static Headers of(Map<String, String> parseHeaders) {
+    public static Headers from(Map<String, String> parseHeaders) {
         return new Headers(parseHeaders.entrySet().stream()
                 .map(Header::from)
                 .collect(Collectors.toList()));

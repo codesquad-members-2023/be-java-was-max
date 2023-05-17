@@ -19,9 +19,9 @@ public class StartLine {
 
     public static StartLine parse(String startLineString) {
         String[] startLineInfo = startLineString.split(LINE_DELIMITER);
-        HttpRequestMethod httpMethodInfo = HttpRequestMethod.parse(startLineInfo[HTTP_METHOD_INDEX]);
-        OriginForm originForm = OriginForm.parse(startLineInfo[REQUEST_INDEX]);
-        HttpVersion httpVersion = HttpVersion.parse(startLineInfo[HTTP_VERSION_INDEX]);
+        HttpRequestMethod httpMethodInfo = HttpRequestMethod.from(startLineInfo[HTTP_METHOD_INDEX]);
+        OriginForm originForm = OriginForm.from(startLineInfo[REQUEST_INDEX]);
+        HttpVersion httpVersion = HttpVersion.from(startLineInfo[HTTP_VERSION_INDEX]);
 
         return new StartLine(httpMethodInfo, originForm, httpVersion);
     }

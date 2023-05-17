@@ -7,6 +7,9 @@ package servlet.domain.request.target;
 // HEAD /test.html?query=alibaba HTTP/1.1
 // OPTIONS /anypage.html HTTP/1.0
 public class OriginForm {
+    public static final int PATH_INDEX = 0;
+    public static final int QUERY_STRING_INDEX = 1;
+    public static final String PATH_QUERYSTRING_DELIMITER = "\\?";
     private final Path path;
     private QueryString queryString;
 
@@ -19,16 +22,16 @@ public class OriginForm {
         this.queryString = queryString;
     }
 
-    public static OriginForm parse(String requestTarget) {
+    public static OriginForm from(String requestTarget) {
         if (hasQuery(requestTarget)) {
-            String[] target = requestTarget.split("\\?");
-            return new OriginForm(Path.of(target[0]), QueryString.of(target[1]));
+            String[] target = requestTarget.split(PATH_QUERYSTRING_DELIMITER);
+            return new OriginForm(Path.of(target[PATH_INDEX]), QueryString.of(target[QUERY_STRING_INDEX]));
         }
         return new OriginForm(Path.of(requestTarget));
     }
 
     private static boolean hasQuery(String url) {
-        return url.contains("?");
+        return url.contains(PATH_QUERYSTRING_DELIMITER);
     }
 
     public Path getPath() {

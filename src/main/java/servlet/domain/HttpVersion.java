@@ -13,7 +13,7 @@ public enum HttpVersion {
         this.version = version;
     }
 
-    public static HttpVersion parse(String version) {
+    public static HttpVersion from(String version) {
         return Arrays.stream(values())
                 .filter(httpVersion -> httpVersion.version.equals(version))
                 .findFirst().orElseThrow();
