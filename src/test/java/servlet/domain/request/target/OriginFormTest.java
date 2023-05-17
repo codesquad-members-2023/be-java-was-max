@@ -45,7 +45,7 @@ class OriginFormTest {
 
     @DisplayName("Parameter 개수랑 같으면 true 아니면 false")
     @Test
-    void isSameParameterCount() {
+    void isSameParameterCountIfHaveParams() {
         OriginForm form = OriginForm.from("/index.html?name=albert;password=testPassword");
 
         assertSoftly(
@@ -55,7 +55,19 @@ class OriginFormTest {
                     softAssertions.assertThat(form.isSameParameterCount(3)).isFalse();
                 }
         );
+    }
 
+    @DisplayName("Parameter가 없을 시 count가 0일때 일치하다")
+    @Test
+    void isSameParameterCountIfHaveNotParams() {
+        OriginForm form = OriginForm.from("/index.html");
+
+        assertSoftly(
+                softAssertions -> {
+                    softAssertions.assertThat(form.isSameParameterCount(1)).isFalse();
+                    softAssertions.assertThat(form.isSameParameterCount(0)).isTrue();
+                }
+        );
     }
 
     @DisplayName("Parameter 있으면 true 아니면 false")

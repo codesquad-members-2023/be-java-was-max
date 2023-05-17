@@ -13,6 +13,7 @@ public class OriginForm {
     public static final int QUERY_STRING_INDEX = 1;
     public static final String PATH_QUERYSTRING_SPIT_DELIMITER = "\\?";
     public static final String PATH_QUERYSTRING_DELIMITER = "?";
+    public static final int NONE = 0;
     private final Path path;
     private QueryString queryString;
 
@@ -54,7 +55,10 @@ public class OriginForm {
     }
 
     public boolean isSameParameterCount(int parameterCount) {
-        return queryString.isSameCount(parameterCount);
+        if (queryString != null) {
+            return queryString.isSameCount(parameterCount);
+        }
+        return parameterCount == NONE;
     }
 
     public boolean hasParameter() {

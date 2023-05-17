@@ -3,7 +3,6 @@ package servlet.domain;
 
 import servlet.domain.request.target.Path;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 public class HttpRequest {
@@ -46,11 +45,8 @@ public class HttpRequest {
         return startLine.getPath();
     }
 
-    public boolean isMatching(Method method, String path) {
-        if (startLine.hasParameter()) {
-            return startLine.isSamePath(path) && startLine.isSameParameterCount(method.getParameterCount());
-        }
-        return startLine.isSamePath(path);
+    public boolean isMatching(int count, String path) {
+        return startLine.isSamePath(path) && startLine.isSameParameterCount(count);
     }
 
     public boolean hasParameters() {
