@@ -1,14 +1,16 @@
 package http;
 
-import com.google.common.collect.Maps;
-
 import java.util.Map;
 
 public class HttpBody {
-    private String body;
-    private Map<String, String> data = Maps.newHashMap();
+    private final Map<String, String> data;
 
     public HttpBody(String body) {
-        this.body = body;
+        this.data = HttpUtils.parseBody(body);
     }
+
+    public String findValueByKey(String key) {
+        return data.get(key);
+    }
+
 }

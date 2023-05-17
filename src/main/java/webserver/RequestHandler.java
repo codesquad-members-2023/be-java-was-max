@@ -1,21 +1,24 @@
 package webserver;
 
 import controller.UserController;
+import http.HttpBody;
+import http.HttpHeader;
+import http.HttpUtils;
+import http.request.HttpRequest;
+import http.request.HttpRequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.HttpRequest;
-import response.ContentType;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestHandler implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
@@ -31,16 +34,32 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            HttpRequest httpRequest = new HttpRequest();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)); // HTTP Request 읽기
             String startLine = reader.readLine(); // start line
-            HttpRequest httpRequest = new HttpRequest(startLine);
-            LOGGER.debug("HTTP Request : {}", httpRequest);
+            HttpRequestLine httpRequestLine = new HttpRequestLine(startLine);
+            httpRequest.setRequestLine(httpRequestLine);
+            LOGGER.debug("--- HTTP Request : {} ---", httpRequestLine);
 
             String line;
-            while (!(line = reader.readLine()).equals("")) {
-                LOGGER.debug("Header : {}", line);
+            List<String> headers = new ArrayList<>();
+            while (!(line = reader.readLine()).equals("")) { // headers
+                headers.add(line);
+                LOGGER.debug("{}", line);
             }
+            HttpHeader header = new HttpHeader(headers);
+            httpRequest.setHeaders(header);
 
+            if (header.contains("Content-Length")) { // body
+                int contentLength = Integer.parseInt(header.findFieldByName("Content-Length"));
+                char[] requestBody = new char[contentLength];
+                reader.read(requestBody, 0, contentLength);
+                StringBuilder builder = new StringBuilder();
+                builder.append(requestBody);
+                HttpBody body = new HttpBody(builder.toString());
+                httpRequest.setBody(body);
+                LOGGER.debug("Request Body : {}", builder);
+            }
             DataOutputStream dos = new DataOutputStream(out);
 
             String url = userController.requestMapping(httpRequest);
@@ -49,8 +68,8 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
-            byte[] body = findFilePath(url);
-            response200Header(dos, body.length, findContentType(url));
+            byte[] body = HttpUtils.findFilePath(url);
+            response200Header(dos, body.length, HttpUtils.findContentType(url));
             responseBody(dos, body);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
@@ -85,34 +104,5 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
-    }
-
-    private byte[] findFilePath(String url) throws IOException {
-        // Static
-        if (url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".ico") || url.endsWith(".png") || url.endsWith(".jpeg") || url.endsWith(".jpg") || url.startsWith("/fonts")) { // 파일의 확장자로 구분
-            return Files.readAllBytes(new File("src/main/resources/static" + url).toPath());
-        }
-        // Templates
-        return Files.readAllBytes(new File("src/main/resources/templates" + url).toPath());
-    }
-
-    private String findContentType(String url) {
-        String extension = url.substring(url.lastIndexOf("."));
-        if (extension.equals(".js")) {
-            return ContentType.JS.getType();
-        }
-        if (extension.equals(".css")) {
-            return ContentType.CSS.getType();
-        }
-        if (extension.equals(".png")) {
-            return ContentType.PNG.getType();
-        }
-        if (extension.equals(".jpeg") || extension.equals(".jpg")) {
-            return ContentType.JPEG.getType();
-        }
-        if (extension.equals(".ttf") || extension.equals(".woff")) {
-            return ContentType.FONT.getType();
-        }
-        return ContentType.HTML.getType();
     }
 }

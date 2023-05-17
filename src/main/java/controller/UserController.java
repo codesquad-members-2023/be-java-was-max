@@ -1,28 +1,32 @@
 package controller;
 
+import http.HttpBody;
+import http.request.HttpRequest;
 import model.User;
-import request.HttpRequest;
-
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     public static final String MAIN_PAGE = "/index.html";
+    public static final String USER_SAVE_URL = "/user/create";
 
     public String requestMapping(HttpRequest httpRequest) {
-        if (httpRequest.getUrl().equals("/")) {
+        if (httpRequest.getRequestLine().getUrl().equals("/")) {
             return MAIN_PAGE;
         }
 
-        if (httpRequest.getUrl().equals("/user/create")) {
+        if (httpRequest.getRequestLine().getUrl().equals(USER_SAVE_URL)) {
             return signUp(httpRequest);
         }
 
-        return httpRequest.getUrl();
+        return httpRequest.getRequestLine().getUrl();
     }
 
     private String signUp(HttpRequest httpRequest) {
-        Map<String, String> queryStrings = httpRequest.getQueryString();
-        User user = new User(queryStrings.get("userId"), queryStrings.get("password"), queryStrings.get("name"), queryStrings.get("email"));
+        HttpBody httpBody = httpRequest.getBody();
+        User user = new User(httpBody.findValueByKey("userId"), httpBody.findValueByKey("password"), httpBody.findValueByKey("name"), httpBody.findValueByKey("email"));
+        LOGGER.debug("Created : {}", user);
         return "redirect:/";
     }
 }
