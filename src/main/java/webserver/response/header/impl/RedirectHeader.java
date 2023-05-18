@@ -1,16 +1,19 @@
 package webserver.response.header.impl;
 
 import session.Session;
+import webserver.response.HttpResponseParams;
 import webserver.response.header.HttpResponseHeader;
 
 public class RedirectHeader implements HttpResponseHeader {
 
 	private String redirectLocation;
 	private String header;
+	private final Session session;
 
-	public RedirectHeader(String viewName, Session session) {
-		this.redirectLocation = extractSubstringAfterColon(viewName);
-		createRedirectHeader(session);
+	public RedirectHeader(HttpResponseParams httpResponseParams) {
+		this.redirectLocation = extractSubstringAfterColon(httpResponseParams.getViewName());
+		this.session = httpResponseParams.getSession();
+		createHeader();
 	}
 
 	/**
@@ -22,7 +25,7 @@ public class RedirectHeader implements HttpResponseHeader {
 		return view.substring(view.indexOf(":") + 1);
 	}
 
-	private void createRedirectHeader(Session session) {
+	private void createHeader() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Location: ").append(redirectLocation).append("\r\n");
 

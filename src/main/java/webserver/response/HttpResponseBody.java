@@ -4,8 +4,8 @@ public class HttpResponseBody {
 
 	private final byte[] body;
 
-	public HttpResponseBody(byte[] body) {
-		this.body = body;
+	public HttpResponseBody(HttpResponseParams param) {
+		this.body = param.getBody();
 	}
 
 	public byte[] getBody() {

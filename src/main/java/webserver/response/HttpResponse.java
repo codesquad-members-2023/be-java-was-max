@@ -1,29 +1,20 @@
 package webserver.response;
 
-import session.Session;
 import webserver.response.header.HttpResponseHeader;
-import webserver.response.header.impl.OkHeader;
-import webserver.response.header.impl.RedirectHeader;
 import webserver.response.statusline.HttpResponseStatusLine;
-import webserver.response.statusline.impl.OkStatusLine;
-import webserver.response.statusline.impl.RedirectStatusLine;
 
 public class HttpResponse {
 
 	private final HttpResponseStatusLine httpResponseStatusLine;
 	private final HttpResponseHeader httpResponseHeader;
 	private final HttpResponseBody httpResponseBody;
-	private static final String REDIRECT = "redirect";
+	private final HttpResponseFactory httpResponseFactory;
 
-	public HttpResponse(String viewName, byte[] body, Session session) {
-		if (viewName.contains(REDIRECT)) {
-			httpResponseStatusLine = new RedirectStatusLine();
-			httpResponseHeader = new RedirectHeader(viewName, session);
-		} else {
-			httpResponseStatusLine = new OkStatusLine();
-			httpResponseHeader = new OkHeader(viewName, body.length);
-		}
-		httpResponseBody = new HttpResponseBody(body);
+	public HttpResponse(HttpResponseParams httpResponseParams) {
+		httpResponseFactory = new HttpResponseFactory(httpResponseParams.getViewName());
+		httpResponseStatusLine = httpResponseFactory.httpResponseStatusLine();
+		httpResponseHeader = httpResponseFactory.httpResponseHeader(httpResponseParams);
+		httpResponseBody = new HttpResponseBody(httpResponseParams);
 	}
 
 	public String getStatusLine() {

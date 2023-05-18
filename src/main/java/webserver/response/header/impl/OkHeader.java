@@ -3,6 +3,7 @@ package webserver.response.header.impl;
 import static utils.HttpResponseUtils.*;
 
 import utils.ContentType;
+import webserver.response.HttpResponseParams;
 import webserver.response.header.HttpResponseHeader;
 
 public class OkHeader implements HttpResponseHeader {
@@ -11,13 +12,13 @@ public class OkHeader implements HttpResponseHeader {
 	private int contentLength;
 	private String header;
 
-	public OkHeader(String viewName, int contentLength) {
-		this.contentType = ContentType.getByExtension(extractFileExtensionFromView(viewName));
-		this.contentLength = contentLength;
-		createResponse200Header();
+	public OkHeader(HttpResponseParams httpResponseParams) {
+		this.contentType = ContentType.getByExtension(extractFileExtensionFromView(httpResponseParams.getViewName()));
+		this.contentLength = httpResponseParams.getBody().length;
+		createHeader();
 	}
 
-	private void createResponse200Header() {
+	private void createHeader() {
 		header = "Content-Type: " + contentType + "\r\n" +
 			"Content-Length: " + contentLength + "\r\n" +
 			"\r\n";

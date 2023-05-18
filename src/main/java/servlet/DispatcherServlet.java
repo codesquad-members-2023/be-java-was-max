@@ -14,6 +14,7 @@ import viewResolver.impl.OkViewResolver;
 import viewResolver.impl.RedirectViewResolver;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
+import webserver.response.HttpResponseParams;
 
 public class DispatcherServlet {
 
@@ -36,7 +37,7 @@ public class DispatcherServlet {
 		String viewPath = viewResolver.viewResolver(viewName);
 		byte[] body = view.render(viewPath);
 
-		return new HttpResponse(viewName, body, request.getSession());
+		return new HttpResponse(new HttpResponseParams(viewName, body, request.getSession()));
 	}
 
 	private void initViewAndViewResolver(String viewName) {
