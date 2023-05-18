@@ -1,6 +1,6 @@
-package view.impl;
+package servlet.view.impl;
 
-import view.View;
+import servlet.view.View;
 
 public class RedirectView implements View {
 

@@ -1,6 +1,6 @@
-package viewResolver.impl;
+package servlet.viewResolver.impl;
 
-import viewResolver.ViewResolver;
+import servlet.viewResolver.ViewResolver;
 
 public class RedirectViewResolver implements ViewResolver {
 	@Override

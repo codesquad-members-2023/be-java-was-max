@@ -1,10 +1,10 @@
-package view.impl;
+package servlet.view.impl;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import view.View;
+import servlet.view.View;
 
 public class OkView implements View {
 

@@ -1,10 +1,10 @@
-package viewResolver.impl;
+package servlet.viewResolver.impl;
 
 import static utils.HttpResponseUtils.*;
 
 import java.util.Map;
 
-import viewResolver.ViewResolver;
+import servlet.viewResolver.ViewResolver;
 
 public class OkViewResolver implements ViewResolver {
 
