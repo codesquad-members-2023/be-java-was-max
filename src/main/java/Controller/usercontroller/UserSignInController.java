@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import Controller.Controller;
 import db.UserRepository;
 import model.User;
+import session.Session;
 import webserver.RequestHandler;
 import webserver.request.HttpRequest;
 
@@ -32,8 +33,15 @@ public class UserSignInController implements Controller {
 		if (isSignInFailed(requestPassword, user)) {
 			return "redirect:login_failed.html";
 		}
+
 		logger.debug("savedUser : {}", user);
+		addUserToSessionMap(request, requestId);
 		return "redirect:/";
+	}
+
+	private void addUserToSessionMap(HttpRequest request, String requestId) {
+		Session session = request.getSession();
+		session.addUserToSessionMap(requestId);
 	}
 
 	private static boolean isSignInFailed(String requestPassword, User user) {

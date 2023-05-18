@@ -13,6 +13,7 @@ import viewResolver.ViewResolver;
 import viewResolver.impl.OkViewResolver;
 import viewResolver.impl.RedirectViewResolver;
 import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 public class DispatcherServlet {
 
@@ -25,7 +26,7 @@ public class DispatcherServlet {
 		controllerMap = Map.of("/user/create", new UserSignUpController(), "/user/signIn", new UserSignInController());
 	}
 
-	public ViewResult doDispatch(HttpRequest request) {
+	public HttpResponse doDispatch(HttpRequest request) {
 		controller = controllerMap.getOrDefault(request.getURL(), new UserController());
 
 		String viewName = controller.process(request);
@@ -35,7 +36,7 @@ public class DispatcherServlet {
 		String viewPath = viewResolver.viewResolver(viewName);
 		byte[] body = view.render(viewPath);
 
-		return new ViewResult(viewName, body);
+		return new HttpResponse(viewName, body, request.getSession());
 	}
 
 	private void initViewAndViewResolver(String viewName) {

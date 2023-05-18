@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import session.Session;
 import webserver.request.exception.HttpRequestParsingException;
 
 public class HttpRequest {
@@ -14,6 +15,7 @@ public class HttpRequest {
 	private HttpRequestLine httpRequestLine;
 	private HttpRequestHeader httpRequestHeader;
 	private HttpRequestBody httpRequestBody;
+	private Session session;
 	private static final String GET = "GET";
 
 	public HttpRequest(InputStream in) {
@@ -25,6 +27,7 @@ public class HttpRequest {
 		} catch (IOException e) {
 			throw new HttpRequestParsingException();
 		}
+		session = new Session();
 	}
 
 	public String getMethod() {
@@ -52,5 +55,9 @@ public class HttpRequest {
 
 	public String getBody() {
 		return httpRequestBody.getBody();
+	}
+
+	public Session getSession() {
+		return session;
 	}
 }

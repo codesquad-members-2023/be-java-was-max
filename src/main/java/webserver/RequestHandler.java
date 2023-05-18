@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import servlet.DispatcherServlet;
-import servlet.ViewResult;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 
@@ -33,11 +32,9 @@ public class RequestHandler implements Runnable {
 
 			logHttpRequestInfo(httpRequest);
 
-			ViewResult viewResult = dispatcherServlet.doDispatch(httpRequest);
+			HttpResponse response = dispatcherServlet.doDispatch(httpRequest);
 
-			HttpResponse httpResponse = new HttpResponse(viewResult.getViewName(), viewResult.getBody());
-
-			sendHttpResponse(out, httpResponse);
+			sendHttpResponse(out, response);
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}

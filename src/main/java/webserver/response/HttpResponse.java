@@ -1,5 +1,6 @@
 package webserver.response;
 
+import session.Session;
 import webserver.response.header.HttpResponseHeader;
 import webserver.response.header.impl.OkHeader;
 import webserver.response.header.impl.RedirectHeader;
@@ -14,10 +15,10 @@ public class HttpResponse {
 	private final HttpResponseBody httpResponseBody;
 	private static final String REDIRECT = "redirect";
 
-	public HttpResponse(String viewName, byte[] body) {
+	public HttpResponse(String viewName, byte[] body, Session session) {
 		if (viewName.contains(REDIRECT)) {
 			httpResponseStatusLine = new RedirectStatusLine();
-			httpResponseHeader = new RedirectHeader(viewName);
+			httpResponseHeader = new RedirectHeader(viewName, session);
 		} else {
 			httpResponseStatusLine = new OkStatusLine();
 			httpResponseHeader = new OkHeader(viewName, body.length);
