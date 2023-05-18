@@ -1,33 +1,40 @@
 package http.request.component;
 
+import http.common.header.HeaderType;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestHeader {
 
-    private final Map<String, String> header;
+    private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
 
-    public RequestHeader(Map<String, String> header) {
+    private final Map<HeaderType, String> header;
+
+    public RequestHeader(Map<HeaderType, String> header) {
         this.header = header;
     }
 
-    public String getHeader(String key) {
-        return header.get(key);
+    public Optional<String> get(HeaderType key) {
+
+        return Optional.ofNullable(header.get(key));
     }
 
-    public boolean containsKey(String key) {
+    public boolean containsKey(HeaderType key) {
         return header.containsKey(key);
     }
 
-    public void addHeader(String key, String value) {
-        header.put(key, value);
+    public String put(HeaderType key, String value) {
+        return header.put(key, value);
     }
 
     @Override
     public String toString() {
         return header.keySet()
             .stream()
-            .map(key -> String.format("%s: %s", key, header.get(key)))
+            .map(key -> String.format("%s: %s", key.value(), header.get(key)))
             .collect(Collectors.joining("\r\n"))
             .trim();
     }

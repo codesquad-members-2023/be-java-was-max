@@ -1,9 +1,9 @@
 package webserver.handler;
 
+import static http.parser.HttpRequestParser.parseHttpRequest;
 import static util.FileUtils.getFile;
 
 import http.request.HttpRequest;
-import http.request.parser.HttpRequestParser;
 import http.response.HttpResponse;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -29,36 +29,29 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}",
-            connection.getInetAddress(), connection.getPort());
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+            connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             DataOutputStream dos = new DataOutputStream(out);
-            HttpRequest request = HttpRequestParser.parse(br);
+            HttpRequest request = parseHttpRequest(br);
             HttpResponse response = new HttpResponse();
             StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
+            logger.debug("httpRequest : {}", request);
 
             Optional<File> optionalStaticResource = getFile(request.getPath());
 
-            optionalStaticResource.ifPresentOrElse(file -> {
-                try {
-                    staticResourceHandler.process(file, response);
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                }
-            }, () -> {
-                try {
-                    DispatcherServlet dispatcherServlet = new DispatcherServlet();
-                    dispatcherServlet.doDispatch(request, response);
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-            });
+            if (optionalStaticResource.isPresent()) {
+                File file = optionalStaticResource.get();
+                staticResourceHandler.process(file, request, response);
+            } else {
+                DispatcherServlet dispatcherServlet = new DispatcherServlet();
+                dispatcherServlet.doDispatch(request, response);
+            }
 
             response200Header(dos, response);
             responseBody(dos, response);
-            logger.debug("httpRequest : {}", request);
             logger.debug("httpResponse : {}", response);
         } catch (IOException e) {
             logger.error(e.getMessage());

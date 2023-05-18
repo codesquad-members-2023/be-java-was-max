@@ -9,6 +9,7 @@ public final class HeaderTypeFactory {
     }
 
     public static HeaderType createHeaderType(String headerName) {
+
         Optional<EntityHeaderType> optionalEntityHeaderType = EntityHeaderType.resolve(headerName);
         if (optionalEntityHeaderType.isPresent()) {
             return optionalEntityHeaderType.get();
@@ -17,8 +18,11 @@ public final class HeaderTypeFactory {
         if (optionalGeneralHeaderType.isPresent()) {
             return optionalGeneralHeaderType.get();
         }
-        Optional<ResponseHeaderType> optionalResponseHeaderType = ResponseHeaderType.resolve(headerName);
-        return optionalResponseHeaderType.orElseThrow();
+        Optional<RequestHeaderType> optionalRequestHeaderType = RequestHeaderType.resolve(headerName);
+        if (optionalRequestHeaderType.isPresent()) {
+            return optionalRequestHeaderType.get();
+        }
+        return ResponseHeaderType.resolve(headerName).orElseThrow();
     }
 }
 

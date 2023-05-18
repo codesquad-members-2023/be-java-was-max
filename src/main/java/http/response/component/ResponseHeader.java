@@ -2,6 +2,7 @@ package http.response.component;
 
 import http.common.header.HeaderType;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ResponseHeader {
@@ -12,12 +13,8 @@ public class ResponseHeader {
         this.header = header;
     }
 
-    public boolean containsKey(HeaderType key) {
-        return header.containsKey(key);
-    }
-
-    public String getHeaderValue(HeaderType key) {
-        return header.get(key);
+    public Optional<String> get(HeaderType key) {
+        return Optional.ofNullable(header.get(key));
     }
 
     public void addHeader(HeaderType key, String value) {

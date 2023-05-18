@@ -4,6 +4,7 @@ import http.common.header.HeaderType;
 import http.response.component.ResponseHeader;
 import http.response.component.StatusLine;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class HttpResponse {
 
@@ -35,8 +36,8 @@ public class HttpResponse {
         this.messageBody = messageBody;
     }
 
-    public String getHeaderValue(HeaderType key) {
-        return responseHeader.getHeaderValue(key);
+    public Optional<String> get(HeaderType key) {
+        return responseHeader.get(key);
     }
 
     public StatusLine getStatusLine() {
@@ -45,10 +46,6 @@ public class HttpResponse {
 
     public void setStatusLine(StatusLine statusLine) {
         this.statusLine = statusLine;
-    }
-
-    public ResponseHeader getResponseHeader() {
-        return responseHeader;
     }
 
     @Override

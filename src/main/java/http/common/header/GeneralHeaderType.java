@@ -20,7 +20,6 @@ public enum GeneralHeaderType implements HeaderType {
         this.value = value;
     }
 
-
     public static Optional<GeneralHeaderType> resolve(String headerName) {
         return Arrays.stream(values())
             .filter(headerType -> headerType.value()

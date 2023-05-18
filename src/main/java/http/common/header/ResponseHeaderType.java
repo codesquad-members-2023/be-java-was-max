@@ -11,15 +11,15 @@ public enum ResponseHeaderType implements HeaderType {
     PROXY_AUTHENTICATE("Proxy-Authenticate"),
     RETRY_AFTER("Retry-After"),
     SERVER("Server"),
+    SET_COOKIE("Set-Cookie"),
     VARY("Vary"),
     WWW_AUTHENTICATE("WWW-Authenticate");
 
-    private String value;
+    private final String value;
 
     ResponseHeaderType(String value) {
         this.value = value;
     }
-
 
     public static Optional<ResponseHeaderType> resolve(String headerName) {
         return Arrays.stream(values())

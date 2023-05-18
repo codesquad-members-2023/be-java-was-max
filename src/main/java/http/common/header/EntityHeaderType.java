@@ -13,10 +13,10 @@ public enum EntityHeaderType implements HeaderType {
     CONTENT_RANGE("Content-Range"),
     CONTENT_TYPE("Content-Type"),
     EXPIRES("Expires"),
-    Last_Modified("Last-Modified"),
+    LAST_MODIFIED("Last-Modified"),
     EXTENSION_HEADER("extension-header");
 
-    private String value;
+    private final String value;
 
     EntityHeaderType(String value) {
         this.value = value;

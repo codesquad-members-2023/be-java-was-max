@@ -1,5 +1,11 @@
 package http.request.component;
 
+import static http.parser.HttpRequestParser.KEY_INDEX;
+import static http.parser.HttpRequestParser.KEY_VALUE_SEPARATOR;
+import static http.parser.HttpRequestParser.QUERYSTRING_SEPARATOR;
+import static http.parser.HttpRequestParser.VALUE_INDEX;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -9,6 +15,20 @@ public class RequestMessageBody {
 
     public RequestMessageBody(Map<String, String> parameter) {
         this.parameter = parameter;
+    }
+
+    public static RequestMessageBody parseMessageBody(String messageBodyString) {
+        if (messageBodyString.isEmpty()) {
+            return new RequestMessageBody(new HashMap<>());
+        }
+
+        Map<String, String> messageBodyMap = new HashMap<>();
+        String[] params = messageBodyString.split(QUERYSTRING_SEPARATOR);
+        for (String param : params) {
+            String[] tokens = param.split(KEY_VALUE_SEPARATOR);
+            messageBodyMap.put(tokens[KEY_INDEX], tokens[VALUE_INDEX]);
+        }
+        return new RequestMessageBody(messageBodyMap);
     }
 
     public String get(Object key) {
