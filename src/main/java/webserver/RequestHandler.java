@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import http.request.HttpRequest;
+import servlet.DispatcherServlet;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -25,11 +27,12 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             HttpRequest httpRequest = new HttpRequest(in);
             DataOutputStream dos = new DataOutputStream(out);
-            String absolutePath = Paths.get("").toAbsolutePath().toString();
+//            String absolutePath = Paths.get("").toAbsolutePath().toString();
+            DispatcherServlet dispatcherServlet = new DispatcherServlet();
+            dispatcherServlet.run(httpRequest);
             // TODO: new File().toPath()와 Paths.get()이 무슨 차이인지 알아보기
             byte[] body = Files.readAllBytes(new File(absolutePath
                     + "/src/main/resources" + httpRequest.getPathPrefix() + httpRequest.getPath()).toPath());
-            httpRequest.getRequest(); // log 확인 위함
 //            byte[] body = Files.readAllBytes(Paths.get(absolutePath
 //                  + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl()));
             response200Header(dos, body, httpRequest);
