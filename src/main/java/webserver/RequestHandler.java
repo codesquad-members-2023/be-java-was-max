@@ -56,14 +56,8 @@ public class RequestHandler implements Runnable {
                 try {
                     URI uri = new URI(requestedURI);
                     String query = uri.getQuery();
-
                     Map<String, String> queryMap = request.parseQuery(query);
-                    String userId = queryMap.get("userId");
-                    String password = queryMap.get("password");
-                    String name = queryMap.get("name");
-                    String email = queryMap.get("email");
-
-                    userController.join(userId, password, name, email);
+                    userController.join(queryMap);
 
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
