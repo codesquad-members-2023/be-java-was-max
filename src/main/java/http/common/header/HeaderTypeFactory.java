@@ -1,15 +1,19 @@
 package http.common.header;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class HeaderTypeFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(HeaderTypeFactory.class);
+
 
     private HeaderTypeFactory() {
 
     }
 
     public static HeaderType createHeaderType(String headerName) {
-
         Optional<EntityHeaderType> optionalEntityHeaderType = EntityHeaderType.resolve(headerName);
         if (optionalEntityHeaderType.isPresent()) {
             return optionalEntityHeaderType.get();
@@ -22,7 +26,7 @@ public final class HeaderTypeFactory {
         if (optionalRequestHeaderType.isPresent()) {
             return optionalRequestHeaderType.get();
         }
-        return ResponseHeaderType.resolve(headerName).orElseThrow();
+        return ResponseHeaderType.resolve(headerName).orElse(null);
     }
 }
 

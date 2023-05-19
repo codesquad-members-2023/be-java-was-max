@@ -9,6 +9,7 @@ public enum RequestHeaderType implements HeaderType {
     ACCEPT_ENCODING("Accept-Encoding"),
     ACCEPT_LANGUAGE("Accept-Language"),
     AUTHORIZATION("Authorization"),
+    COOKIE("Cookie"),
     EXPECT("Expect"),
     FROM("From"),
     HOST("Host"),
