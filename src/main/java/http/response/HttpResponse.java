@@ -4,40 +4,40 @@ import http.HttpHeaders;
 
 public class HttpResponse {
 
-    private StatusLine statusLine;
-    private ContentType contentType;
-    private HttpHeaders httpHeaders;
-    private byte[] body;
+	private StatusLine statusLine;
+	private ContentType contentType;
+	private HttpHeaders httpHeaders;
+	private byte[] body;
 
-    public StatusLine getResponseLine() {
-        return statusLine;
-    }
+	public HttpResponse() {
+		this.httpHeaders = new HttpHeaders();
+	}
 
-    public void setResponseLine(StatusLine statusLine) {
-        this.statusLine = statusLine;
-    }
+	public StatusLine getResponseLine() {
+		return statusLine;
+	}
 
-    public ContentType getContentType() {
-        return contentType;
-    }
+	public void setResponseLine(StatusLine statusLine) {
+		this.statusLine = statusLine;
+	}
 
-    public void setContentType(ContentType contentType) {
-        this.contentType = contentType;
-    }
+	public ContentType getContentType() {
+		return contentType;
+	}
 
-    public HttpHeaders getHttpHeaders() {
-        return httpHeaders;
-    }
+	public void setContentType(ContentType contentType) {
+		this.contentType = contentType;
+	}
 
-    public void setHttpHeaders(HttpHeaders httpHeaders) {
-        this.httpHeaders = httpHeaders;
-    }
+	public HttpHeaders getHttpHeaders() {
+		return httpHeaders;
+	}
 
-    public byte[] getBody() {
-        return body;
-    }
+	public byte[] getBody() {
+		return body;
+	}
 
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
+	public void setBody(byte[] body) {
+		this.body = body;
+	}
 }

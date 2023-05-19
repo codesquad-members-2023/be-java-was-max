@@ -1,6 +1,5 @@
 package view;
 
-import http.HttpHeaders;
 import http.response.ContentType;
 import http.response.HttpResponse;
 import http.response.StatusLine;
@@ -29,9 +28,7 @@ public class ViewResolver {
 
 	private void redirect(final String viewName, final HttpResponse httpResponse) {
 		httpResponse.setResponseLine(new StatusLine("HTTP/1.1", 302, "FOUND"));
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.addHeader(Map.of("Location", List.of(viewName)));
-		httpResponse.setHttpHeaders(httpHeaders);
+		httpResponse.getHttpHeaders().addHeader(Map.of("Location", List.of(viewName)));
 	}
 
 	private void forward(final String viewName, final HttpResponse httpResponse) throws IOException {
