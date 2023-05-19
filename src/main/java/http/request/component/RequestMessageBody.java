@@ -4,7 +4,9 @@ import static http.parser.HttpRequestParser.KEY_INDEX;
 import static http.parser.HttpRequestParser.KEY_VALUE_SEPARATOR;
 import static http.parser.HttpRequestParser.QUERYSTRING_SEPARATOR;
 import static http.parser.HttpRequestParser.VALUE_INDEX;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +28,9 @@ public class RequestMessageBody {
         String[] params = messageBodyString.split(QUERYSTRING_SEPARATOR);
         for (String param : params) {
             String[] tokens = param.split(KEY_VALUE_SEPARATOR);
-            messageBodyMap.put(tokens[KEY_INDEX], tokens[VALUE_INDEX]);
+            String key = URLDecoder.decode(tokens[KEY_INDEX], UTF_8);
+            String value = URLDecoder.decode(tokens[VALUE_INDEX], UTF_8);
+            messageBodyMap.put(key, value);
         }
         return new RequestMessageBody(messageBodyMap);
     }
