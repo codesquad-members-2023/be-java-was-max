@@ -1,10 +1,13 @@
 package webserver.handler;
 
+import static http.common.header.ResponseHeaderType.SET_COOKIE;
 import static http.parser.HttpRequestParser.parseHttpRequest;
-import static util.FileUtils.getFile;
+import static util.FileUtils.readFile;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import http.session.Cookie;
+import http.session.HttpSession;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -13,7 +16,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.dispatcher_servlet.DispatcherServlet;
@@ -40,7 +45,7 @@ public class RequestHandler implements Runnable {
             StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
             logger.debug("httpRequest : {}", request);
 
-            Optional<File> optionalStaticResource = getFile(request.getPath());
+            Optional<File> optionalStaticResource = readFile(request.getPath());
 
             if (optionalStaticResource.isPresent()) {
                 File file = optionalStaticResource.get();
@@ -50,6 +55,7 @@ public class RequestHandler implements Runnable {
                 dispatcherServlet.doDispatch(request, response);
             }
 
+            responseCookie(request, response);
             response200Header(dos, response);
             responseBody(dos, response);
             logger.debug("httpResponse : {}", response);
@@ -60,9 +66,28 @@ public class RequestHandler implements Runnable {
         }
     }
 
+    private void responseCookie(HttpRequest request, HttpResponse response) {
+        if (request.hasHttpSession()) {
+            String sessionIdCookie = createSessionIdCookie(request.getHttpSession().getId());
+            response.getResponseHeader().put(SET_COOKIE, sessionIdCookie);
+        } else if (request.getSid() != null) {
+            String sessionIdCookie = createSessionIdCookie(request.getSid());
+            response.getResponseHeader().put(SET_COOKIE, sessionIdCookie);
+        }
+    }
+
+    private String createSessionIdCookie(String sid) {
+        List<Cookie> cookies = HttpSession.createSessionIdCookie(sid);
+        return cookies.stream().map(Cookie::toString).collect(Collectors.joining(";"));
+    }
+
     private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.writeBytes(httpResponse.toString());
+            dos.writeBytes(httpResponse.getStatusLine().toString());
+            dos.writeBytes(System.lineSeparator());
+            dos.writeBytes(httpResponse.getResponseHeader().toString());
+            dos.writeBytes(System.lineSeparator());
+            dos.writeBytes(System.lineSeparator());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
