@@ -1,6 +1,7 @@
 package cafe.app.user.controller;
 
 
+import static http.common.HttpMethod.GET;
 import static http.common.HttpMethod.POST;
 
 import annotation.Controller;
@@ -20,7 +21,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(path = "/user/create", method = POST)
+    @RequestMapping(path = "/user/new", method = GET)
+    public String addUserForm(HttpRequest request, HttpResponse response) {
+        return "user/form";
+    }
+
+    @RequestMapping(path = "/users", method = POST)
     public String createUser(HttpRequest request, HttpResponse response) {
         RequestMessageBody messageBody = request.getMessageBody();
         String userId = messageBody.get("userId");
