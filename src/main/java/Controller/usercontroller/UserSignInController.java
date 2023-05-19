@@ -41,7 +41,7 @@ public class UserSignInController implements Controller {
 
 	private void addUserToSessionMap(HttpRequest request, String requestId) {
 		Session session = request.getSession();
-		session.addUserToSessionMap(requestId);
+		session.setAttribute("user", requestId);
 	}
 
 	private static boolean isSignInFailed(String requestPassword, User user) {
