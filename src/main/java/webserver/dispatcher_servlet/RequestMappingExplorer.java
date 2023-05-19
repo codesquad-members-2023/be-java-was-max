@@ -3,6 +3,7 @@ package webserver.dispatcher_servlet;
 import static util.PackageExplorer.findAllClassesUsingGoogleGuice;
 
 import annotation.Controller;
+import config.DependencyInjectionContainer;
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;

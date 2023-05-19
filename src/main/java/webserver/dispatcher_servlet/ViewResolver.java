@@ -1,5 +1,6 @@
 package webserver.dispatcher_servlet;
 
+import http.request.HttpRequest;
 import http.response.HttpResponse;
 import java.io.File;
 import java.io.IOException;
@@ -21,11 +22,11 @@ public class ViewResolver {
         return prefix + viewName + suffix;
     }
 
-    public void render(String viewPath, final HttpResponse response) throws IOException {
+    public void render(String viewPath, HttpRequest request, final HttpResponse response) throws IOException {
         StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
-        Optional<File> optionalFile = FileUtils.getFile(viewPath);
+        Optional<File> optionalFile = FileUtils.readFile(viewPath);
         if (optionalFile.isPresent()) {
-            staticResourceHandler.process(optionalFile.get(), response);
+            staticResourceHandler.process(optionalFile.get(), request, response);
         }
     }
 }

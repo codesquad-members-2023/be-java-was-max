@@ -4,6 +4,8 @@ import static http.common.HttpStatus.FOUND;
 import static http.common.header.ResponseHeaderType.LOCATION;
 import static http.common.version.HttpVersion.HTTP_1_1;
 
+import config.CafeAppConfig;
+import config.DependencyInjectionContainer;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.component.StatusLine;
@@ -24,7 +26,7 @@ public class DispatcherServlet implements HttpServlet {
     private final ViewResolver viewResolver;
 
     public DispatcherServlet() throws IOException, InvocationTargetException, IllegalAccessException {
-        DependencyInjectionContainer container = new DependencyInjectionContainer(new UserAppConfig());
+        DependencyInjectionContainer container = new DependencyInjectionContainer(new CafeAppConfig());
         RequestMappingExplorer explorer = new RequestMappingExplorer(container);
         this.handlerMapping = explorer.scanRequestMapping(PACKAGE_NAME);
         this.handlerAdapter = new HandlerAdapter();
@@ -52,7 +54,7 @@ public class DispatcherServlet implements HttpServlet {
         String viewPath = viewResolver.getView(viewName);
 
         // viewPath에 따른 파일 렌더링
-        viewResolver.render(viewPath, response);
+        viewResolver.render(viewPath, request, response);
     }
 
     private void processRedirection(String location, final HttpResponse response) {

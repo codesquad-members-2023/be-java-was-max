@@ -36,6 +36,9 @@ public class Handler {
         Method[] methods = controllerInstance.getClass()
             .getMethods();
         for (Method method : methods) {
+            if (!method.isAnnotationPresent(RequestMapping.class)) {
+                continue;
+            }
             RequestMapping requestMapping = method.getDeclaredAnnotation(RequestMapping.class);
             HttpMethod httpMethod = requestMapping.method();
             String path = requestMapping.path();

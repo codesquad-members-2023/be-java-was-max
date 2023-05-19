@@ -17,7 +17,7 @@ public class ResponseHeader {
         return Optional.ofNullable(header.get(key));
     }
 
-    public void addHeader(HeaderType key, String value) {
+    public void put(HeaderType key, String value) {
         header.put(key, value);
     }
 

@@ -25,7 +25,7 @@ public class HttpResponse {
     }
 
     public void addHeader(HeaderType key, String value) {
-        responseHeader.addHeader(key, value);
+        responseHeader.put(key, value);
     }
 
     public byte[] getMessageBody() {
@@ -46,6 +46,10 @@ public class HttpResponse {
 
     public void setStatusLine(StatusLine statusLine) {
         this.statusLine = statusLine;
+    }
+
+    public ResponseHeader getResponseHeader() {
+        return responseHeader;
     }
 
     @Override
