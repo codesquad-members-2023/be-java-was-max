@@ -28,12 +28,16 @@ https://www.rfc-editor.org/rfc/rfc2616
 
 ## 리뷰 피드백(1~3단계)
 
-### 1차 리팩토링
+### TODO : 1차 리팩토링
 
 - [x] MediaType -> ContentType 클래스명 변경
 - [x] contentType -> mimeType 필드명 변경
 - [x] response200header(),responseBody() 분리 #Response 객체
 - [x] parsing 메서드 분리 #Request 객체
+- [x] join()에 queryMap 직접 넘기기
+- [ ] Is a directory 오류 해결하기
+- [ ] Connect가 계속 이뤄지는 이유 찾아서 해결하기
+- [ ] Request, Response 클래스명 수정하기
 
 * private 메서드를 테스트 하는 것은 좋지 않다. private 메서드를 포함하고 있는 public 메서드를 테스트하면 동일한 테스트 효과가 있다.
     * 리플렉션을 활용하는 방법도 있지만 좋은 방법은 아니라고 한다.
