@@ -22,7 +22,9 @@ public final class HttpRequestBuilder {
 
 		QueryParameter queryParameter = parseQueryParameter(startLine.split(DELIMITER)[1]);
 
-		return new HttpRequest(requestLine, queryParameter, httpHeaders);
+		String body = parseBody(br, httpHeaders.getContentLength());
+
+		return new HttpRequest(requestLine, queryParameter, httpHeaders, body);
 	}
 
 	private static RequestLine parseStartLine(final String startLine) {
@@ -52,5 +54,12 @@ public final class HttpRequestBuilder {
 		}
 
 		return headers;
+	}
+
+	private static String parseBody(final BufferedReader br, final int contentLength) throws IOException {
+		char[] buffer = new char[contentLength];
+
+		int readByte = br.read(buffer, 0, contentLength);
+		return new String(buffer, 0, readByte);
 	}
 }
