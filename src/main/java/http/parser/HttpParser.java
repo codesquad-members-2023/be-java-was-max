@@ -28,6 +28,9 @@ public class HttpParser {
         String[] headers = headerString.split(System.lineSeparator());
         for (String header : headers) {
             HeaderType key = HeaderTypeFactory.createHeaderType(header.split(HEADER_SEPARATOR_REGEX)[KEY_INDEX]);
+            if (key == null) {
+                continue;
+            }
             String value = header.split(HEADER_SEPARATOR_REGEX)[VALUE_INDEX];
             headerMap.put(key, value);
         }
