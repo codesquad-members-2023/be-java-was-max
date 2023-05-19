@@ -7,6 +7,7 @@ import static http.common.HttpMethod.POST;
 import annotation.Controller;
 import annotation.RequestMapping;
 import cafe.app.user.controller.dto.UserLoginRequest;
+import cafe.app.user.controller.dto.UserResponse;
 import cafe.app.user.entity.User;
 import cafe.app.user.service.UserService;
 import http.request.HttpRequest;
@@ -42,7 +43,8 @@ public class LoginController {
         UserLoginRequest requestDto = new UserLoginRequest(userId, password);
         try {
             User user = userService.login(requestDto);
-            httpSession.setAttribute("user", user);
+            UserResponse userResponse = new UserResponse(user);
+            httpSession.setAttribute("user", userResponse);
         } catch (Exception e) {
             return "redirect:user/login_failed";
         }

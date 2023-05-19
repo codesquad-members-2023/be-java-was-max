@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class RequestHandler implements Runnable {
             connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             DataOutputStream dos = new DataOutputStream(out);
             HttpRequest request = parseHttpRequest(br);
             HttpResponse response = new HttpResponse();
@@ -56,7 +57,7 @@ public class RequestHandler implements Runnable {
             }
 
             responseCookie(request, response);
-            response200Header(dos, response);
+            responseHeader(dos, response);
             responseBody(dos, response);
             logger.debug("httpResponse : {}", response);
         } catch (IOException e) {
@@ -68,20 +69,20 @@ public class RequestHandler implements Runnable {
 
     private void responseCookie(HttpRequest request, HttpResponse response) {
         if (request.hasHttpSession()) {
-            String sessionIdCookie = createSessionIdCookie(request.getHttpSession().getId());
+            String sessionIdCookie = createSessionIdCookieString(request.getHttpSession().getId());
             response.getResponseHeader().put(SET_COOKIE, sessionIdCookie);
         } else if (request.getSid() != null) {
-            String sessionIdCookie = createSessionIdCookie(request.getSid());
+            String sessionIdCookie = createSessionIdCookieString(request.getSid());
             response.getResponseHeader().put(SET_COOKIE, sessionIdCookie);
         }
     }
 
-    private String createSessionIdCookie(String sid) {
+    private String createSessionIdCookieString(String sid) {
         List<Cookie> cookies = HttpSession.createSessionIdCookie(sid);
         return cookies.stream().map(Cookie::toString).collect(Collectors.joining(";"));
     }
 
-    private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {
+    private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {
         try {
             dos.writeBytes(httpResponse.getStatusLine().toString());
             dos.writeBytes(System.lineSeparator());

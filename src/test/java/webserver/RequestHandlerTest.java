@@ -74,7 +74,7 @@ class RequestHandlerTest {
             String contentType = "Content-Type: application/x-www-form-urlencoded";
             String accept = "Accept: */*";
             String eof = "";
-            String messageBody = "userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
+            String messageBody = "userId=user1&password=user1user1&name=%EA%B9%80%EC%9A%A9%ED%99%98&email=user1%40naver.com";
             String requestString = String.join("\r\n", requestLine, host, connection, contentLength, contentType,
                 accept, eof, messageBody);
 
@@ -83,9 +83,10 @@ class RequestHandlerTest {
             // then
             UserRepository userRepository = new MemoryUserRepository();
             serverThreadFuture.thenRun(() -> {
-                User user = userRepository.findByUserId("javajigi")
+                User user = userRepository.findByUserId("user1")
                     .orElseThrow();
                 assertThat(user).isNotNull();
+                assertThat(user.getName()).isEqualTo("김용환");
             });
 
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
