@@ -11,8 +11,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpParser.class);
 
     public static String readHttpHeader(BufferedReader br) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -37,9 +41,9 @@ public class HttpParser {
         return headerMap;
     }
 
-    public static String readMessageBody(BufferedReader br, int contentType) throws IOException {
-        char[] buf = new char[contentType];
-        br.read(buf, 0, contentType);
+    public static String readMessageBody(BufferedReader br, int contentLength) throws IOException {
+        char[] buf = new char[contentLength];
+        br.read(buf, 0, contentLength);
         return String.valueOf(buf);
     }
 }
