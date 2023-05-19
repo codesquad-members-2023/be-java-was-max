@@ -1,5 +1,6 @@
 package http.request;
 
+import http.ContentType;
 import http.request.headers.EntityHeader;
 import http.request.headers.GeneralHeader;
 import http.request.headers.RequestHeader;
@@ -43,6 +44,14 @@ public class RequestHeaders {
     }
 
     public Map<String, String> getTemp() {
+        return temp;
+    }
+
+    public String getContentType(String uri){
+        return ContentType.get(uri);
+    }
+
+    public Map<String, String> get(){
         return temp;
     }
 }

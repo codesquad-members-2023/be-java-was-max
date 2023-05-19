@@ -13,8 +13,8 @@ public class RequestBody {
         contents.append(ch);
     }
 
-    public Optional<StringBuilder> getContents(){
-        return Optional.of(contents);
+    public String getContents(){
+        return contents.toString();
     }
 
 }
