@@ -20,6 +20,9 @@ public class DispatcherServlet {
 		if (path.equals("/user/create")) {
 			viewName = new UserJoinServlet().join(httpRequest, httpResponse);
 		}
+		if (path.equals("/user/login")) {
+			viewName = new UserLoginServlet().login(httpRequest, httpResponse);
+		}
 
 		viewResolver.resolve(viewName, httpResponse);
 	}
