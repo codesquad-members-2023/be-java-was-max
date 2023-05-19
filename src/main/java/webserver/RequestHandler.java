@@ -24,28 +24,25 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             HttpRequest httpRequest = new HttpRequest(in);
             DataOutputStream dos = new DataOutputStream(out);
-//            String absolutePath = Paths.get("").toAbsolutePath().toString();
+
             DispatcherServlet dispatcherServlet = new DispatcherServlet();
-            dispatcherServlet.run(httpRequest);
+            String path = dispatcherServlet.run(httpRequest);
             // TODO: new File().toPath()와 Paths.get()이 무슨 차이인지 알아보기
-            byte[] body = Files.readAllBytes(new File(absolutePath
-                    + "/src/main/resources" + httpRequest.getPathPrefix() + httpRequest.getPath()).toPath());
-//            byte[] body = Files.readAllBytes(Paths.get(absolutePath
-//                  + "/src/main/resources" + httpRequest.getContentType() + httpRequest.getUrl()));
-            response200Header(dos, body, httpRequest);
+            byte[] body = Files.readAllBytes(Paths.get(path));
+//            byte[] body = Files.readAllBytes(new File(path).toPath());
+            response200Header(dos, body, httpRequest.getContentType(dispatcherServlet.getMappingUri()));
             responseBody(dos, body);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, byte[] body, HttpRequest httpRequest) {
+    private void response200Header(DataOutputStream dos, byte[] body, String contentType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + httpRequest.getContentType() + ";charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + body.length + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
