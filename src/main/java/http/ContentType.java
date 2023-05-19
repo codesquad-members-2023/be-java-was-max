@@ -1,5 +1,8 @@
 package http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public enum ContentType {
     HTML("text/html"),
     CSS("text/css"),
@@ -14,6 +17,7 @@ public enum ContentType {
     WOFF2("font/woff2");
 
     private final String value;
+    private static final Logger logger = LoggerFactory.getLogger(ContentType.class);
     ContentType(String value) {
         this.value = value;
     }
@@ -25,6 +29,7 @@ public enum ContentType {
                 return ct.value;
             }
         }
+        logger.debug("Content-Type: {}", viewPath);
         throw new RuntimeException("지원하지 않는 확장자 입니다.");
     }
 
