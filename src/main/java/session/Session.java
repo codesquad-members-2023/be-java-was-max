@@ -16,7 +16,8 @@ public class Session {
 	}
 
 	/**
-	 * uuid를 key값으로한 httpSession Map에 key와 value를 저장한다.
+	 * uuid를 key값으로한 httpSession을 Value로 하는 UUIDMap에 해당 UUID와 httpSession을 저장후
+	 * 파라미터로 받은 key와 value를  httpSession에 저장한다.
 	 * 사실 setAttribute 를 할때마다 UUID를 생성하면 문제가 생기지만
 	 * 일단은 넘어간다.
 	 * @param key

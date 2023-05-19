@@ -19,9 +19,12 @@ public class OkHeader implements HttpResponseHeader {
 	}
 
 	private void createHeader() {
-		header = "Content-Type: " + contentType + "\r\n" +
-			"Content-Length: " + contentLength + "\r\n" +
-			"\r\n";
+		StringBuilder sb = new StringBuilder();
+		sb.append("Content-Type: ").append(contentType).append("\r\n")
+			.append("Content-Length: ").append(contentLength).append("\r\n")
+			.append("\r\n");
+		header = sb.toString();
+
 	}
 
 	@Override

@@ -38,6 +38,10 @@ public class DispatcherServlet {
 		return new HttpResponse(new HttpResponseParams(viewName, body, request.getSession()));
 	}
 
+	/**
+	 * viewName을 통해 어떠한 view, viewResolver 인스턴스를 생성할지 결정한다.
+	 * @param viewName
+	 */
 	private void initViewAndViewResolver(String viewName) {
 		view = viewFactory.view(viewName);
 		viewResolver = viewFactory.viewResolver(viewName);

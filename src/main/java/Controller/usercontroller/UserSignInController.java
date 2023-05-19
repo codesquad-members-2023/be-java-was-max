@@ -39,6 +39,11 @@ public class UserSignInController implements Controller {
 		return "redirect:/";
 	}
 
+	/**
+	 * 세션에 "user" 라는 key로 requestId를 저장한다.
+	 * @param request
+	 * @param requestId
+	 */
 	private void addUserToSessionMap(HttpRequest request, String requestId) {
 		Session session = request.getSession();
 		session.setAttribute("user", requestId);
