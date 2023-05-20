@@ -11,11 +11,13 @@ public class HttpRequest {
 	private final RequestLine requestLine;
 	private final QueryParameter queryParameter;
 	private final HttpHeaders httpHeaders;
+	private final String body;
 
-	public HttpRequest(final RequestLine requestLine, final QueryParameter queryParameter, final HttpHeaders httpHeaders) {
+	public HttpRequest(final RequestLine requestLine, final QueryParameter queryParameter, final HttpHeaders httpHeaders, final String body) {
 		this.requestLine = requestLine;
 		this.queryParameter = queryParameter;
 		this.httpHeaders = httpHeaders;
+		this.body = body;
 	}
 
 	public HttpMethod getHttpMethod() {
@@ -28,6 +30,10 @@ public class HttpRequest {
 
 	public Map<String, String> getQueryParameter() {
 		return queryParameter.getQueryParameter();
+	}
+
+	public String getBody() {
+		return body;
 	}
 
 	@Override

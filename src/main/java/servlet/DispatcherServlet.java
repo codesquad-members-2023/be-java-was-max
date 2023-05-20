@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class DispatcherServlet {
 
-	private static final ViewResolver VIEW_RESOLVER = new ViewResolver();
+	private static final ViewResolver viewResolver = new ViewResolver();
 
 	public void dispatch(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
 		String path = httpRequest.getUri().getPath();
@@ -20,7 +20,10 @@ public class DispatcherServlet {
 		if (path.equals("/user/create")) {
 			viewName = new UserJoinServlet().join(httpRequest, httpResponse);
 		}
+		if (path.equals("/user/login")) {
+			viewName = new UserLoginServlet().login(httpRequest, httpResponse);
+		}
 
-		VIEW_RESOLVER.resolve(viewName, httpResponse);
+		viewResolver.resolve(viewName, httpResponse);
 	}
 }

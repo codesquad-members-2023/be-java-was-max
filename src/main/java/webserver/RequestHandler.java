@@ -13,7 +13,7 @@ import java.net.Socket;
 public class RequestHandler implements Runnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-	private static final DispatcherServlet DISPATCHER_SERVLET = new DispatcherServlet();
+	private static final DispatcherServlet dispatcherServlet = new DispatcherServlet();
 
 	private final Socket connection;
 
@@ -30,7 +30,7 @@ public class RequestHandler implements Runnable {
 			HttpRequest httpRequest = HttpRequestBuilder.build(br);
 			HttpResponse httpResponse = new HttpResponse();
 
-			DISPATCHER_SERVLET.dispatch(httpRequest, httpResponse);
+			dispatcherServlet.dispatch(httpRequest, httpResponse);
 
 			logger.debug(httpRequest.toString());
 
@@ -45,8 +45,15 @@ public class RequestHandler implements Runnable {
 	private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {
 		try {
 			dos.writeBytes(httpResponse.getResponseLine().toString() + " \r\n");
-			dos.writeBytes("Content-Type: " + httpResponse.getContentType().getValue() + "\r\n");
-			dos.writeBytes("Content-Length: " + httpResponse.getBody().length + "\r\n");
+			if (httpResponse.getContentType() != null) {
+				dos.writeBytes("Content-Type: " + httpResponse.getContentType().getValue() + "\r\n");
+			}
+			if (httpResponse.getBody() != null) {
+				dos.writeBytes("Content-Length: " + httpResponse.getBody().length + "\r\n");
+			}
+			if (httpResponse.getHttpHeaders() != null) {
+				dos.writeBytes(httpResponse.getHttpHeaders().toString());
+			}
 			dos.writeBytes("\r\n");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
@@ -55,6 +62,10 @@ public class RequestHandler implements Runnable {
 
 	private void responseBody(DataOutputStream dos, byte[] body) {
 		try {
+			if (body == null) {
+				return;
+			}
+
 			dos.write(body, 0, body.length);
 			dos.flush();
 		} catch (IOException e) {

@@ -17,11 +17,21 @@ public class HttpHeaders {
 		headersMap.putAll(header);
 	}
 
+	public int getContentLength() {
+		return Integer.parseInt(headersMap.getOrDefault("Content-Length", List.of("0")).get(0));
+	}
+
+	public List<String> allValues(final String name) {
+		List<String> values = headersMap.get(name);
+
+		return values != null ? values : List.of();
+	}
+
 	@Override
 	public String toString() {
 		return headersMap.entrySet()
-			.stream()
-			.map(entry -> entry.getKey() + ": " + entry.getValue())
-			.collect(Collectors.joining("\n"));
+				.stream()
+				.map(entry -> entry.getKey() + ": " + String.join(", ", entry.getValue()))
+				.collect(Collectors.joining("\n"));
 	}
 }

@@ -4,17 +4,21 @@ import http.HttpHeaders;
 
 public class HttpResponse {
 
-	private ResponseLine responseLine;
+	private StatusLine statusLine;
 	private ContentType contentType;
 	private HttpHeaders httpHeaders;
 	private byte[] body;
 
-	public ResponseLine getResponseLine() {
-		return responseLine;
+	public HttpResponse() {
+		this.httpHeaders = new HttpHeaders();
 	}
 
-	public void setResponseLine(ResponseLine responseLine) {
-		this.responseLine = responseLine;
+	public StatusLine getResponseLine() {
+		return statusLine;
+	}
+
+	public void setResponseLine(StatusLine statusLine) {
+		this.statusLine = statusLine;
 	}
 
 	public ContentType getContentType() {
@@ -27,10 +31,6 @@ public class HttpResponse {
 
 	public HttpHeaders getHttpHeaders() {
 		return httpHeaders;
-	}
-
-	public void setHttpHeaders(HttpHeaders httpHeaders) {
-		this.httpHeaders = httpHeaders;
 	}
 
 	public byte[] getBody() {
