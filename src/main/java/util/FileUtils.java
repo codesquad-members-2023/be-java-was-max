@@ -12,7 +12,7 @@ public final class FileUtils {
 
     }
 
-    public static Optional<File> getFile(String path) {
+    public static Optional<File> readFile(String path) {
         // static 디렉토리 탐색
         if (isExistFile(STATIC_PATH + path)) {
             return Optional.of(new File(STATIC_PATH + path));
@@ -25,6 +25,6 @@ public final class FileUtils {
     }
 
     private static boolean isExistFile(String pathname) {
-        return new File(pathname).exists();
+        return new File(pathname).isFile();
     }
 }

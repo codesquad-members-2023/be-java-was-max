@@ -1,4 +1,4 @@
-package http.common;
+package http.common.version;
 
 public class HttpVersion extends ProtocolVersion {
 

@@ -1,12 +1,13 @@
 package webserver.dispatcher_servlet;
 
-import http.request.HttpServletRequest;
-import http.response.HttpServletResponse;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
+import java.lang.reflect.InvocationTargetException;
 
 public class HandlerAdapter {
 
-    public String handle(HttpServletRequest request, HttpServletResponse response, Servlet servlet)
-        throws Exception {
-        return servlet.invoke(request, response);
+    public String handle(HttpRequest request, HttpResponse response, Handler handler)
+        throws InvocationTargetException, IllegalAccessException {
+        return handler.service(request, response);
     }
 }

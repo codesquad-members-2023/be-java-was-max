@@ -1,33 +1,24 @@
-package http.request.component;
+package http.response.component;
 
 import http.common.header.HeaderType;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class RequestHeader {
-
-    private static final Logger logger = LoggerFactory.getLogger(RequestHeader.class);
+public class ResponseHeader {
 
     private final Map<HeaderType, String> header;
 
-    public RequestHeader(Map<HeaderType, String> header) {
+    public ResponseHeader(Map<HeaderType, String> header) {
         this.header = header;
     }
 
     public Optional<String> get(HeaderType key) {
-
         return Optional.ofNullable(header.get(key));
     }
 
-    public boolean containsKey(HeaderType key) {
-        return header.containsKey(key);
-    }
-
-    public String put(HeaderType key, String value) {
-        return header.put(key, value);
+    public void put(HeaderType key, String value) {
+        header.put(key, value);
     }
 
     @Override

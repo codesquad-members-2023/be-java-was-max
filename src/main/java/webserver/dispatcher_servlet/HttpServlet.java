@@ -1,9 +1,9 @@
 package webserver.dispatcher_servlet;
 
-import http.request.HttpServletRequest;
-import http.response.HttpServletResponse;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 
 public interface HttpServlet {
 
-    void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    void doDispatch(HttpRequest request, HttpResponse response) throws Exception;
 }

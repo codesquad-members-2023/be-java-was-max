@@ -1,28 +1,31 @@
 package http.response;
 
+import http.common.header.HeaderType;
+import http.response.component.ResponseHeader;
+import http.response.component.StatusLine;
 import java.util.HashMap;
+import java.util.Optional;
 
-public class HttpServletResponse {
+public class HttpResponse {
 
     private StatusLine statusLine;
     private ResponseHeader responseHeader;
     private byte[] messageBody;
 
-    public HttpServletResponse() {
+    public HttpResponse() {
         this.statusLine = null;
         this.responseHeader = new ResponseHeader(new HashMap<>());
         this.messageBody = null;
     }
 
-    public HttpServletResponse(StatusLine statusLine, ResponseHeader responseHeader,
-        byte[] messageBody) {
+    public HttpResponse(StatusLine statusLine, ResponseHeader responseHeader, byte[] messageBody) {
         this.statusLine = statusLine;
         this.responseHeader = responseHeader;
         this.messageBody = messageBody;
     }
 
-    public void addHeader(String key, Object value) {
-        responseHeader.addHeader(key, value);
+    public void addHeader(HeaderType key, String value) {
+        responseHeader.put(key, value);
     }
 
     public byte[] getMessageBody() {
@@ -33,12 +36,20 @@ public class HttpServletResponse {
         this.messageBody = messageBody;
     }
 
-    public Object getHeaderValue(String key) {
-        return responseHeader.getHeaderValue(key);
+    public Optional<String> get(HeaderType key) {
+        return responseHeader.get(key);
+    }
+
+    public StatusLine getStatusLine() {
+        return statusLine;
     }
 
     public void setStatusLine(StatusLine statusLine) {
         this.statusLine = statusLine;
+    }
+
+    public ResponseHeader getResponseHeader() {
+        return responseHeader;
     }
 
     @Override
