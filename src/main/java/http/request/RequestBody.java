@@ -1,6 +1,5 @@
 package http.request;
 
-import java.util.Optional;
 
 public class RequestBody {
     private final StringBuilder contents;

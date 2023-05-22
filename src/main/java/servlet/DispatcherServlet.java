@@ -1,8 +1,7 @@
 package servlet;
 
 import http.request.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import http.response.HttpResponse;
 import view.ViewResolver;
 
 public class DispatcherServlet {
