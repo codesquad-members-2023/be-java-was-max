@@ -1,7 +1,7 @@
 package http.request;
 
 import http.HttpMethod;
-import http.HttpUtils;
+import http.HttpUtil;
 
 public class RequestLine {
     private static final int METHOD_INDEX = 0;
@@ -17,7 +17,7 @@ public class RequestLine {
 
     public RequestLine(String startLine) {
         String[] tokens = startLine.split(START_LINE_DIVIDER);
-        this.method = HttpUtils.getMethodType(tokens[METHOD_INDEX]);
+        this.method = HttpUtil.getMethodType(tokens[METHOD_INDEX]);
         this.protocol = tokens[PROTOCOL_INDEX];
 
         if (startLine.contains(QUERY_STRING)) { // if queryString exists

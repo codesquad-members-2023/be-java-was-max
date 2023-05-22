@@ -3,9 +3,6 @@ package http;
 import com.google.common.collect.Maps;
 import http.response.ContentType;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -14,7 +11,7 @@ import static http.HttpMethod.GET;
 import static http.HttpMethod.POST;
 
 
-public final class HttpUtils {
+public final class HttpUtil {
 
     private static final String PARAMETER_DIVIDER = "&";
     private static final String KEY_VALUE_DIVIDER = "=";
@@ -22,11 +19,8 @@ public final class HttpUtils {
     private static final String EXTENSION_DIVIDER = ".";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
-    private static final String HTML_EXTENSION = ".html";
-    private static final String STATIC_PATH = "src/main/resources/static";
-    private static final String TEMPLATES_PATH = "src/main/resources/templates";
 
-    private HttpUtils() {
+    private HttpUtil() {
         throw new IllegalStateException("Utility Class");
     }
 
@@ -74,15 +68,6 @@ public final class HttpUtils {
         }
 
         return GET;
-    }
-
-    public static byte[] findFilePath(String url) throws IOException {
-        // Templates
-        if (url.endsWith(HTML_EXTENSION)) {
-            return Files.readAllBytes(new File(TEMPLATES_PATH + url).toPath());
-        }
-        // Static
-        return Files.readAllBytes(new File(STATIC_PATH + url).toPath());
     }
 
     public static String findContentTypeValue(String url) {
