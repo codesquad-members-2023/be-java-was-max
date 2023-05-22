@@ -15,6 +15,7 @@ public class ControllerMapper {
 
 	private final List<Controller> controllers;
 
+	//todo classLoader를 사용해 자동으로 controller가 추가되도록 만들자.
 	public ControllerMapper() {
 		this.controllers = new ArrayList<>(
 			Arrays.asList(new UserSignUpController(), new UserSignInController()));
