@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
 
 public class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
     private RequestLine requestLine;
     private RequestHeaders requestHeaders;
     private RequestBody requestBody;
@@ -55,7 +55,7 @@ public class HttpRequest {
     }
 
     public String getRequestBody(){
-        return requestBody.getContents();
+        return requestBody.get();
     }
 
     public String getContentType(String mappingUri){
@@ -63,15 +63,16 @@ public class HttpRequest {
     }
 
     public void logRequest(){
-//        logger.debug("<Request Line>");
-//        logger.debug(requestLine.get()); // requestLine
-//        logger.debug("<Request Headers>");
-//        Map<String, String> requestHeadersMap = requestHeaders.get();
-//        for (String key: requestHeadersMap.keySet()){
-//            logger.debug("{}: {}", key, requestHeadersMap.get(key)); // requestHeader
-//        }
+        logger.debug("✅*******Request*******");
+        logger.debug("<Request Line>");
+        logger.debug(requestLine.get()); // requestLine
+        logger.debug("<Request Headers>");
+        Map<String, String> requestHeadersMap = requestHeaders.get();
+        for (String key: requestHeadersMap.keySet()){
+            logger.debug("{}: {}", key, requestHeadersMap.get(key)); // requestHeader
+        }
         logger.debug("<Request Body>");
-        logger.debug(requestBody.getContents()); // requestBody
+        logger.debug(requestBody.get()); // requestBody
     }
 
 }
