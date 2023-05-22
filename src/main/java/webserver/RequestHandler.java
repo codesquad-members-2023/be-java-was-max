@@ -29,9 +29,7 @@ public class RequestHandler implements Runnable {
 
             DispatcherServlet dispatcherServlet = new DispatcherServlet();
             String path = dispatcherServlet.run(httpRequest);
-            // TODO: new File().toPath()와 Paths.get()이 무슨 차이인지 알아보기
             byte[] body = Files.readAllBytes(Paths.get(path));
-//            byte[] body = Files.readAllBytes(new File(path).toPath());
             response200Header(dos, body, httpRequest.getContentType(dispatcherServlet.getMappingUri()));
             responseBody(dos, body);
         } catch (IOException e) {
