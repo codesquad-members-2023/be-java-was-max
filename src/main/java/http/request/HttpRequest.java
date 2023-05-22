@@ -26,19 +26,19 @@ public class HttpRequest {
         this.requestHeaders = new RequestHeaders();
         this.requestBody = new RequestBody();
         makeRequests(br);
-        requestLog();
+        logRequest();
     }
 
     private void makeRequests(BufferedReader br) throws IOException { // requestLine, requestHeader, requestBody 만들기
         String line = br.readLine();
         while (!line.equals("")) { // Request Header
-            requestHeaders.addHeader(line);
+            requestHeaders.add(line);
             line = br.readLine();
         }
 
         if (requestLine.getMethod().equals(HttpMethod.POST)){ // POST 일 때만 Request Body 가져오기
             for (int i = 0; i < Long.parseLong(requestHeaders.get("Content-Length")); i++) { // Request Body
-                requestBody.addContent((char) br.read());
+                requestBody.add((char) br.read());
             }
         }
     }
@@ -62,14 +62,14 @@ public class HttpRequest {
         return requestHeaders.getContentType(mappingUri);
     }
 
-    public void requestLog(){
-        logger.debug("<Request Line>");
-        logger.debug(requestLine.get()); // requestLine
-        logger.debug("<Request Headers>");
-        Map<String, String> requestHeadersMap = requestHeaders.get();
-        for (String key: requestHeadersMap.keySet()){
-            logger.debug("{}: {}", key, requestHeadersMap.get(key)); // requestHeader
-        }
+    public void logRequest(){
+//        logger.debug("<Request Line>");
+//        logger.debug(requestLine.get()); // requestLine
+//        logger.debug("<Request Headers>");
+//        Map<String, String> requestHeadersMap = requestHeaders.get();
+//        for (String key: requestHeadersMap.keySet()){
+//            logger.debug("{}: {}", key, requestHeadersMap.get(key)); // requestHeader
+//        }
         logger.debug("<Request Body>");
         logger.debug(requestBody.getContents()); // requestBody
     }

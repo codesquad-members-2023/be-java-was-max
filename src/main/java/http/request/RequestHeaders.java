@@ -22,7 +22,7 @@ public class RequestHeaders {
     }
 
     // TODO: 적절한 header를 판단해서 Data를 넣어주는 역할.
-    public void addHeader(String header){
+    public void add(String header){
         String[] splitedHeader = header.split(":", 2);
         temp.put(splitedHeader[0], splitedHeader[1].trim());
     }

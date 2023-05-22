@@ -9,7 +9,7 @@ public class RequestBody {
         this.contents = new StringBuilder();
     }
 
-    public void addContent(char ch){
+    public void add(char ch){
         contents.append(ch);
     }
 
