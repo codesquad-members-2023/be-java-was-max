@@ -56,11 +56,10 @@ public class RequestParser {
 
     private String readBody(BufferedReader br, Map<String, String> header) throws IOException {
         StringBuffer sb = new StringBuffer();
-        int input;
 
         if (header.containsKey("Content-Length")) {
-            while ((input = br.read()) != 0) {
-                sb.append(input);
+            for (int i = 0; i < Integer.parseInt(header.get("Content-Length")); i++) {
+                sb.append((char) br.read());
             }
         }
         return sb.toString();
