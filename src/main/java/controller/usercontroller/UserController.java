@@ -1,6 +1,6 @@
-package Controller.usercontroller;
+package controller.usercontroller;
 
-import Controller.Controller;
+import controller.Controller;
 import webserver.request.HttpRequest;
 
 public class UserController implements Controller {

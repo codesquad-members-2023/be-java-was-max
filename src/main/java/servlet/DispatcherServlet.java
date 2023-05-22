@@ -2,10 +2,10 @@ package servlet;
 
 import java.util.Map;
 
-import Controller.Controller;
-import Controller.usercontroller.UserController;
-import Controller.usercontroller.UserSignInController;
-import Controller.usercontroller.UserSignUpController;
+import controller.Controller;
+import controller.usercontroller.UserController;
+import controller.usercontroller.UserSignInController;
+import controller.usercontroller.UserSignUpController;
 import servlet.view.View;
 import servlet.viewResolver.ViewResolver;
 import webserver.request.HttpRequest;

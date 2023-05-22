@@ -1,8 +1,8 @@
-package Controller.usercontroller;
+package controller.usercontroller;
 
 import java.util.Map;
 
-import Controller.Controller;
+import controller.Controller;
 import db.UserRepository;
 import model.User;
 import webserver.request.HttpRequest;
