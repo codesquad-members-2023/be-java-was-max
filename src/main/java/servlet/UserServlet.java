@@ -9,12 +9,12 @@ import util.HttpRequestUtils;
 public class UserServlet {
     public String findViewPath(HttpRequest httpRequest) {
         String method = httpRequest.getMethod();
-        if (method.equals(HttpMethod.GET)) { // Query String 을 찾는다.
-            if (!httpRequest.getQueryString().isEmpty()) { // user 객체 생성
+
+        if (HttpMethod.get(method) == HttpMethod.GET) { // Query String 을 찾는다.
                 Database.addUser(createUser(httpRequest.getQueryString().get()));
             }
         }
-        if (method.equals(HttpMethod.POST)) { // Request Body를 찾는다.
+        if (HttpMethod.get(method) == HttpMethod.POST) { // Request Body를 찾는다.
             Database.addUser(createUser(httpRequest.getRequestBody().toString()));
 
         }

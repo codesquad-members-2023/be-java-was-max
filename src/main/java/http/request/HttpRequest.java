@@ -36,7 +36,7 @@ public class HttpRequest {
             line = br.readLine();
         }
 
-        if (requestLine.getMethod().equals(HttpMethod.POST)){ // POST 일 때만 Request Body 가져오기
+        if (HttpMethod.POST == HttpMethod.get(requestLine.getMethod())){ // POST 일 때만 Request Body 가져오기
             for (int i = 0; i < Long.parseLong(requestHeaders.get("Content-Length")); i++) { // Request Body
                 requestBody.add((char) br.read());
             }
