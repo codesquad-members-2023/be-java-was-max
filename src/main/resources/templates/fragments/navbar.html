@@ -58,7 +58,9 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="/">Posts</a></li>
                     {{#session}}
-                    <li><a href="#" role="button">로그아웃</a></li>
+                    <form action="/user/sign-out" method="post">
+                        <button type="submit" role="button">로그아웃</button>
+                    </form>
                     <li><a href="#" role="button">개인정보수정</a></li>
                     {{/session}}
                     {{^session}}

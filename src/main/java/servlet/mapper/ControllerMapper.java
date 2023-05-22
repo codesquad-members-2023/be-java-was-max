@@ -8,6 +8,7 @@ import annotation.RequestMapping;
 import controller.Controller;
 import controller.usercontroller.UserController;
 import controller.usercontroller.UserSignInController;
+import controller.usercontroller.UserSignOutController;
 import controller.usercontroller.UserSignUpController;
 import webserver.request.HttpRequest;
 
@@ -18,7 +19,7 @@ public class ControllerMapper {
 	//todo classLoader를 사용해 자동으로 controller가 추가되도록 만들자.
 	public ControllerMapper() {
 		this.controllers = new ArrayList<>(
-			Arrays.asList(new UserSignUpController(), new UserSignInController()));
+			Arrays.asList(new UserSignUpController(), new UserSignInController(), new UserSignOutController()));
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Session {
 	private UUID uuid;
+	private boolean invalidate;
 	private static Map<UUID, Map<String, String>> UUIDMap;
 	private Map<String, String> httpSession;
 
@@ -46,4 +47,11 @@ public class Session {
 		return uuid;
 	}
 
+	public void invalidate() {
+		this.invalidate = true;
+	}
+
+	public boolean isInvalidate() {
+		return invalidate;
+	}
 }
