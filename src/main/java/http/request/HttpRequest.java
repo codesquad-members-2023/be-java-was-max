@@ -1,31 +1,22 @@
 package http.request;
 
-import http.HttpBody;
 import http.HttpHeader;
+import http.HttpBody;
 
 public class HttpRequest {
-    private HttpRequestLine requestLine;
-    private QueryString queryString;
+    private RequestLine requestLine;
     private HttpHeader headers;
     private HttpBody body;
 
     public HttpRequest() {
     }
 
-    public HttpRequestLine getRequestLine() {
+    public RequestLine getRequestLine() {
         return requestLine;
     }
 
-    public void setRequestLine(HttpRequestLine requestLine) {
+    public void setRequestLine(RequestLine requestLine) {
         this.requestLine = requestLine;
-    }
-
-    public QueryString getQueryString() {
-        return queryString;
-    }
-
-    public void setQueryString(final QueryString queryString) {
-        this.queryString = queryString;
     }
 
     public HttpHeader getHeaders() {
