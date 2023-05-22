@@ -1,11 +1,11 @@
 package servlet;
 
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import controller.Controller;
-import controller.usercontroller.UserController;
-import controller.usercontroller.UserSignInController;
-import controller.usercontroller.UserSignUpController;
+import servlet.mapper.ControllerMapper;
+import servlet.mapper.HandlerMapper;
 import servlet.view.View;
 import servlet.viewResolver.ViewResolver;
 import webserver.request.HttpRequest;
@@ -14,21 +14,30 @@ import webserver.response.HttpResponseParams;
 
 public class DispatcherServlet {
 
-	private final Map<String, Controller> controllerMap;
 	private Controller controller;
 	private View view;
 	private ViewResolver viewResolver;
 	private ViewFactory viewFactory;
+	private final ControllerMapper controllerMapper;
+	private final HandlerMapper handlerMapper;
+	private String viewName;
 
 	public DispatcherServlet() {
-		controllerMap = Map.of("/user/create", new UserSignUpController(), "/user/signIn", new UserSignInController());
-		viewFactory = new ViewFactory();
+		this.viewFactory = new ViewFactory();
+		this.controllerMapper = new ControllerMapper();
+		this.handlerMapper = new HandlerMapper();
 	}
 
 	public HttpResponse doDispatch(HttpRequest request) {
-		controller = controllerMap.getOrDefault(request.getURL(), new UserController());
+		controller = controllerMapper.mapController(request);
 
-		String viewName = controller.process(request);
+		Method handlerMethod = handlerMapper.mapHandler(controller, request);
+
+		try {
+			viewName = (String)handlerMethod.invoke(controller, request);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
 
 		initViewAndViewResolver(viewName);
 
