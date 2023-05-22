@@ -10,7 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-public class HttpUtils {
+import static http.HttpMethod.GET;
+import static http.HttpMethod.POST;
+
+
+public final class HttpUtils {
 
     private static final String PARAMETER_DIVIDER = "&";
     private static final String KEY_VALUE_DIVIDER = "=";
@@ -65,11 +69,11 @@ public class HttpUtils {
     }
 
     public static HttpMethod getMethodType(String name) {
-        if (name.equals(HttpMethod.POST.name())) {
-            return HttpMethod.POST;
+        if (name.equals(POST.name())) {
+            return POST;
         }
 
-        return HttpMethod.GET;
+        return GET;
     }
 
     public static byte[] findFilePath(String url) throws IOException {
@@ -81,25 +85,8 @@ public class HttpUtils {
         return Files.readAllBytes(new File(STATIC_PATH + url).toPath());
     }
 
-    public static String findContentType(String url) {
+    public static String findContentTypeValue(String url) {
         String extension = url.substring(url.lastIndexOf(EXTENSION_DIVIDER));
-        if (extension.equals(ContentType.JS.getExtension())) {
-            return ContentType.JS.getType();
-        }
-        if (extension.equals(ContentType.CSS.getExtension())) {
-            return ContentType.CSS.getType();
-        }
-        if (extension.equals(ContentType.PNG.getExtension())) {
-            return ContentType.PNG.getType();
-        }
-        if (extension.equals(ContentType.JPEG.getExtension())
-                || extension.equals(ContentType.JPG.getExtension())) {
-            return ContentType.JPEG.getType();
-        }
-        if (extension.equals(ContentType.TRUE_TYPE_FONT.getExtension())
-                || extension.equals(ContentType.WEB_OPEN_FONT.getExtension())) {
-            return ContentType.TRUE_TYPE_FONT.getType();
-        }
-        return ContentType.HTML.getType();
+        return ContentType.getTypeValue(extension);
     }
 }
