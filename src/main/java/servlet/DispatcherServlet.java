@@ -7,10 +7,7 @@ import view.ViewResolver;
 public class DispatcherServlet {
     // 1. 적합한 컨트롤러를 찾는다.
     // 2. 적합한 메서드를 찾는다.
-    // exception : 맵핑되는 url이 없으면 에러 발생.
-    private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
     private final ViewResolver viewResolver;
-    private String mappingUri;
 
     public DispatcherServlet(){
         this.viewResolver = new ViewResolver();
@@ -18,8 +15,6 @@ public class DispatcherServlet {
 
     public void run(HttpRequest httpRequest, HttpResponse httpResponse){
         viewResolver.run(mappingUri(httpRequest), httpResponse);
-        this.mappingUri = mappingUri(httpRequest);
-        return viewResolver.run(mappingUri);
     }
 
     public String mappingUri(HttpRequest httpRequest){
@@ -34,11 +29,6 @@ public class DispatcherServlet {
         if (path.contains("/user/create")){
             viewPath = new UserServlet().findViewPath(httpRequest);
         }
-        logger.debug("viewPath: {}", viewPath);
         return viewPath;
-    }
-
-    public String getMappingUri(){
-        return mappingUri;
     }
 }

@@ -25,6 +25,6 @@ public class StatusLine {
     }
 
     public String get(){
-        return httpVersion + " " + statusCode + " " + reasonPhase + " \r\n";
+        return httpVersion + " " + statusCode + " " + reasonPhase;
     }
 }
