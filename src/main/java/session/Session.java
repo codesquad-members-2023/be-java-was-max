@@ -18,8 +18,6 @@ public class Session {
 	/**
 	 * uuid를 key값으로한 httpSession을 Value로 하는 UUIDMap에 해당 UUID와 httpSession을 저장후
 	 * 파라미터로 받은 key와 value를  httpSession에 저장한다.
-	 * 사실 setAttribute 를 할때마다 UUID를 생성하면 문제가 생기지만
-	 * 일단은 넘어간다.
 	 * @param key
 	 * @param value
 	 */
@@ -40,8 +38,8 @@ public class Session {
 		return httpSession.get(key);
 	}
 
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
+	public void setUUID(String uuid) {
+		this.uuid = UUID.fromString(uuid);
 	}
 
 	public UUID getUUID() {

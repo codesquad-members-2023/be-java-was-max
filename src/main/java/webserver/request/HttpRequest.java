@@ -19,15 +19,15 @@ public class HttpRequest {
 	private static final String GET = "GET";
 
 	public HttpRequest(InputStream in) {
+		session = new Session();
 		BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		try {
 			httpRequestLine = new HttpRequestLine(br.readLine());
-			httpRequestHeader = new HttpRequestHeader(br);
+			httpRequestHeader = new HttpRequestHeader(br, session);
 			httpRequestBody = new HttpRequestBody(br, httpRequestHeader.getContentLength());
 		} catch (IOException e) {
 			throw new HttpRequestParsingException();
 		}
-		session = new Session();
 	}
 
 	public String getMethod() {
