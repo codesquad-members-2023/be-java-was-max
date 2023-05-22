@@ -14,6 +14,6 @@ public class StatusLine {
 
     @Override
     public String toString() {
-        return "HttpResponse [protocol=" + protocol + ", status=" + status + ", reasonPhrase=" + reasonPhrase + "]";
+        return String.join(" ", protocol, status, reasonPhrase);
     }
 }
