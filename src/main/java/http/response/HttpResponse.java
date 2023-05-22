@@ -20,8 +20,8 @@ public class HttpResponse {
         responseHeaders.add(line);
     }
 
-    public void setResponseBody(String line){
-        responseBody.add(line);
+    public void setResponseBody(byte[] body){
+        responseBody.add(body);
     }
 
     public String getStatusLine() {
@@ -32,7 +32,7 @@ public class HttpResponse {
         return responseHeaders.get();
     }
 
-    public String getResponseBody() {
+    public byte[] getResponseBody() {
         return responseBody.get();
     }
 }
