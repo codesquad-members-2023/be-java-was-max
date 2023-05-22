@@ -3,6 +3,7 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.request.HttpRequest;
@@ -23,23 +24,30 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest httpRequest = new HttpRequest(in);
+            HttpResponse httpResponse = new HttpResponse();
             DataOutputStream dos = new DataOutputStream(out);
 
             DispatcherServlet dispatcherServlet = new DispatcherServlet();
-            String path = dispatcherServlet.run(httpRequest);
-            byte[] body = Files.readAllBytes(Paths.get(path));
-            response200Header(dos, body, httpRequest.getContentType(dispatcherServlet.getMappingUri()));
-            responseBody(dos, body);
+            dispatcherServlet.run(httpRequest, httpResponse);
+            responseHeader(dos, httpResponse);
+            responseBody(dos, httpResponse.getResponseBody());
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, byte[] body, String contentType) {
+    private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + body.length + "\r\n");
+            dos.writeBytes(httpResponse.getStatusLine() + "\r\n");
+            if (httpResponse.getContentType().isPresent()) {
+                dos.writeBytes("Content-Type: " + httpResponse.getContentType().get() + ";charset=utf-8\r\n");
+            }
+            if (httpResponse.getContentLength().isPresent()) {
+                dos.writeBytes("Content-Length: " + httpResponse.getContentLength().get() + ";charset=utf-8\r\n");
+            }
+            if (httpResponse.getLocation().isPresent()) {
+                dos.writeBytes("Location: " + httpResponse.getLocation().get() + "\r\n");
+            }
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());

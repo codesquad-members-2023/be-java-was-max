@@ -16,8 +16,8 @@ public class DispatcherServlet {
         this.viewResolver = new ViewResolver();
     }
 
-    // TODO: 최종 경로를 return 하지 말고, ViewResolver에서 처리하게 끔 수정하기.
-    public String run(HttpRequest httpRequest){
+    public void run(HttpRequest httpRequest, HttpResponse httpResponse){
+        viewResolver.run(mappingUri(httpRequest), httpResponse);
         this.mappingUri = mappingUri(httpRequest);
         return viewResolver.run(mappingUri);
     }
