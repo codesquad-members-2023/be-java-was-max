@@ -1,5 +1,8 @@
 package servlet.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -9,9 +12,11 @@ public class HttpResponse {
     private static final String CONTENT_LENGTH = "Content-Length: ";
     private static final String DELIMITER = " ";
     private static final String NEXT_LINE = "\r\n";
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
     private final HttpResponseStatus httpResponseStatus;
     private final String httpVersion;
     private final byte[] body;
+    private String session;
 
     public HttpResponse(HttpResponseStatus httpResponseStatus, byte[] body) {
         this.httpResponseStatus = httpResponseStatus;
@@ -19,11 +24,30 @@ public class HttpResponse {
         this.httpVersion = DEFAULT_HTTP_VERSION;
     }
 
+    public HttpResponse(HttpResponseStatus httpResponseStatus, byte[] body, String session) {
+        this.httpResponseStatus = httpResponseStatus;
+        this.body = body;
+        this.httpVersion = DEFAULT_HTTP_VERSION;
+        this.session = session;
+    }
+
     public void written(DataOutputStream out) throws IOException {
-        out.writeBytes(getResponseStartLine());
+        if (session != null) {
+            String sessionReturn = getSessionReturn();
+            out.writeBytes(sessionReturn);
+            String s = "Set-Cookie: " + session + "; Path=/";
+            logger.debug("session = {}", s);
+            out.writeBytes(s+NEXT_LINE);
+        } else {
+            out.writeBytes(getResponseStartLine());
+        }
         out.writeBytes(CONTENT_LENGTH + body.length + NEXT_LINE);
         out.writeBytes(NEXT_LINE);
         out.write(body, 0, body.length);
+    }
+
+    private String getSessionReturn() {
+        return httpVersion + DELIMITER + httpResponseStatus.getValue() + DELIMITER + httpResponseStatus.name()+NEXT_LINE;
     }
 
     private String getResponseStartLine() {

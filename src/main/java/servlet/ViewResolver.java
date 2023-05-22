@@ -18,12 +18,20 @@ public class ViewResolver {
 
     public static HttpResponse resolve(String result) throws IOException {
         byte[] body;
+        String session = null;
+        if (result.contains("sid=")) {
+            int index = result.indexOf("sid=");
+            session = result.substring(index);
+            result = result.substring(0, index-1);
+        }
+
         if (result.startsWith(PREFIX)) {
             Path path = Paths.get(SRC_MAIN_RESOURCES + result);
             body = Files.readAllBytes(path);
         } else {
             body = result.getBytes();
         }
-        return new HttpResponse(HttpResponseStatus.OK, body);
+        return session == null ? new HttpResponse(HttpResponseStatus.OK, body) :
+                new HttpResponse(HttpResponseStatus.OK, body, session);
     }
 }
