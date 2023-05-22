@@ -12,7 +12,7 @@ public class RequestBody {
         contents.append(ch);
     }
 
-    public String getContents(){
+    public String get(){
         return contents.toString();
     }
 
