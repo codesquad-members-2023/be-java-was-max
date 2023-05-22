@@ -25,4 +25,25 @@ public enum ContentType {
     public String getExtension() {
         return extension;
     }
+
+    public static String getTypeValue(String extension) {
+        if (extension.equals(JS.getExtension())) {
+            return JS.getType();
+        }
+        if (extension.equals(CSS.getExtension())) {
+            return CSS.getType();
+        }
+        if (extension.equals(PNG.getExtension())) {
+            return PNG.getType();
+        }
+        if (extension.equals(JPEG.getExtension())
+                || extension.equals(JPG.getExtension())) {
+            return JPEG.getType();
+        }
+        if (extension.equals(TRUE_TYPE_FONT.getExtension())
+                || extension.equals(WEB_OPEN_FONT.getExtension())) {
+            return TRUE_TYPE_FONT.getType();
+        }
+        return HTML.getType();
+    }
 }
