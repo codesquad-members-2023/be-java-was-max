@@ -1,12 +1,11 @@
 package http.response;
 
-import http.HttpBody;
 import http.HttpHeader;
 
 public class HttpResponse {
     private StatusLine statusLine;
     private HttpHeader headers;
-    private HttpBody body;
+    private byte[] body;
 
     public HttpResponse() {
     }
@@ -19,7 +18,7 @@ public class HttpResponse {
         return headers;
     }
 
-    public HttpBody getBody() {
+    public byte[] getBody() {
         return body;
     }
 
@@ -31,7 +30,7 @@ public class HttpResponse {
         this.headers = headers;
     }
 
-    public void setBody(final HttpBody body) {
+    public void setBody(final byte[] body) {
         this.body = body;
     }
 }

@@ -1,11 +1,13 @@
-package http;
+package http.request;
+
+import http.HttpUtils;
 
 import java.util.Map;
 
-public class HttpBody {
+public class RequestBody {
     private final Map<String, String> data;
 
-    public HttpBody(String body) {
+    public RequestBody(String body) {
         this.data = HttpUtils.parseBody(body);
     }
 

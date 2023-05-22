@@ -1,12 +1,11 @@
 package http.request;
 
 import http.HttpHeader;
-import http.HttpBody;
 
 public class HttpRequest {
     private RequestLine requestLine;
     private HttpHeader headers;
-    private HttpBody body;
+    private RequestBody body;
 
     public HttpRequest() {
     }
@@ -27,11 +26,11 @@ public class HttpRequest {
         this.headers = headers;
     }
 
-    public HttpBody getBody() {
+    public RequestBody getBody() {
         return body;
     }
 
-    public void setBody(final HttpBody body) {
+    public void setBody(final RequestBody body) {
         this.body = body;
     }
 }
