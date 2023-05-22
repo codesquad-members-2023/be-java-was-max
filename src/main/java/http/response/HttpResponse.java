@@ -8,6 +8,7 @@ public class HttpResponse {
     private byte[] body;
 
     public HttpResponse() {
+        this.headers = new HttpHeader();
     }
 
     public StatusLine getStatusLine() {
