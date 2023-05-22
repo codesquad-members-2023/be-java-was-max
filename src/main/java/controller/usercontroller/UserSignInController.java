@@ -5,6 +5,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import annotation.MethodType;
+import annotation.RequestMapping;
 import controller.Controller;
 import db.UserRepository;
 import model.User;
@@ -12,6 +14,7 @@ import session.Session;
 import webserver.RequestHandler;
 import webserver.request.HttpRequest;
 
+@RequestMapping("/user/signIn")
 public class UserSignInController implements Controller {
 
 	private UserRepository userRepository;
@@ -22,6 +25,7 @@ public class UserSignInController implements Controller {
 	}
 
 	@Override
+	@MethodType("POST")
 	public String process(HttpRequest request) {
 		Map<String, String> queryParams = request.getParameters();
 
