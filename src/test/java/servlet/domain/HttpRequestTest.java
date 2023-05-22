@@ -19,17 +19,17 @@ class HttpRequestTest {
                 HttpRequest.of(StartLine.parse("GET /index.html HTTP/1.0"), RequestHeaders.from(new HashMap<>()));
 
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(httpRequest.isMatching(0, INDEX_HTML)).isTrue();
-        softAssertions.assertThat(httpRequest.isMatching(1, INDEX_HTML)).isFalse();
-        softAssertions.assertThat(httpRequest.isMatching(0, NO_MATCH_PATH)).isFalse();
+        softAssertions.assertThat(httpRequest.isMatching(0, INDEX_HTML, "GET")).isTrue();
+        softAssertions.assertThat(httpRequest.isMatching(1, INDEX_HTML, "GET")).isFalse();
+        softAssertions.assertThat(httpRequest.isMatching(0, NO_MATCH_PATH, "GET")).isFalse();
 
         httpRequest =
                 HttpRequest.of(StartLine.parse("GET /index.html?name=albert;password=password HTTP/1.0"),
                         RequestHeaders.from(new HashMap<>()));
 
-        softAssertions.assertThat(httpRequest.isMatching(2, INDEX_HTML)).isTrue();
-        softAssertions.assertThat(httpRequest.isMatching(1, INDEX_HTML)).isFalse();
-        softAssertions.assertThat(httpRequest.isMatching(2, NO_MATCH_PATH)).isFalse();
+        softAssertions.assertThat(httpRequest.isMatching(2, INDEX_HTML, "GET")).isTrue();
+        softAssertions.assertThat(httpRequest.isMatching(1, INDEX_HTML, "GET")).isFalse();
+        softAssertions.assertThat(httpRequest.isMatching(2, NO_MATCH_PATH, "GET")).isFalse();
 
         softAssertions.assertAll();
     }

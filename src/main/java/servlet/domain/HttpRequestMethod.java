@@ -10,4 +10,8 @@ public enum HttpRequestMethod {
                 .filter(httpRequestMethod -> httpRequestMethod.name().equals(name))
                 .findFirst().orElseThrow();
     }
+
+    public boolean isSameName(String httpRequestMethod) {
+        return this.name().equals(httpRequestMethod);
+    }
 }

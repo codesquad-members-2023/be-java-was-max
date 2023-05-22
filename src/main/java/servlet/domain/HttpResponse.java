@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class HttpResponse {
+
     private static final String DEFAULT_HTTP_VERSION = "HTTP/1.1";
     private static final String CONTENT_LENGTH = "Content-Length: ";
     private static final String DELIMITER = " ";
@@ -19,13 +20,13 @@ public class HttpResponse {
     }
 
     public void written(DataOutputStream out) throws IOException {
-        out.writeBytes(getHttpMethodHeader());
+        out.writeBytes(getResponseStartLine());
         out.writeBytes(CONTENT_LENGTH + body.length + NEXT_LINE);
         out.writeBytes(NEXT_LINE);
         out.write(body, 0, body.length);
     }
 
-    private String getHttpMethodHeader() {
+    private String getResponseStartLine() {
         return httpVersion + DELIMITER + httpResponseStatus.getValue() + DELIMITER + httpResponseStatus.name() + DELIMITER +
                 NEXT_LINE;
     }

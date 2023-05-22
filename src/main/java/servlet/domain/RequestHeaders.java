@@ -2,6 +2,7 @@ package servlet.domain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -18,4 +19,10 @@ public class RequestHeaders {
                 .collect(Collectors.toList()));
     }
 
+    public int getContentLength() {
+        return headers.stream()
+                .filter(header -> Objects.equals(header.getKey(), "Content-Length"))
+                .map(header -> Integer.parseInt(header.getValue()))
+                .findFirst().orElse(0);
+    }
 }

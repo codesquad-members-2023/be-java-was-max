@@ -4,6 +4,9 @@ import servlet.domain.request.target.OriginForm;
 
 import java.util.Map;
 
+import static servlet.domain.HttpRequestMethod.GET;
+import static servlet.domain.HttpRequestMethod.from;
+
 public class StartLine {
     private static final String LINE_DELIMITER = " ";
     public static final int HTTP_METHOD_INDEX = 0;
@@ -21,7 +24,7 @@ public class StartLine {
 
     public static StartLine parse(String startLineString) {
         String[] startLineInfo = startLineString.split(LINE_DELIMITER);
-        HttpRequestMethod httpMethodInfo = HttpRequestMethod.from(startLineInfo[HTTP_METHOD_INDEX]);
+        HttpRequestMethod httpMethodInfo = from(startLineInfo[HTTP_METHOD_INDEX]);
         OriginForm originForm = OriginForm.from(startLineInfo[REQUEST_INDEX]);
         HttpVersion httpVersion = HttpVersion.from(startLineInfo[HTTP_VERSION_INDEX]);
 
@@ -55,4 +58,13 @@ public class StartLine {
     public boolean hasParameter() {
         return originForm.hasParameter();
     }
+
+    public boolean isSameMethod(String httpRequestMethod) {
+        return this.httpRequestMethod.isSameName(httpRequestMethod);
+    }
+
+    public boolean hasBody() {
+        return this.httpRequestMethod != GET;
+    }
+
 }

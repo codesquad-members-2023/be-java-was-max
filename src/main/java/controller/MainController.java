@@ -31,7 +31,7 @@ public class MainController {
         return "/user/form.html";
     }
 
-    @RequestMapping("/user/create")
+    @RequestMapping(value = "/user/create",method = "POST")
     public String viewUserList(String userId, String password, String name, String email) {
         Database.addUser(new User(userId, password, name, email));
         return "/user/list.html";

@@ -8,13 +8,17 @@ public class HttpRequest {
 
     private final RequestHeaders requestHeaders;
 
-    private String body;
+    private HttpBody body;
 
 
-    private HttpRequest(StartLine startLine, RequestHeaders requestHeaders, String body) {
+    private HttpRequest(StartLine startLine, RequestHeaders requestHeaders, HttpBody body) {
         this.startLine = startLine;
         this.requestHeaders = requestHeaders;
         this.body = body;
+    }
+
+    public static HttpRequest of(StartLine startLine, RequestHeaders requestHeaders, HttpBody body) {
+        return new HttpRequest(startLine, requestHeaders, body);
     }
 
     private HttpRequest(StartLine startLine, RequestHeaders requestHeaders) {
@@ -27,24 +31,23 @@ public class HttpRequest {
     }
 
 
-    public String getBody() {
-        return body;
-    }
-
     public String getUrl() {
         return startLine.getUrl();
     }
 
     public Map<String, String> getParameters() {
+        if (body != null) {
+            return body.getKeyValue();
+        }
         return startLine.getParameters();
     }
 
 
-    public boolean isMatching(int count, String path) {
-        return startLine.isSamePath(path) && startLine.isSameParameterCount(count);
+    public boolean isMatching(int count, String path, String httpRequestMethod) {
+        return startLine.isSamePath(path) && (startLine.isSameParameterCount(count) || body.isSameCount(count)) && startLine.isSameMethod(httpRequestMethod);
     }
 
     public boolean hasParameters() {
-        return startLine.hasParameter();
+        return startLine.hasParameter() || body != null;
     }
 }
