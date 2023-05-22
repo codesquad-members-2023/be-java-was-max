@@ -32,7 +32,7 @@ public class DispatcherServlet {
         if (path.equals("/user/form.html")) {
             viewPath = "/user/form.html";
         }
-        if (path.equals("/user/create")){
+        if (path.contains("/user/create")){
             viewPath = new UserServlet().findViewPath(httpRequest);
         }
         logger.debug("viewPath: {}", viewPath);
