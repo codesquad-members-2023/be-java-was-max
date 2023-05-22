@@ -25,7 +25,7 @@ public class UserServlet {
             String userId = Database.addUser(createUser(httpRequest.getRequestBody()));
             logger.debug("User: {}", Database.findUserById(userId));
         }
-        return "/index.html"; // 유저 생성하고 home으로 redirect
+        return "redirect:/index.html"; // 유저 생성하고 home으로 redirect
     }
 
     private User createUser(String userData){

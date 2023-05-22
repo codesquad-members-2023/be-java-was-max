@@ -16,12 +16,13 @@ public class ViewResolver {
     private final String RESOURCES_PATH = ROOT_PATH + "src/main/resources";
     private final String STATIC_PATH = RESOURCES_PATH + "/static";
     private final String TEMPLATES_PATH = RESOURCES_PATH + "/templates";
+    private final String REDIRECT = "redirect:";
 
     // TODO: redirect 처리 추가 -> location header에 추가
     // TODO: RequestHandler 클래스의 response200Header 메서드 다루기
-    // 순서 고민: user/create를 하면, user를 생성하고 해당하는 html을 찾아서 반환하는게 맞는가?(반환할 수 있는 html 파일이 없다면?)
 
     public String run(String viewPath){
+
         return findTotalPath(viewPath);
     }
 
