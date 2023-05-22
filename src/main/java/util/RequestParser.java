@@ -23,10 +23,10 @@ public class RequestParser {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             Map<String, String> requestLine = readNParseRequestLine(br);
             Map<String, String> header = readNParseHeader(br);
-//            String body = readBody(br, header);
+            String body = readBody(br, header);
             request.addRequestLine(requestLine);
             request.addHeader(header);
-//            request.setBody(body);
+            request.setBody(body);
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage());
         } catch (IOException e) {
@@ -38,7 +38,7 @@ public class RequestParser {
     private Map<String, String> readNParseRequestLine(BufferedReader br) throws IOException {
         String requestLine = br.readLine().trim();
         logger.debug("Request Line : {}", requestLine);
-        Map<String,String> parsedRequestLine = parseStartLine(requestLine);
+        Map<String, String> parsedRequestLine = parseStartLine(requestLine);
 
         return parsedRequestLine;
     }
@@ -55,17 +55,19 @@ public class RequestParser {
     }
 
     private String readBody(BufferedReader br, Map<String, String> header) throws IOException {
-        int input;
         StringBuffer sb = new StringBuffer();
+        int input;
 
-        while ((input = br.read()) > 0) {
-            sb.append((char) input);
+        if (header.containsKey("Content-Length")) {
+            while ((input = br.read()) != 0) {
+                sb.append(input);
+            }
         }
         return sb.toString();
     }
 
 
-    public static Map<String, String> parseStartLine (String startLine) {
+    public static Map<String, String> parseStartLine(String startLine) {
         Map<String, String> container = new HashMap<>();
         String[] splitLine = startLine.split(" ");
 
@@ -75,10 +77,10 @@ public class RequestParser {
         return container;
     }
 
-    public static Map<String, String> parseHeader (String header) {
+    public static Map<String, String> parseHeader(String header) {
         Map<String, String> container = new HashMap<>();
         String[] splitLine = header.split(":");
-        List<String> trimmed= Arrays.stream(splitLine).map(s -> s.trim()).collect(Collectors.toList());
+        List<String> trimmed = Arrays.stream(splitLine).map(s -> s.trim()).collect(Collectors.toList());
 
         container.put(trimmed.get(0), trimmed.get(1));
         return container;
