@@ -35,7 +35,8 @@ public class DispatcherServlet {
 		initViewAndViewResolver(viewName);
 
 		String viewPath = viewResolver.viewResolver(viewName);
-		byte[] body = view.render(viewPath);
+		Model model = new Model(request);
+		byte[] body = view.render(viewPath, model);
 
 		return new HttpResponse(new HttpResponseParams(viewName, body, request.getSession()));
 	}
