@@ -2,6 +2,7 @@ package http.response;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ResponseHeaders {
     private final String generalHeader;
@@ -35,5 +36,9 @@ public class ResponseHeaders {
 
     public Map<String, String> get() {
         return temp;
+    }
+
+    public Optional<String> get(String key){
+        return Optional.ofNullable(temp.get(key));
     }
 }
