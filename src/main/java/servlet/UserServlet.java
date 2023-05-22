@@ -16,7 +16,7 @@ public class UserServlet {
         String method = httpRequest.getMethod();
 
         if (HttpMethod.get(method) == HttpMethod.GET) { // Query String 을 찾는다.
-                Database.addUser(createUser(httpRequest.getQueryString().get()));
+            if (httpRequest.getQueryString().isPresent()) { // Query String이 비어있지 않으면 user 객체 생성
                 String userId = Database.addUser(createUser(httpRequest.getQueryString().get()));
                 logger.debug("User: {}", Database.findUserById(userId));
             }
