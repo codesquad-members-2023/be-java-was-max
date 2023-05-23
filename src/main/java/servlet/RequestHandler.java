@@ -29,13 +29,17 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream()) {
             HttpRequest httpRequest = HttpRequestMessageParser.parsingHttpRequest(in);
-            MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
-            String result = HandlerAdapter.process(mappingInfo);
-            HttpResponse httpResponse = ViewResolver.resolve(result);
-            ResponseHandler.response(httpResponse, connection);
+            if (SecurityHandler.isPermit(httpRequest)) {
+                MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
+                String result = HandlerAdapter.process(mappingInfo);
+                HttpResponse httpResponse = ViewResolver.resolve(result);
+                ResponseHandler.response(httpResponse, connection);
+            } else {
+                ResponseHandler.response(ViewResolver.resolve("/templates/user/login.html"), connection);
+            }
         } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage());
-            ResponseHandler.response(new HttpResponse(HttpResponseStatus.NOT_FOUND, new byte[0]), connection);
+            ResponseHandler.response(new HttpResponse(HttpResponseStatus.NOT_FOUND, "찾을 수 없는 페이지 입니다"), connection);
         }
     }
 }

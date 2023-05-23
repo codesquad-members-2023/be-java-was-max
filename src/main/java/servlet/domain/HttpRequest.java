@@ -50,4 +50,8 @@ public class HttpRequest {
     public boolean hasParameters() {
         return startLine.hasParameter() || body != null;
     }
+
+    public String getSession() {
+        return requestHeaders.getSession();
+    }
 }

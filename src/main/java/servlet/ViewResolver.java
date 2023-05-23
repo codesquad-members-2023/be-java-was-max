@@ -1,7 +1,9 @@
 package servlet;
 
-import servlet.domain.HttpResponseStatus;
+import db.SessionDB;
+import model.User;
 import servlet.domain.HttpResponse;
+import servlet.domain.HttpResponseStatus;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,21 +19,26 @@ public class ViewResolver {
     }
 
     public static HttpResponse resolve(String result) throws IOException {
-        byte[] body;
+        String body;
         String session = null;
         if (result.contains("sid=")) {
             int index = result.indexOf("sid=");
             session = result.substring(index);
-            result = result.substring(0, index-1);
+            result = result.substring(0, index - 1);
         }
 
         if (result.startsWith(PREFIX)) {
             Path path = Paths.get(SRC_MAIN_RESOURCES + result);
-            body = Files.readAllBytes(path);
+            body = Files.readString(path);
         } else {
-            body = result.getBytes();
+            body = result;
         }
         return session == null ? new HttpResponse(HttpResponseStatus.OK, body) :
-                new HttpResponse(HttpResponseStatus.OK, body, session);
+                new HttpResponse(HttpResponseStatus.OK, loginSession(body, session), session);
+    }
+
+    private static String loginSession(String body, String session) {
+        User user = SessionDB.get(session);
+        return body.replace("로그인", user.getName());
     }
 }

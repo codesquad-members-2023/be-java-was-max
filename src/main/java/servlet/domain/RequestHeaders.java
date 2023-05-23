@@ -25,4 +25,11 @@ public class RequestHeaders {
                 .map(header -> Integer.parseInt(header.getValue()))
                 .findFirst().orElse(0);
     }
+
+    public String getSession() {
+        return headers.stream()
+                .filter(header -> header.getKey().equals("Cookie"))
+                .map(Header::getValue)
+                .findFirst().orElse("");
+    }
 }

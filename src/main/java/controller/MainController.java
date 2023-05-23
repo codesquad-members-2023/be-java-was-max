@@ -36,8 +36,10 @@ public class MainController {
 
     @RequestMapping(value = "/user/create", method = "POST")
     public String viewUserList(String password, String name, String userId, String email) {
-        Database.addUser(new User(userId, password, name, email));
-        return "/user/list.html";
+        User user = new User(userId, password, name, email);
+        Database.addUser(user);
+        UUID uuid = SessionDB.put(user);
+        return "/user/list.html?sid=" + uuid;
     }
 
     @RequestMapping("/user/login.html")
@@ -49,10 +51,19 @@ public class MainController {
     public String login(String password, String email) {
         User user = Database.findUserByEmail(email);
         if (user.getPassword().equals(password)) {
-            UUID uuid = UUID.randomUUID();
-            SessionDB.put(uuid, user);
+            UUID uuid = SessionDB.put(user);
             return "/index.html?sid=" + uuid;
         }
         return "/user/login_failed.html";
+    }
+
+    @RequestMapping(value = "/user/list")
+    public String userList() {
+        return "/user/list";
+    }
+
+    @RequestMapping(value = "/qna/form")
+    public String qnaForm() {
+        return "/qna/form.html";
     }
 }

@@ -15,16 +15,16 @@ public class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
     private final HttpResponseStatus httpResponseStatus;
     private final String httpVersion;
-    private final byte[] body;
+    private final String body;
     private String session;
 
-    public HttpResponse(HttpResponseStatus httpResponseStatus, byte[] body) {
+    public HttpResponse(HttpResponseStatus httpResponseStatus, String body) {
         this.httpResponseStatus = httpResponseStatus;
         this.body = body;
         this.httpVersion = DEFAULT_HTTP_VERSION;
     }
 
-    public HttpResponse(HttpResponseStatus httpResponseStatus, byte[] body, String session) {
+    public HttpResponse(HttpResponseStatus httpResponseStatus, String body, String session) {
         this.httpResponseStatus = httpResponseStatus;
         this.body = body;
         this.httpVersion = DEFAULT_HTTP_VERSION;
@@ -41,9 +41,10 @@ public class HttpResponse {
         } else {
             out.writeBytes(getResponseStartLine());
         }
-        out.writeBytes(CONTENT_LENGTH + body.length + NEXT_LINE);
+        byte[] bytes = body.getBytes();
+        out.writeBytes(CONTENT_LENGTH + bytes.length + NEXT_LINE);
         out.writeBytes(NEXT_LINE);
-        out.write(body, 0, body.length);
+        out.write(bytes, 0, bytes.length);
     }
 
     private String getSessionReturn() {
