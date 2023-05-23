@@ -15,14 +15,14 @@ public class RequestHandler implements Runnable {
     private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private final Socket connection;
     private final UserController userController;
-    private final Request request;
-    private final Response response;
+    private final HttpRequest httpRequest;
+    private final HttpResponse httpResponse;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
         this.userController = new UserController();
-        this.request = new Request();
-        this.response = new Response();
+        this.httpRequest = new HttpRequest();
+        this.httpResponse = new HttpResponse();
     }
 
     public void run() {
@@ -56,7 +56,7 @@ public class RequestHandler implements Runnable {
                 try {
                     URI uri = new URI(requestedURI);
                     String query = uri.getQuery();
-                    Map<String, String> queryMap = request.parseQuery(query);
+                    Map<String, String> queryMap = httpRequest.parseQuery(query);
                     userController.join(queryMap);
 
                 } catch (URISyntaxException e) {
@@ -83,11 +83,11 @@ public class RequestHandler implements Runnable {
 
             // 요청에 대한 Request Message를 전송한다
             DataOutputStream dos = new DataOutputStream(out);
-            response.response200Header(dos, body.length, contentType);
-            response.responseBody(dos, body);
+            httpResponse.response200Header(dos, body.length, contentType);
+            httpResponse.responseBody(dos, body);
 
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage());   // Is a directory 에러 발생
         }
     }
 }

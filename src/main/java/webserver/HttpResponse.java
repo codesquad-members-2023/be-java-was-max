@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Response {
+public class HttpResponse {
     private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     public void response200Header(DataOutputStream dos, int lengthOfBodyContent, String contentType) {

@@ -3,7 +3,7 @@ package webserver;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Request {
+public class HttpRequest {
     public Map<String, String> parseQuery(String query) {
         Map<String, String> queryMap = new HashMap<>();
 
