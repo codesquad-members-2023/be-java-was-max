@@ -2,6 +2,7 @@ package util.response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.request.Session;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -50,6 +51,10 @@ public class HttpResponse {
         try {
             dos.writeBytes("HTTP/1.1 302 FOUND\r\n");
             dos.writeBytes("Location: " + redirectUrl[0] + "\r\n");
+//            dos.writeBytes("Set-Cookie:dd; Path=/ ; Max-Age=1;"+ "\r\n");
+            if(Session.sessionStorage.get(Session.sId) != null) {
+                dos.writeBytes("Set-Cookie: sid=" + Session.sId + "; Path=/ ;"+ "\r\n");
+            }
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
