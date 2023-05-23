@@ -58,9 +58,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="/">Posts</a></li>
                     {{#session}}
-                    <form action="/user/sign-out" method="post">
-                        <button type="submit" role="button">로그아웃</button>
-                    </form>
+                    <li><a href="#" onclick="submit();" role="button">로그아웃</a></li>
                     <li><a href="#" role="button">개인정보수정</a></li>
                     {{/session}}
                     {{^session}}
@@ -72,4 +70,15 @@
         </div>
     </div>
 </head>
+<script>
+    function submit() {
+        $.ajax({
+            url: "/user/sign-out",
+            type: "POST"
+        }).done(function () {
+            alert("로그아웃되었습니다.")
+            location.href = "/";
+        })
+    }
+</script>
 </html>
