@@ -2,6 +2,7 @@ package util.request;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class HttpRequestUtil {
     public static Map<String,String> paresQueryString(String queryString) {
@@ -16,4 +17,8 @@ public class HttpRequestUtil {
         return queryParam;
     }
 
+    public static String createSid() {
+        UUID sid = UUID.randomUUID();
+        return sid.toString();
+    }
 }
