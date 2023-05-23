@@ -1,14 +1,19 @@
-package db;
-
-import com.google.common.collect.Maps;
-
-import model.User;
+package application.db;
 
 import java.util.Collection;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
+import application.model.User;
+
 public class Database {
-    private static Map<String, User> users = Maps.newHashMap();
+    private static final Map<String, User> users = Maps.newHashMap();
+
+    static {
+        User user = new User("admin", "1234", "관리자","email.@emai.com");
+        users.put(user.getUserId(), user);
+    }
 
     public static void addUser(User user) {
         users.put(user.getUserId(), user);
