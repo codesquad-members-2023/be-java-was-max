@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import servlet.controller.LoginController;
+import webserver.util.HttpResponseUtils;
 
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class LoginControllerTest {
 
         Database.addUser(new User("sully", "1234", "설리", "sully@naver.com"));
 
-        String viewName = loginController.process(Map.of(USER_ID, "sully", PASSWORD, "1234"));
+        String viewName = loginController.process(Map.of(USER_ID, "sully", PASSWORD, "1234"), new HttpResponseUtils());
         assertThat(viewName).isEqualTo("redirect:/");
     }
 
@@ -33,7 +34,7 @@ public class LoginControllerTest {
 
         Database.addUser(new User("sully", "1234", "설리", "sully@naver.com"));
 
-        String viewName = loginController.process(Map.of(USER_ID, "sulla", PASSWORD, "4321"));
+        String viewName = loginController.process(Map.of(USER_ID, "sulla", PASSWORD, "4321"), new HttpResponseUtils());
         assertThat(viewName).isEqualTo("user/login_failed");
     }
 

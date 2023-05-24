@@ -3,6 +3,7 @@ package controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import servlet.controller.LoginFormController;
+import webserver.util.HttpResponseUtils;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -12,7 +13,7 @@ public class LoginFormControllerTest {
     void process() {
         LoginFormController loginFormController = new LoginFormController();
 
-        String viewName = loginFormController.process(null);
+        String viewName = loginFormController.process(null, new HttpResponseUtils());
 
         assertThat("user/login").isEqualTo(viewName);
     }

@@ -38,7 +38,7 @@ public class DispatcherServlet {
             return requestUrl;
         }
 
-        String viewName = controller.process(httpRequest.getParameters());
+        String viewName = controller.process(httpRequest.getParameters(), httpResponse);
 
         // redirect 요청일 경우
         if (viewName.startsWith(REDIRECT_URL_PREFIX)) {

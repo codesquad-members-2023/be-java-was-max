@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import servlet.controller.UserSaveController;
+import webserver.util.HttpResponseUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class UserSaveControllerTest {
     void process() {
         UserSaveController userSaveController = new UserSaveController();
 
-        String viewName = userSaveController.process(Map.of("userId", "sully1234", "password", "1234", "name", "sully", "email", "123%40123"));
+        String viewName = userSaveController.process(Map.of("userId", "sully1234", "password", "1234", "name", "sully", "email", "123%40123"), new HttpResponseUtils());
 
         assertThat("redirect:/").isEqualTo(viewName);
 
