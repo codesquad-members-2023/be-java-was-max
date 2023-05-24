@@ -6,27 +6,21 @@ import java.util.HashMap;
 import java.util.Map;
 import webserver.frontcontroller.ModelAndView;
 import webserver.frontcontroller.controller.Handler;
-import webserver.frontcontroller.controller.RequestMappingHandler;
+import webserver.frontcontroller.controller.StaticResourceHandler;
 
-public class RequestMappingHandlerAdapter implements MyHandlerAdapter {
+public class StaticResourceHandlerAdapter implements MyHandlerAdapter {
 
     @Override
     public boolean supports(Object handler) {
-        return handler instanceof RequestMappingHandler;
+        return handler instanceof StaticResourceHandler;
     }
 
     @Override
     public ModelAndView handle(HttpRequest request, HttpResponse response, Object handler) {
         Handler controller = (Handler) handler;
-        Map<String, Object> model = new HashMap<>();
         String viewName = controller.process(request, response);
+        Map<String, Object> model = new HashMap<>();
         ModelAndView mv = new ModelAndView(viewName);
-
-        if (viewName.startsWith("redirect:")) {
-            viewName = viewName.replace("redirect:", "");
-            mv.setViewName(viewName);
-            model.put("redirect", Boolean.TRUE);
-        }
         mv.setModel(model);
         return mv;
     }

@@ -1,4 +1,4 @@
-package webserver.frontcontroller.old;
+package webserver.frontcontroller.controller;
 
 import annotation.RequestMapping;
 import http.common.HttpMethod;
@@ -7,13 +7,12 @@ import http.response.HttpResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
-import webserver.frontcontroller.controller.RequestMappingController;
 
-public class Handler implements RequestMappingController {
+public class RequestMappingHandler implements Handler {
 
     private final Object controllerInstance;
 
-    public Handler(Object controllerInstance) {
+    public RequestMappingHandler(Object controllerInstance) {
         this.controllerInstance = controllerInstance;
     }
 
@@ -36,10 +35,9 @@ public class Handler implements RequestMappingController {
     }
 
     private Optional<Method> find(HttpRequest request) {
-        HttpMethod requestHttpMethod = request.getHttpMethod();
-        String requestPath = request.getPath();
-        Method[] methods = controllerInstance.getClass()
-            .getMethods();
+        HttpMethod requestHttpMethod = request.getRequestLine().getHttpMethod();
+        String requestPath = request.getRequestLine().getRequestURI().getPath();
+        Method[] methods = controllerInstance.getClass().getMethods();
         for (Method method : methods) {
             if (!method.isAnnotationPresent(RequestMapping.class)) {
                 continue;

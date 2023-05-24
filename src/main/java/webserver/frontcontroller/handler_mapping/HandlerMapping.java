@@ -1,6 +1,7 @@
-package webserver.frontcontroller.old;
+package webserver.frontcontroller.handler_mapping;
 
 import http.request.HttpRequest;
+import webserver.frontcontroller.controller.Handler;
 
 public interface HandlerMapping {
 
