@@ -32,7 +32,6 @@ public enum ContentType {
         return Arrays.stream(values())
                 .filter(mimeType -> url.endsWith(mimeType.fileExtension))
                 .findAny()
-                // TODO: 예외 던졌으니 처리 필요함 (호눅스 피드백)
                 .orElse(HTML);
     }
 

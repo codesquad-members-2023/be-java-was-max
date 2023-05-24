@@ -6,6 +6,9 @@ import model.RequestLine;
 import java.util.HashMap;
 import java.util.Map;
 
+import static model.RequestLine.AMPERSAND;
+import static model.RequestLine.EQUALS_MARK;
+
 public class HttpRequestUtils {
     private static final String GET = "GET";
     private static final String POST = "POST";
@@ -43,9 +46,9 @@ public class HttpRequestUtils {
             return null;
         }
 
-        String[] parameterPairs = messageBody.split("&");
+        String[] parameterPairs = messageBody.split(AMPERSAND);
         for (String pair : parameterPairs) {
-            parameters.put(pair.split("=")[PARAM_NAME_IDX], pair.split("=")[PARAM_VALUE_IDX]);
+            parameters.put(pair.split(EQUALS_MARK)[PARAM_NAME_IDX], pair.split(EQUALS_MARK)[PARAM_VALUE_IDX]);
         }
 
         return parameters;
