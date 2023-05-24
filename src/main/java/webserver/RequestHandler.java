@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import servlet.DispatcherServlet;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
@@ -39,6 +40,9 @@ public class RequestHandler implements Runnable {
 			responseBody(dos, httpResponse.getBody());
 		} catch (IOException e) {
 			logger.error(e.getMessage());
+		} catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+		         IllegalAccessException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

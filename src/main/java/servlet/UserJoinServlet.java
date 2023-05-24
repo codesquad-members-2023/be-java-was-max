@@ -1,22 +1,26 @@
 package servlet;
 
+import annotation.WebServlet;
 import db.Database;
 import http.HttpUtils;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
 
+import java.io.IOException;
 import java.util.Map;
 
-public class UserJoinServlet {
+@WebServlet(url = "/user/create")
+public class UserJoinServlet extends HttpServlet {
 
-	public String join(HttpRequest httpRequest, HttpResponse httpResponse) {
-		Map<String, String> queryParameter = HttpUtils.parseQueryString(httpRequest.getBody());
+	@Override
+	protected void doPost(HttpRequest request, HttpResponse response) throws IOException {
+		Map<String, String> joinInfo = HttpUtils.parseQueryString(request.getBody());
 
-		User user = new User(queryParameter.get("userId"), queryParameter.get("password"), queryParameter.get("name"), queryParameter.get("email"));
+		User user = new User(joinInfo.get("userId"), joinInfo.get("password"), joinInfo.get("name"), joinInfo.get("email"));
 
 		Database.addUser(user);
 
-		return "redirect:/";
+		viewResolver.resolve("redirect:/", response);
 	}
 }
