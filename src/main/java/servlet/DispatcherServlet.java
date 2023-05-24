@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import controller.Controller;
+import interceptor.LoginCheckInterceptor;
 import request.HttpRequest;
 import response.HttpResponse;
 import response.HttpResponseParams;
@@ -18,10 +19,12 @@ public class DispatcherServlet {
 	private ViewResolver viewResolver;
 	private final ControllerMapper controllerMapper;
 	private final HandlerMapper handlerMapper;
+	private final LoginCheckInterceptor loginCheckInterceptor;
 
 	public DispatcherServlet() {
 		this.controllerMapper = new ControllerMapper();
 		this.handlerMapper = new HandlerMapper();
+		loginCheckInterceptor = new LoginCheckInterceptor();
 	}
 
 	/**
@@ -30,7 +33,11 @@ public class DispatcherServlet {
 	 * @return
 	 */
 	public HttpResponse doDispatch(HttpRequest request) {
-		String viewName = getViewName(request);
+
+		String viewName = loginCheckInterceptor.preHandle(request);
+		if (viewName == null) {
+			viewName = getViewName(request);
+		}
 
 		initViewAndViewResolver(viewName);
 
