@@ -1,6 +1,6 @@
 package webserver;
 
-public enum MediaType {
+public enum ContentType {
     // TODO extension 수정 필요, contentType을 요청 메세지에서 가져올지 고민해보기
     HTML("html", "text/html"),
     CSS("css", "text/css"),
@@ -17,12 +17,12 @@ public enum MediaType {
     private static final String STATIC_PATH = "./src/main/resources/static";
 
     public final String extension;
-    public final String contentType;
+    public final String mimeType;
     public final String path;
 
-    MediaType(String extension, String contentType) {
+    ContentType(String extension, String mimeType) {
         this.extension = extension;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
         this.path = getPath();
     }
 
@@ -30,8 +30,8 @@ public enum MediaType {
         return extension;
     }
 
-    public String getContentType() {
-        return contentType;
+    public String getMimeType() {
+        return mimeType;
     }
 
     public String getPath() {
