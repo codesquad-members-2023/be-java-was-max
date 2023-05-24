@@ -1,4 +1,4 @@
-package webserver;
+package was.common;
 
 import java.util.Arrays;
 
@@ -22,6 +22,10 @@ public enum HeaderType {
 
     HeaderType(String key) {
         this.key = key;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public static String keyOf(String keyName) {

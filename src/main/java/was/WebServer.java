@@ -1,4 +1,4 @@
-package webserver;
+package was;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,10 +6,10 @@ import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import was.request.RequestHandler;
 
 public class WebServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebServer.class);
@@ -26,8 +26,7 @@ public class WebServer {
             Socket clientSocket = serverSocket.accept();
 
             CompletableFuture.runAsync(toRequestHandler(clientSocket), executorService)
-                    .thenRunAsync(closeSocket(clientSocket))
-                    .exceptionally(printException());
+                    .thenRunAsync(closeSocket(clientSocket));
         }
 
         executorService.shutdown();
@@ -36,23 +35,17 @@ public class WebServer {
 
 
     private static RequestHandler toRequestHandler(Socket clientSocket) throws IOException {
-            return new RequestHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+        return new RequestHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
     }
 
     private static Runnable closeSocket(Socket clientSocket) {
         return () -> {
             try {
+                // Closing socket will also close the socket's InputStream and OutputStream.
                 clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        };
-    }
-
-    private static Function<Throwable, Void> printException() {
-        return ex -> {
-            LOGGER.error(ex.getMessage());
-            return null;
         };
     }
 
