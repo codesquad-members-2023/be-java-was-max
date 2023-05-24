@@ -14,17 +14,22 @@ public class HttpRequestUtils {
     private static final String POST = "POST";
     private static final int PARAM_NAME_IDX = 0;
     private static final int PARAM_VALUE_IDX = 1;
+    private static final String COOKIE = "Cookie";
+    private static final String SEMI_COLON = ";";
+    private static final String EQUALS_SEPARATOR = "=";
 
     private final RequestLine requestLine;
     private final Map<String, String> headers;
     private final String messageBody;
     private final Map<String, String> parameters;
+    private final Map<String, String> cookies;
 
     public HttpRequestUtils(String requestLine, Map<String, String> headers, String messageBody) {
         this.requestLine = new RequestLine(requestLine);
         this.headers = headers;
         this.messageBody = messageBody;
         this.parameters = setParameters();
+        this.cookies = setCookies();
     }
 
     private Map<String, String> setParameters() {
@@ -52,6 +57,23 @@ public class HttpRequestUtils {
         }
 
         return parameters;
+    }
+
+    private Map<String, String> setCookies() {
+        if (!headers.containsKey(COOKIE)) {
+            return null;
+        }
+
+        Map<String, String> cookies = new HashMap<>();
+
+        String[] splitCookies = headers.get(COOKIE).split(SEMI_COLON);
+        for (String cookie : splitCookies) {
+            String cookieName = cookie.split(EQUALS_SEPARATOR)[PARAM_NAME_IDX].trim();
+            String cookieValue = cookie.split(EQUALS_SEPARATOR)[PARAM_VALUE_IDX].trim();
+            cookies.put(cookieName, cookieValue);
+        }
+
+        return cookies;
     }
 
     public String getMethod() {
@@ -84,5 +106,9 @@ public class HttpRequestUtils {
 
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    public Map<String, String> getCookies() {
+        return cookies;
     }
 }

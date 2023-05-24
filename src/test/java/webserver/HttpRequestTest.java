@@ -109,4 +109,18 @@ class HttpRequestTest {
 
         assertThat(httpRequest.getParameters()).isNull();
     }
+
+    @Test
+    @DisplayName("요청 헤더에 Cookie 정보가 존재하는 경우, 해당 정보들을 HashMap으로 관리한다.")
+    void getCookies() {
+        String requestLine = "GET /index.html HTTP/1.1";
+        Map<String, String> headers = Map.of("Host", "localhost:8080"
+                , "Connection", "keep-alive",
+                "Cookie", "cookie1=1; cookie2=2; cookie3=3");
+
+        HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, null);
+        Map<String, String> expectedCookies = Map.of("cookie1", "1", "cookie2", "2", "cookie3", "3");
+
+        assertThat(expectedCookies).isEqualTo(httpRequest.getCookies());
+    }
 }
