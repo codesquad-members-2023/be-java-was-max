@@ -4,25 +4,33 @@ import db.Database;
 import http.request.HttpMethod;
 import http.request.HttpRequest;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;
 
+
+
 public class UserServlet {
+    private static final Logger logger = LoggerFactory.getLogger(UserServlet.class);
     public String findViewPath(HttpRequest httpRequest) {
         String method = httpRequest.getMethod();
-        if (method.equals(HttpMethod.GET)) { // Query String 을 찾는다.
-            if (!httpRequest.getQueryString().isEmpty()) { // user 객체 생성
-                Database.addUser(createUser(httpRequest.getQueryString().get()));
+
+        if (HttpMethod.get(method) == HttpMethod.GET) { // Query String 을 찾는다.
+            if (httpRequest.getQueryString().isPresent()) { // Query String이 비어있지 않으면 user 객체 생성
+                String userId = Database.addUser(createUser(httpRequest.getQueryString().get()));
+                logger.debug("User: {}", Database.findUserById(userId));
             }
         }
-        if (method.equals(HttpMethod.POST)) { // Request Body를 찾는다.
-            Database.addUser(createUser(httpRequest.getRequestBody().toString()));
-
+        if (HttpMethod.get(method) == HttpMethod.POST) { // Request Body를 찾는다.
+            String userId = Database.addUser(createUser(httpRequest.getRequestBody()));
+            logger.debug("User: {}", Database.findUserById(userId));
         }
-        return "/index.html"; // 유저 생성하고 home으로 redirect
+        return "redirect:/index.html"; // 유저 생성하고 home으로 redirect
     }
 
     private User createUser(String userData){
         HttpRequestUtils utils = new HttpRequestUtils();
         return utils.createUser(utils.parseQueryString(userData));
     }
+
 }

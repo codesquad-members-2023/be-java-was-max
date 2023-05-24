@@ -10,10 +10,9 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
 
 public class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
     private RequestLine requestLine;
     private RequestHeaders requestHeaders;
     private RequestBody requestBody;
@@ -26,19 +25,19 @@ public class HttpRequest {
         this.requestHeaders = new RequestHeaders();
         this.requestBody = new RequestBody();
         makeRequests(br);
-        requestLog();
+        logRequest();
     }
 
     private void makeRequests(BufferedReader br) throws IOException { // requestLine, requestHeader, requestBody 만들기
         String line = br.readLine();
         while (!line.equals("")) { // Request Header
-            requestHeaders.addHeader(line);
+            requestHeaders.add(line);
             line = br.readLine();
         }
 
-        if (requestLine.getMethod().equals(HttpMethod.POST)){ // POST 일 때만 Request Body 가져오기
+        if (HttpMethod.POST == HttpMethod.get(requestLine.getMethod())){ // POST 일 때만 Request Body 가져오기
             for (int i = 0; i < Long.parseLong(requestHeaders.get("Content-Length")); i++) { // Request Body
-                requestBody.addContent((char) br.read());
+                requestBody.add((char) br.read());
             }
         }
     }
@@ -55,14 +54,15 @@ public class HttpRequest {
     }
 
     public String getRequestBody(){
-        return requestBody.getContents();
+        return requestBody.get();
     }
 
     public String getContentType(String mappingUri){
         return requestHeaders.getContentType(mappingUri);
     }
 
-    public void requestLog(){
+    public void logRequest(){
+        logger.debug("✅*******Request*******");
         logger.debug("<Request Line>");
         logger.debug(requestLine.get()); // requestLine
         logger.debug("<Request Headers>");
@@ -71,7 +71,7 @@ public class HttpRequest {
             logger.debug("{}: {}", key, requestHeadersMap.get(key)); // requestHeader
         }
         logger.debug("<Request Body>");
-        logger.debug(requestBody.getContents()); // requestBody
+        logger.debug(requestBody.get()); // requestBody
     }
 
 }

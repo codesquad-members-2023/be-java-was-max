@@ -1,26 +1,20 @@
 package servlet;
 
 import http.request.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import http.response.HttpResponse;
 import view.ViewResolver;
 
 public class DispatcherServlet {
     // 1. 적합한 컨트롤러를 찾는다.
     // 2. 적합한 메서드를 찾는다.
-    // exception : 맵핑되는 url이 없으면 에러 발생.
-    private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
     private final ViewResolver viewResolver;
-    private String mappingUri;
 
     public DispatcherServlet(){
         this.viewResolver = new ViewResolver();
     }
 
-    // TODO: 최종 경로를 return 하지 말고, ViewResolver에서 처리하게 끔 수정하기.
-    public String run(HttpRequest httpRequest){
-        this.mappingUri = mappingUri(httpRequest);
-        return viewResolver.run(mappingUri);
+    public void run(HttpRequest httpRequest, HttpResponse httpResponse){
+        viewResolver.run(mappingUri(httpRequest), httpResponse);
     }
 
     public String mappingUri(HttpRequest httpRequest){
@@ -32,14 +26,9 @@ public class DispatcherServlet {
         if (path.equals("/user/form.html")) {
             viewPath = "/user/form.html";
         }
-        if (path.equals("/user/create")){
+        if (path.contains("/user/create")){
             viewPath = new UserServlet().findViewPath(httpRequest);
         }
-        logger.debug("viewPath: {}", viewPath);
         return viewPath;
-    }
-
-    public String getMappingUri(){
-        return mappingUri;
     }
 }

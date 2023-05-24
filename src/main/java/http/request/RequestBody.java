@@ -1,6 +1,5 @@
 package http.request;
 
-import java.util.Optional;
 
 public class RequestBody {
     private final StringBuilder contents;
@@ -9,11 +8,11 @@ public class RequestBody {
         this.contents = new StringBuilder();
     }
 
-    public void addContent(char ch){
+    public void add(char ch){
         contents.append(ch);
     }
 
-    public String getContents(){
+    public String get(){
         return contents.toString();
     }
 
