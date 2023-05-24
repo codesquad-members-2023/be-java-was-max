@@ -6,10 +6,12 @@ import webserver.util.HttpResponseUtils;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class LoginController implements Controller {
     private static final String USER_ID = "userId";
     private static final String PASSWORD = "password";
+    private static final String COOKIE_NAME = "sid";
 
     @Override
     public String process(Map<String, String> parameters, HttpResponseUtils httpResponse) {
@@ -24,6 +26,9 @@ public class LoginController implements Controller {
         if (findUser.isEmpty()) {
             return "user/login_failed";
         }
+
+        String uuid = UUID.randomUUID().toString();
+        httpResponse.setCookie(COOKIE_NAME, uuid);
 
         return "redirect:/";
     }
