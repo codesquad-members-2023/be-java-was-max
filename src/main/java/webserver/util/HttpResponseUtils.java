@@ -55,11 +55,9 @@ public class HttpResponseUtils {
             statusCode = OK;
         }
 
-        sb.append(HTTP_VERSION + " ").append(statusCode).append(" ").append(STATUS_MESSAGE.get(statusCode)).append(" \r\n");
+        sb.append(HTTP_VERSION).append(" ").append(statusCode).append(" ").append(STATUS_MESSAGE.get(statusCode)).append(" \r\n");
 
-        headers.forEach((k, v) -> {
-            sb.append(k).append(": ").append(v).append("\r\n");
-        });
+        headers.forEach((k, v) -> sb.append(k).append(": ").append(v).append("\r\n"));
         sb.append("\r\n");
 
         return sb.toString().getBytes();

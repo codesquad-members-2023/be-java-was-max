@@ -6,7 +6,7 @@ import static model.ContentType.Url.BASE_URL;
 
 
 public enum ContentType {
-    HTML(BASE_URL + "/templates", "text/html;charset=utf-8", ".html"),
+    HTML(BASE_URL + "/templates/", "text/html;charset=utf-8", ".html"),
     CSS(BASE_URL + "/static", "text/css", ".css"),
     JS(BASE_URL + "/static", "application/javascript", ".js"),
     FONTS(BASE_URL + "/static", "application/octet-stream", ".woff"),
@@ -36,9 +36,9 @@ public enum ContentType {
     }
 
     public String separatePath(String viewName) {
-//        if (this == HTML) {
-//            return this.path + viewName;
-//        }
+        if (this == HTML) {
+            return this.path + viewName + ".html";
+        }
 
         return this.path + viewName;
     }

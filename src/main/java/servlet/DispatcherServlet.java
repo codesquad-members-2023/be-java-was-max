@@ -21,7 +21,7 @@ public class DispatcherServlet {
 
         controllerMap.put("/", new IndexController());
         controllerMap.put("/index.html", new IndexController());
-        controllerMap.put("/user/form", new UserFormController());
+        controllerMap.put("/user/form.html", new UserFormController());
         controllerMap.put("/user/create", new UserSaveController());
         controllerMap.put("/user/login.html", new LoginFormController());
         controllerMap.put("/user/login", new LoginController());
