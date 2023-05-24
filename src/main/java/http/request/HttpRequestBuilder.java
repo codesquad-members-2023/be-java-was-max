@@ -6,6 +6,8 @@ import http.HttpUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public final class HttpRequestBuilder {
 
@@ -60,6 +62,6 @@ public final class HttpRequestBuilder {
 		char[] buffer = new char[contentLength];
 
 		int readByte = br.read(buffer, 0, contentLength);
-		return new String(buffer, 0, readByte);
+		return URLDecoder.decode(new String(buffer, 0, readByte), StandardCharsets.UTF_8);
 	}
 }
