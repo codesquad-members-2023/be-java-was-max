@@ -1,35 +1,52 @@
 package webserver.util;
 
-import model.ContentType;
-import model.RequestLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
-
-import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpResponseUtils {
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String HTTP_VERSION = "HTTP/1.1";
+    private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
 
-    private HttpResponseUtils() {
+    private int statusCode;
+    private Map<String, String> headers = new HashMap<>();
+    private byte[] messageBody;
+
+    public void setStatusCode(int code) {
+        statusCode = code;
     }
 
-    public static void responseBody(DataOutputStream dos, byte[] body, RequestLine requestLine) {
-        try {
-            dos.writeBytes(response200Header(requestLine.getContentType(), body.length));
-            dos.write(body, 0, body.length);
-            dos.flush();
-
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
     }
 
-    private static String response200Header(ContentType contentType, int lengthOfBodyContent) {
-        return "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: " + contentType.getMimeType() + "\r\n" +
-                "Content-Length: " + lengthOfBodyContent + "\r\n" +
-                "\r\n";
+    public boolean isRedirect() {
+        return statusCode / 100 == 3;
+    }
+
+    public void setContent(String absolutePath, HttpRequestUtils httpRequest) throws IOException {
+        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
+
+        addHeader("Content-Type", httpRequest.getContentType().getMimeType());
+        addHeader("Content-Length", String.valueOf(messageBody.length));
+    }
+
+    public byte[] toBytes() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(HTTP_VERSION + " ").append(statusCode).append(" ").append(STATUS_MESSAGE.get(statusCode)).append(" \r\n");
+
+        headers.forEach((k, v) -> {
+            sb.append(k).append(": ").append(v).append("\r\n");
+        });
+        sb.append("\r\n");
+
+        return sb.toString().getBytes();
+    }
+
+    public byte[] getMessageBody() {
+        return messageBody;
     }
 }

@@ -28,21 +28,20 @@ public enum ContentType {
         this.fileExtension = fileExtension;
     }
 
-    // TODO: RequestLine으로 변경 다시 해보자
     public static ContentType findByUrl(String url) {
         return Arrays.stream(values())
                 .filter(mimeType -> url.endsWith(mimeType.fileExtension))
                 .findAny()
                 // TODO: 예외 던졌으니 처리 필요함 (호눅스 피드백)
-                .orElseThrow(() -> new RuntimeException("Unknown file extension: " + url));
+                .orElse(HTML);
     }
 
-    public String separatePath(String url) {
-        if (url.equals("/")) {
-            url = path + "/index.html";
-        }
+    public String separatePath(String viewName) {
+//        if (this == HTML) {
+//            return this.path + viewName;
+//        }
 
-        return path + url;
+        return this.path + viewName;
     }
 
     public String getMimeType() {

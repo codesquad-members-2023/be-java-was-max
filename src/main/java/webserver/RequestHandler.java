@@ -1,16 +1,14 @@
 package webserver;
 
-import model.RequestLine;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.DispatcherServlet;
 import webserver.util.HttpRequestUtils;
 import webserver.util.HttpResponseUtils;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 public class RequestHandler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,26 +26,19 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // https://docs.oracle.com/javase/8/docs/api/java/nio/charset/StandardCharsets.html
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            // 라인별로 http header 읽기
-            String line = br.readLine();
-            RequestLine requestLine = HttpRequestUtils.parseLine(line);
+            HttpRequestUtils httpRequest = RequestSeparator.askHttpRequest(br);
+            HttpResponseUtils httpResponse = new HttpResponseUtils();
+            String viewName = DispatcherServlet.service(httpRequest, httpResponse);             // 컨트롤러가 반환한 viewName
 
-            if (requestLine.getMethod().equals("GET") && requestLine.getQueryMap() != null) {
-                User user = new User(requestLine.getQueryMap());
-                log.debug("user : {}", user);
+            if (httpResponse.isRedirect()) {                                                    // 리다이렉트 응답 시
+                httpResponse.addHeader("Location", viewName);
+                sendResponseMessage(out, httpResponse);
+                return;
             }
 
-            // request 마지막에 빈 공백 문자열이 들어오니 그때까지 반복
-            while (!line.equals("")) {
-                line = br.readLine();
-                log.debug("header : {}", line);
-            }
-
-            DataOutputStream dos = new DataOutputStream(out);
-            // https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#readAllBytes-java.nio.file.Path-
-            byte[] body = Files.readAllBytes(new File(requestLine.getPath()).toPath());
-
-            HttpResponseUtils.responseBody(dos, body, requestLine);
+            String absolutePath = resolveView(viewName, httpRequest);                           // 200 응답 시
+            httpResponse.setContent(absolutePath, httpRequest);
+            sendResponseMessage(out, httpResponse);
 
         } catch (IOException | RuntimeException e) {
             log.error(e.getMessage());
@@ -59,6 +50,19 @@ public class RequestHandler implements Runnable {
                 throw new RuntimeException(ex);
             }
             */
+        }
+    }
+
+    private static String resolveView(String viewName, HttpRequestUtils httpRequest) {
+        return httpRequest.getPath(viewName);
+    }
+
+    private static void sendResponseMessage(OutputStream out, HttpResponseUtils httpResponse) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.write(httpResponse.toBytes());
+
+        if (!httpResponse.isRedirect()) {
+            dos.write(httpResponse.getMessageBody());
         }
     }
 }

@@ -1,63 +1,85 @@
 package webserver.util;
 
+import model.ContentType;
 import model.RequestLine;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequestUtils {
-    private static final int METHOD_INDEX = 0;
-    private static final int URL_INDEX = 1;
-    private static final String BLANK = " ";
-    private static final String QUESTION_MARK = "?";
-    private static final String AMPERSAND = "&";
-    private static final String EQUALS_MARK = "=";
+    private static final String GET = "GET";
+    private static final String POST = "POST";
+    private static final int PARAM_NAME_IDX = 0;
+    private static final int PARAM_VALUE_IDX = 1;
 
+    private final RequestLine requestLine;
+    private final Map<String, String> headers;
+    private final String messageBody;
+    private final Map<String, String> parameters;
 
-    private HttpRequestUtils() {
+    public HttpRequestUtils(String requestLine, Map<String, String> headers, String messageBody) {
+        this.requestLine = new RequestLine(requestLine);
+        this.headers = headers;
+        this.messageBody = messageBody;
+        this.parameters = setParameters();
     }
 
-    public static RequestLine parseLine(String requestLine) {
-        return new RequestLine(parseMethod(requestLine), parseUrl(requestLine), parseQueryString(requestLine));
-    }
-
-    public static String parseUrl(String requestLine) {
-        String url = extractUrl(requestLine);
-
-        if (url.contains(QUESTION_MARK)) {
-            url = url.split("\\?")[METHOD_INDEX];
+    private Map<String, String> setParameters() {
+        if (requestLine.getMethod().equals(GET)) {
+            return requestLine.getQueryMap();
         }
 
-        if (url.equals("/")) {
-            url = "/index.html";
+        if (requestLine.getMethod().equals(POST)) {
+            return parseParametersBy(messageBody);
         }
 
-        return url;
+        return null;
     }
 
-    public static String parseMethod(String requestLine) {
-        return requestLine.split(BLANK)[METHOD_INDEX];
-    }
+    private Map<String, String> parseParametersBy(String messageBody) {
+        HashMap<String, String> parameters = new HashMap<>();
 
-    public static Map<String, String> parseQueryString(String requestLine) {
-        String url = extractUrl(requestLine);
-
-        if (!url.contains(QUESTION_MARK)) {
+        if (messageBody == null) {
             return null;
         }
 
-        String[] params = url.split("\\?")[URL_INDEX].split(AMPERSAND);
-
-        Map<String, String> queryMap = new HashMap<>();
-        for (String param : params) {
-            String[] keyValue = param.split(EQUALS_MARK);
-            queryMap.put(keyValue[METHOD_INDEX], keyValue[URL_INDEX]);
+        String[] parameterPairs = messageBody.split("&");
+        for (String pair : parameterPairs) {
+            parameters.put(pair.split("=")[PARAM_NAME_IDX], pair.split("=")[PARAM_VALUE_IDX]);
         }
 
-        return queryMap;
+        return parameters;
     }
 
-    private static String extractUrl(String requestLine) {
-        return requestLine.split(BLANK)[URL_INDEX];
+    public String getMethod() {
+        return requestLine.getMethod();
+    }
+
+    public String getPath(String viewName) {
+        return getContentType().separatePath(viewName);
+    }
+
+    public String getUrl() {
+        return requestLine.getUrl();
+    }
+
+    public ContentType getContentType() {
+        return requestLine.getContentType();
+    }
+
+    public RequestLine getRequestLine() {
+        return requestLine;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getMessageBody() {
+        return messageBody;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
     }
 }
