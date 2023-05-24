@@ -2,21 +2,19 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Map;
 
+import http.RequestMaker;
+import http.Responsor;
 import model.Request;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.MainService;
 import util.RequestParser;
 
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private final RequestExecuter requestExecuter = new RequestExecuter();
-    private final RequestParser requestParser = new RequestParser();
     private final Responsor responsor = new Responsor();
-    private final Request request = new Request();
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -29,10 +27,12 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            Request request = requestParser.readNParseRequest(in);
-            requestExecuter.execute(request);
+            RequestMaker requestMaker = new RequestMaker(in);
+            Request request = requestMaker.make();
+            MainService mainService = new MainService(request);
+            mainService.serve();
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] response = responsor.makeResponse(request.getRequestLine().get("URL"));
+            byte[] response = responsor.makeResponse(request.getRequestLine().getUrl());
             dos.write(response);
             dos.flush();
         } catch (IOException e) {
