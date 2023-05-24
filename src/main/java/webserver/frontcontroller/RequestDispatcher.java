@@ -18,9 +18,11 @@ import java.nio.file.Files;
 public class RequestDispatcher {
 
     private final File file;
+    private final String viewPath;
 
-    public RequestDispatcher(File file) {
+    public RequestDispatcher(File file, String viewPath) {
         this.file = file;
+        this.viewPath = viewPath;
     }
 
     public void forward(HttpResponse response) {
@@ -37,8 +39,7 @@ public class RequestDispatcher {
     }
 
     public void redirect(HttpResponse response) {
-        String path = file.getPath();
-        response.addHeader(LOCATION, path);
+        response.addHeader(LOCATION, viewPath);
         response.setStatusLine(new StatusLine(HTTP_1_1, FOUND));
     }
 }

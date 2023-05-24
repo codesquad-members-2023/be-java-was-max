@@ -82,7 +82,7 @@ public class HttpRequest {
 
     public RequestDispatcher getRequestDispatcher(String viewPath) {
         File file = FileUtils.readFile(viewPath).orElseThrow();
-        return new RequestDispatcher(file);
+        return new RequestDispatcher(file, viewPath);
     }
 
     @Override
