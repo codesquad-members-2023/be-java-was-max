@@ -1,5 +1,6 @@
 package servlet.controller;
 
+import db.Database;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class UserSaveController implements Controller {
         String email = parameters.get(EMAIL);
 
         User user = new User(userId, password, name, email);
+        Database.addUser(user);
 
         logger.debug("생성한 유저 : {}", user);
 
