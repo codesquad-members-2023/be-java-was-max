@@ -19,9 +19,11 @@ public class DispatcherServlet {
         HashMap<String, Controller> controllerMap = new HashMap<>();
 
         controllerMap.put("/", new IndexController());
+        controllerMap.put("/index.html", new IndexController());
         controllerMap.put("/user/form", new UserFormController());
         controllerMap.put("/user/create", new UserSaveController());
-        controllerMap.put("/user/login", new LoginFormController());
+        controllerMap.put("/user/login.html", new LoginFormController());
+        controllerMap.put("/user/login", new LoginController());
 
         return controllerMap;
     }
