@@ -36,8 +36,7 @@ public class RequestHandler implements Runnable {
 			logger.debug(httpRequest.toString());
 
 			DataOutputStream dos = new DataOutputStream(out);
-			response200Header(dos, httpResponse);
-			responseBody(dos, httpResponse.getBody());
+			response(dos, httpResponse);
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		} catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
@@ -46,31 +45,12 @@ public class RequestHandler implements Runnable {
 		}
 	}
 
-	private void response200Header(DataOutputStream dos, HttpResponse httpResponse) {
+	private void response(DataOutputStream dos, HttpResponse httpResponse) {
 		try {
 			dos.writeBytes(httpResponse.getResponseLine().toString() + " \r\n");
-			if (httpResponse.getContentType() != null) {
-				dos.writeBytes("Content-Type: " + httpResponse.getContentType().getValue() + "\r\n");
-			}
-			if (httpResponse.getBody() != null) {
-				dos.writeBytes("Content-Length: " + httpResponse.getBody().length + "\r\n");
-			}
-			if (httpResponse.getHttpHeaders() != null) {
-				dos.writeBytes(httpResponse.getHttpHeaders().toString());
-			}
+			dos.writeBytes(httpResponse.getHttpHeaders().toString() + " \r\n");
 			dos.writeBytes("\r\n");
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-		}
-	}
-
-	private void responseBody(DataOutputStream dos, byte[] body) {
-		try {
-			if (body == null) {
-				return;
-			}
-
-			dos.write(body, 0, body.length);
+			dos.write(httpResponse.getBody(), 0, httpResponse.getBody().length);
 			dos.flush();
 		} catch (IOException e) {
 			logger.error(e.getMessage());
