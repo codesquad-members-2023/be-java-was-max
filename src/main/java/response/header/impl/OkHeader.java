@@ -1,10 +1,10 @@
-package webserver.response.header.impl;
+package response.header.impl;
 
 import static utils.HttpResponseUtils.*;
 
+import response.HttpResponseParams;
+import response.header.HttpResponseHeader;
 import utils.ContentType;
-import webserver.response.HttpResponseParams;
-import webserver.response.header.HttpResponseHeader;
 
 public class OkHeader implements HttpResponseHeader {
 

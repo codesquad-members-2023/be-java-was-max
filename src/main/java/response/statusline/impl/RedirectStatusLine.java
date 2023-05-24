@@ -1,6 +1,6 @@
-package webserver.response.statusline.impl;
+package response.statusline.impl;
 
-import webserver.response.statusline.HttpResponseStatusLine;
+import response.statusline.HttpResponseStatusLine;
 
 public class RedirectStatusLine implements HttpResponseStatusLine {
 

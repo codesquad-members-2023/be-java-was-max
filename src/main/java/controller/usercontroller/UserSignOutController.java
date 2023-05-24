@@ -3,8 +3,8 @@ package controller.usercontroller;
 import annotation.MethodType;
 import annotation.RequestMapping;
 import controller.Controller;
+import request.HttpRequest;
 import session.Session;
-import webserver.request.HttpRequest;
 
 @RequestMapping("/user/sign-out")
 public class UserSignOutController implements Controller {

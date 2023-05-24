@@ -1,8 +1,8 @@
-package webserver.response.header.impl;
+package response.header.impl;
 
+import response.HttpResponseParams;
+import response.header.HttpResponseHeader;
 import session.Session;
-import webserver.response.HttpResponseParams;
-import webserver.response.header.HttpResponseHeader;
 
 public class RedirectHeader implements HttpResponseHeader {
 

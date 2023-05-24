@@ -4,13 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import controller.Controller;
+import request.HttpRequest;
+import response.HttpResponse;
+import response.HttpResponseParams;
 import servlet.mapper.ControllerMapper;
 import servlet.mapper.HandlerMapper;
 import servlet.view.View;
 import servlet.viewResolver.ViewResolver;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpResponseParams;
 
 public class DispatcherServlet {
 

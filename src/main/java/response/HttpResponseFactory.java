@@ -1,11 +1,11 @@
-package webserver.response;
+package response;
 
-import webserver.response.header.HttpResponseHeader;
-import webserver.response.header.impl.OkHeader;
-import webserver.response.header.impl.RedirectHeader;
-import webserver.response.statusline.HttpResponseStatusLine;
-import webserver.response.statusline.impl.OkStatusLine;
-import webserver.response.statusline.impl.RedirectStatusLine;
+import response.header.HttpResponseHeader;
+import response.header.impl.OkHeader;
+import response.header.impl.RedirectHeader;
+import response.statusline.HttpResponseStatusLine;
+import response.statusline.impl.OkStatusLine;
+import response.statusline.impl.RedirectStatusLine;
 
 public class HttpResponseFactory {
 

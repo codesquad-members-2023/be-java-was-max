@@ -3,8 +3,8 @@ package servlet;
 import java.util.HashMap;
 import java.util.Map;
 
+import request.HttpRequest;
 import session.Session;
-import webserver.request.HttpRequest;
 
 public class Model {
 	private final Map<String, Object> map;

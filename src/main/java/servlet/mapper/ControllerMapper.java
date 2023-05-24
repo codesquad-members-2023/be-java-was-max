@@ -10,7 +10,7 @@ import controller.usercontroller.UserController;
 import controller.usercontroller.UserSignInController;
 import controller.usercontroller.UserSignOutController;
 import controller.usercontroller.UserSignUpController;
-import webserver.request.HttpRequest;
+import request.HttpRequest;
 
 public class ControllerMapper {
 
