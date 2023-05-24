@@ -48,11 +48,11 @@ class RequestLineTest {
     @Test
     @DisplayName("RequestLine 클래스는 GET 요청이고, 쿼리 파라미터가 있는 경우, 파라미터 맵을 만들어 반환한다.)")
     void parseParamMap() {
-        String requestLineString = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
+        String requestLineString = "GET /user/create?userId=sully&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
 
         RequestLine requestLine = new RequestLine(requestLineString);
 
-        assertEquals(Map.of("userId", "hyun",
+        assertEquals(Map.of("userId", "sully",
                 "password", "1234",
                 "name", "%ED%99%A9%ED%98%84",
                 "email", "ghkdgus29%40naver.com"), requestLine.getQueryMap());

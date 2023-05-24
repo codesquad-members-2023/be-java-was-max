@@ -54,11 +54,11 @@ class HttpRequestTest {
     @Test
     @DisplayName("GET 요청의 경우, HttpRequest 객체는 request-line 에 포함된 URL에서 파라미터를 뽑아내 parameters 맵으로 반환한다.")
     void getParams() {
-        String requestLine = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
+        String requestLine = "GET /user/create?userId=sully&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
         Map<String, String> headers = Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive");
 
-        Map<String, String> expectedParams = Map.of("userId", "hyun",
+        Map<String, String> expectedParams = Map.of("userId", "sully",
                 "password", "1234",
                 "name", "%ED%99%A9%ED%98%84",
                 "email", "ghkdgus29%40naver.com");
@@ -86,13 +86,13 @@ class HttpRequestTest {
         String requestLine = "POST /user/create HTTP/1.1";
         Map<String, String> headers = Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive");
-        String messageBody = "userId=hyun&password=1234&name=hyun&email=123%40123";
+        String messageBody = "userId=sully&password=1234&name=sully&email=123%40123";
 
         HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, messageBody);
 
-        Map<String, String> expectedParameters = Map.of("userId", "hyun",
+        Map<String, String> expectedParameters = Map.of("userId", "sully",
                 "password", "1234",
-                "name", "hyun",
+                "name", "sully",
                 "email", "123%40123");
 
         assertEquals(expectedParameters, httpRequest.getParameters());
