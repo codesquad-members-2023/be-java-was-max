@@ -20,6 +20,7 @@ import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ class RequestHandlerTest {
 
     @Nested
     @DisplayName("회원가입과 로그인")
-    class WhenDynamicResource {
+    class WhenSignUpAndLogin {
 
         @Test
         @DisplayName("POST 방식으로 데이터를 전달하여 회원가입한다")
@@ -247,6 +248,62 @@ class RequestHandlerTest {
             assertThat(response.getStatusLine()
                 .toString()).isEqualTo("HTTP/1.1 200 OK");
 
+            //cleanup
+            socket.close();
+            serverThread.join();
+        }
+    }
+
+    @Nested
+    @DisplayName("동적 리소스를 요청하는 경우")
+    class WhenDynamicResource {
+
+        @Test
+        @DisplayName("로그인 후에 로그인 버튼은 표시되지 않고, 로그아웃 버튼이 표시된다.")
+        @Disabled
+        public void responseExistSessionAfterLogin() throws IOException, InterruptedException {
+            // given
+            MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
+            // 회원 미리 추가
+            memoryUserRepository.save(User.builder()
+                .userId("user1")
+                .password("user1user1")
+                .name("김용환")
+                .email("user1@gmail.com")
+                .build());
+            Thread serverThread = createWebServerThread(2);
+            serverThread.start();
+
+            // 로그인
+            Socket socket = new Socket("localhost", 8080);
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+            String requestLine = "POST /login HTTP/1.1";
+            String host = "Host: localhost:8080";
+            String connection = "Connection: keep-alive";
+            String accept = "Accept: */*";
+            String contentLength = "Content-Length: " + "userId=user1&password=user1user1".length();
+            String eof = "";
+            String messageBody = "userId=user1&password=user1user1";
+            String requestHeader = String.join("\r\n", requestLine, host, connection, accept, contentLength, eof,
+                messageBody);
+            writer.println(requestHeader);
+            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            HttpResponse response = HttpResponseParser.parse(br);
+            String sid = response.getResponseHeader().get(SET_COOKIE).orElseThrow().split(";")[0].split("=")[1];
+            socket.close();
+
+            socket = new Socket("localhost", 8080);
+            writer = new PrintWriter(socket.getOutputStream(), true);
+            requestLine = "GET / HTTP/1.1";
+            String cookie = String.format("Cookie: sid=%s", sid);
+            requestHeader = String.join("\r\n", requestLine, host, connection, accept, cookie, eof);
+            writer.println(requestHeader);
+            // when
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            response = HttpResponseParser.parse(br);
+            // then
+            messageBody = new String(response.getMessageBody());
+            Assertions.assertThat(messageBody).doesNotContain("<a href=\"login\" role=\"button\">로그인</a>");
             //cleanup
             socket.close();
             serverThread.join();
