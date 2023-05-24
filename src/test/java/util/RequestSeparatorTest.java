@@ -9,8 +9,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class RequestSeparatorTest {
 
@@ -30,13 +29,14 @@ class RequestSeparatorTest {
 
         HttpRequestUtils httpRequest = RequestSeparator.askHttpRequest(br);
 
-        assertEquals("GET", httpRequest.getMethod());
-        assertEquals(Map.of("Host", "localhost:8080"
+        assertThat("GET").isEqualTo(httpRequest.getMethod());
+        assertThat(Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive",
                 "sec-ch-ua", "\"Google Chrome\";v=\"111\", \"Not(A:Brand\";v=\"8\", \"Chromium\";v=\"111\"",
                 "sec-ch-ua-mobile", "?0",
-                "sec-ch-ua-platform", "\"Windows\""), httpRequest.getHeaders());
-        assertNull(httpRequest.getMessageBody());
+                "sec-ch-ua-platform", "\"Windows\""))
+                .isEqualTo(httpRequest.getHeaders());
+        assertThat(httpRequest.getMessageBody()).isNull();
     }
 
     @Test
@@ -58,13 +58,14 @@ class RequestSeparatorTest {
         HttpRequestUtils httpRequest = RequestSeparator.askHttpRequest(br);
 
 
-        assertEquals("POST", httpRequest.getMethod());
-        assertEquals(Map.of("Host", "localhost:8080"
+        assertThat("POST").isEqualTo(httpRequest.getMethod());
+        assertThat(Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive",
                 "Content-Length", "51",
                 "Cache-Control", "max-age=0",
                 "sec-ch-ua", "\"Google Chrome\";v=\"111\", \"Not(A:Brand\";v=\"8\", \"Chromium\";v=\"111\"",
-                "sec-ch-ua-mobile", "?0"), httpRequest.getHeaders());
-        assertEquals("userId=sully1234&password=1234&name=sully&email=123%40123", httpRequest.getMessageBody());
+                "sec-ch-ua-mobile", "?0"))
+                .isEqualTo(httpRequest.getHeaders());
+        assertThat("userId=sully1234&password=1234&name=sully&email=123").isEqualTo(httpRequest.getMessageBody());
     }
 }

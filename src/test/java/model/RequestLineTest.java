@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class RequestLineTest {
 
@@ -16,7 +16,7 @@ class RequestLineTest {
 
         RequestLine requestLine = new RequestLine(requestLineString);
 
-        assertEquals("GET", requestLine.getMethod());
+        assertThat("GET").isEqualTo(requestLine.getMethod());
     }
 
     @Test
@@ -26,7 +26,7 @@ class RequestLineTest {
 
         RequestLine requestLine = new RequestLine(requestLineString);
 
-        assertEquals("/css/bootstrap.min.css", requestLine.getUrl());
+        assertThat("/css/bootstrap.min.css").isEqualTo(requestLine.getUrl());
     }
 
     @Test
@@ -34,15 +34,15 @@ class RequestLineTest {
     void calculateRequestType() {
         String requestCSSString = "GET /css/bootstrap.min.css HTTP/1.1";
         RequestLine requestCSS = new RequestLine(requestCSSString);
-        assertEquals(ContentType.CSS, requestCSS.getContentType());
+        assertThat(ContentType.CSS).isEqualTo(requestCSS.getContentType());
 
         String requestHTMLString = "GET / HTTP/1.1";
         RequestLine requestHTML = new RequestLine(requestHTMLString);
-        assertEquals(ContentType.HTML, requestHTML.getContentType());
+        assertThat(ContentType.HTML).isEqualTo(requestHTML.getContentType());
 
         String requestJSString = "GET /js/bootstrap.min.js HTTP/1.1";
         RequestLine requestJS = new RequestLine(requestJSString);
-        assertEquals(ContentType.JS, requestJS.getContentType());
+        assertThat(ContentType.JS).isEqualTo(requestJS.getContentType());
     }
 
     @Test
@@ -52,9 +52,10 @@ class RequestLineTest {
 
         RequestLine requestLine = new RequestLine(requestLineString);
 
-        assertEquals(Map.of("userId", "sully",
+        assertThat(Map.of("userId", "sully",
                 "password", "1234",
                 "name", "%ED%99%A9%ED%98%84",
-                "email", "ghkdgus29%40naver.com"), requestLine.getQueryMap());
+                "email", "ghkdgus29%40naver.com"))
+                .isEqualTo(requestLine.getQueryMap());
     }
 }

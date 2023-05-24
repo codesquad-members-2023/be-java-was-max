@@ -6,7 +6,7 @@ import webserver.util.HttpResponseUtils;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class HttpResponseTest {
 
@@ -24,6 +24,6 @@ class HttpResponseTest {
 
         byte[] expected = sb.getBytes();
 
-        assertEquals(Arrays.toString(expected), Arrays.toString(httpResponse.toBytes()));
+        assertThat(Arrays.toString(expected)).isEqualTo(Arrays.toString(httpResponse.toBytes()));
     }
 }

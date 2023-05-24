@@ -6,8 +6,8 @@ import webserver.util.HttpRequestUtils;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 
 class HttpRequestTest {
 
@@ -23,7 +23,7 @@ class HttpRequestTest {
 
         HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, null);
 
-        assertEquals("GET", httpRequest.getMethod());
+        assertThat("GET").isEqualTo(httpRequest.getMethod());
     }
 
     @Test
@@ -35,7 +35,7 @@ class HttpRequestTest {
 
         HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, null);
 
-        assertEquals("/index.html", httpRequest.getUrl());
+        assertThat("/index.html").isEqualTo(httpRequest.getUrl());
     }
 
 
@@ -48,7 +48,7 @@ class HttpRequestTest {
 
         HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, null);
 
-        assertEquals(headers, httpRequest.getHeaders());
+        assertThat(headers).isEqualTo(httpRequest.getHeaders());
     }
 
     @Test
@@ -65,7 +65,7 @@ class HttpRequestTest {
 
         HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, null);
 
-        assertEquals(expectedParams, httpRequest.getParameters());
+        assertThat(expectedParams).isEqualTo(httpRequest.getParameters());
     }
 
     @Test
@@ -77,7 +77,7 @@ class HttpRequestTest {
 
         HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, null);
 
-        assertNull(httpRequest.getParameters());
+        assertThat(httpRequest.getParameters()).isNull();
     }
 
     @Test
@@ -95,7 +95,7 @@ class HttpRequestTest {
                 "name", "sully",
                 "email", "123%40123");
 
-        assertEquals(expectedParameters, httpRequest.getParameters());
+        assertThat(expectedParameters).isEqualTo(httpRequest.getParameters());
     }
 
     @Test
@@ -107,6 +107,6 @@ class HttpRequestTest {
 
         HttpRequestUtils httpRequest = new HttpRequestUtils(requestLine, headers, null);
 
-        assertNull(httpRequest.getParameters());
+        assertThat(httpRequest.getParameters()).isNull();
     }
 }
