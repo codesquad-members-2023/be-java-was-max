@@ -68,4 +68,8 @@ public class OriginForm {
     public boolean containsParam(String key, String value) {
         return queryString.contains(key, value);
     }
+
+    public boolean startsWith(String path) {
+        return this.path.startsWith(path);
+    }
 }

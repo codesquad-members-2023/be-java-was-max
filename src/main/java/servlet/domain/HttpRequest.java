@@ -44,6 +44,9 @@ public class HttpRequest {
 
 
     public boolean isMatching(int count, String path, String httpRequestMethod) {
+        if (path.startsWith("/posts/") && !path.equals("/posts/form")) {
+            return startLine.startsWith("/posts/");
+        }
         return startLine.isSamePath(path) && (startLine.isSameParameterCount(count) || body.isSameCount(count)) && startLine.isSameMethod(httpRequestMethod);
     }
 
@@ -54,4 +57,5 @@ public class HttpRequest {
     public String getSession() {
         return requestHeaders.getSession();
     }
+
 }

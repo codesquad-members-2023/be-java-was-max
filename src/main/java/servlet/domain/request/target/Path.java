@@ -18,4 +18,8 @@ public class Path {
     public boolean isSame(String path) {
         return this.value.equals(path);
     }
+
+    public boolean startsWith(String path) {
+        return value.startsWith(path);
+    }
 }

@@ -18,8 +18,15 @@ public class HandlerAdapter {
         Method method = mappingInfo.getMethod();
         Object object = mappingInfo.getObject();
 
+        String url = mappingInfo.getUrl();
         if (mappingInfo.isStatic()) {
-            return mappingInfo.getUrl();
+            return url;
+        }
+
+        if (url.startsWith("/posts/") && !url.equals("/posts/form")) {
+            int index = url.lastIndexOf("/");
+            String id = url.substring(index+1);
+            return getResult((String) method.invoke(object, Integer.valueOf(id)));
         }
 
         if (mappingInfo.hasPrams()) {

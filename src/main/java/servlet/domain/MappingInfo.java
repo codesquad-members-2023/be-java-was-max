@@ -38,9 +38,9 @@ public class MappingInfo {
 
     public static MappingInfo of(Method method, HttpRequest httpRequest, MainController mainController) {
         if (httpRequest.hasParameters()) {
-            return new MappingInfo(SRC_MAIN_RESOURCES + httpRequest.getUrl(), method, mainController, httpRequest.getParameters());
+            return new MappingInfo(httpRequest.getUrl(), method, mainController, httpRequest.getParameters());
         }
-        return new MappingInfo(SRC_MAIN_RESOURCES + httpRequest.getUrl(), method, mainController);
+        return new MappingInfo(httpRequest.getUrl(), method, mainController);
     }
 
     public String getUrl() {

@@ -3,13 +3,16 @@ package controller;
 import annotation.Controller;
 import annotation.RequestMapping;
 import db.Database;
+import db.PostDatabase;
 import db.SessionDB;
+import model.Post;
 import model.User;
 
 import java.util.UUID;
 
 @Controller
 public class MainController {
+
     private static final MainController mainController = new MainController();
 
     private MainController() {
@@ -57,13 +60,25 @@ public class MainController {
         return "/user/login_failed.html";
     }
 
-    @RequestMapping(value = "/user/list")
+    @RequestMapping(value = "/user/list.html")
     public String userList() {
-        return "/user/list";
+        return "/user/list.html";
     }
 
-    @RequestMapping(value = "/qna/form")
+    @RequestMapping(value = "/posts/form")
     public String qnaForm() {
         return "/qna/form.html";
+    }
+
+    @RequestMapping(value = "/posts", method = "POST")
+    public String addPost(String nickname, String title, String content) {
+        Post post = new Post(title, nickname, content);
+        PostDatabase.addPost(post);
+        return "/index.html";
+    }
+
+    @RequestMapping(value = "/posts/{postId}")
+    public String showPost(int postId) {
+        return "/qna/show.html?postId=" + postId;
     }
 }

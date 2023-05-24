@@ -27,7 +27,8 @@ public class RequestHandler implements Runnable {
         InetAddress inetAddress = connection.getInetAddress();
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", inetAddress, connection.getPort());
 
-        try (InputStream in = connection.getInputStream()) {
+        try {
+            InputStream in = connection.getInputStream();
             HttpRequest httpRequest = HttpRequestMessageParser.parsingHttpRequest(in);
             if (SecurityHandler.isPermit(httpRequest)) {
                 MappingInfo mappingInfo = HandlerMapping.map(httpRequest);
@@ -37,7 +38,7 @@ public class RequestHandler implements Runnable {
             } else {
                 ResponseHandler.response(ViewResolver.resolve("/templates/user/login.html"), connection);
             }
-        } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | RuntimeException e) {
             logger.error(e.getMessage());
             ResponseHandler.response(new HttpResponse(HttpResponseStatus.NOT_FOUND, "찾을 수 없는 페이지 입니다"), connection);
         }

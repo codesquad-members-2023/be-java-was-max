@@ -1,5 +1,6 @@
 package servlet.domain;
 
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,13 @@ public class HttpResponse {
             out.writeBytes(s+NEXT_LINE);
         } else {
             out.writeBytes(getResponseStartLine());
+        }
+        if (httpResponseStatus == HttpResponseStatus.NOT_FOUND) {
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_16);
+            out.writeBytes(CONTENT_LENGTH + bytes.length + NEXT_LINE);
+            out.writeBytes(NEXT_LINE);
+            out.write(bytes, 0, bytes.length);
+            return;
         }
         byte[] bytes = body.getBytes();
         out.writeBytes(CONTENT_LENGTH + bytes.length + NEXT_LINE);

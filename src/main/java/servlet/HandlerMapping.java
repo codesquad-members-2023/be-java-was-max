@@ -39,9 +39,11 @@ public class HandlerMapping {
             RequestMapping annotation = method.getAnnotation(RequestMapping.class);
             String path = annotation.value();
             String httpRequestMethod = annotation.method();
+
             if (httpRequest.isMatching(method.getParameterCount(), path, httpRequestMethod)) {
                 return Optional.of(MappingInfo.of(method, httpRequest, mainController));
             }
+
         }
         return Optional.empty();
     }

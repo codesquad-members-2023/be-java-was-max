@@ -67,4 +67,7 @@ public class StartLine {
         return this.httpRequestMethod != GET;
     }
 
+    public boolean startsWith(String path) {
+        return originForm.startsWith(path);
+    }
 }
