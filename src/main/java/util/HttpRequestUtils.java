@@ -2,6 +2,8 @@ package util;
 
 import model.User;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,8 @@ public class HttpRequestUtils {
                                     if (info.getValue().contains(trans)){ // 변형된 문자가 포함되어있으면, 원래의 특수문자로 바꿔준다.
                                         info.setValue(info.getValue().replace(trans, exclamationMark.get(trans)));
                                     }
+                                    // 한글로 디코드 (password, email은 한글 변환 적용 안됨)
+                                    info.setValue(URLDecoder.decode(info.getValue(), StandardCharsets.UTF_8));
                                 }));
     }
 
