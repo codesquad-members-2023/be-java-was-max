@@ -29,12 +29,8 @@ public class RedirectHeader implements HttpResponseHeader {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Location: ").append(redirectLocation).append("\r\n");
 
-		if (session.getUUID() != null && !session.isInvalidate()) {
+		if (session.isExist()) {
 			sb.append(String.format("Set-Cookie: sid=%s; Path=/\r\n", session.getUUID()));
-		}
-
-		if (session.isInvalidate()) {
-			sb.append(String.format("Set-Cookie: sid=%s; Max-Age=0; Path=/\r\n", session.getUUID()));
 		}
 
 		header = sb.toString();

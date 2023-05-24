@@ -39,7 +39,7 @@ public class DynamicViewRenderer {
 
 	//todo session 외 다른 model 값에 대해서도 동작할수 있도록 리팩토링이 필요하다. 
 	private void modifyNavbarForSession(StringBuilder navbar, Session session) {
-		if (session.getUUID() != null) {
+		if (session.isExist()) {
 			removeSection(navbar, LOGGED_OUT_TAG, END_TAG);
 			removeTags(navbar, LOGGED_IN_TAG, END_TAG);
 		} else {

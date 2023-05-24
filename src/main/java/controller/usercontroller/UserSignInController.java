@@ -50,6 +50,7 @@ public class UserSignInController implements Controller {
 	 */
 	private void addUserToSessionMap(HttpRequest request, String requestId) {
 		Session session = request.getSession();
+		session.createSession();
 		session.setAttribute("user", requestId);
 	}
 
