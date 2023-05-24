@@ -2,6 +2,7 @@ package controller;
 
 import db.Database;
 import model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import servlet.controller.LoginController;
@@ -34,5 +35,13 @@ public class LoginControllerTest {
 
         String viewName = loginController.process(Map.of(USER_ID, "sulla", PASSWORD, "4321"));
         assertThat(viewName).isEqualTo("user/login_failed");
+    }
+
+    /**
+     * 이거 안 해주면 expected: 2 오류남
+     */
+    @AfterEach
+    void clearDatabase() {
+        Database.deleteAll();
     }
 }

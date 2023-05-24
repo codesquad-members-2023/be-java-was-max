@@ -3,15 +3,16 @@ package servlet;
 import servlet.controller.*;
 import webserver.util.HttpRequestUtils;
 import webserver.util.HttpResponseUtils;
+import webserver.util.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static webserver.util.HttpStatus.FOUND;
+
 public class DispatcherServlet {
     private static final String REDIRECT_URL_PREFIX = "redirect:";
     private static final String COLON = ":";
-    private static final int OK = 200;
-    private static final int FOUND = 302;
     private static final int REDIRECT_URL_IDX = 1;
     private static final Map<String, Controller> controllerMap = addController();
 
@@ -34,7 +35,6 @@ public class DispatcherServlet {
         Controller controller = controllerMap.get(requestUrl);
         // CSS, JS 와 같은 static 타입 요청이 올 경우
         if (controller == null) {
-            httpResponse.setStatusCode(OK);
             return requestUrl;
         }
 
@@ -42,11 +42,13 @@ public class DispatcherServlet {
 
         // redirect 요청일 경우
         if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
+            String redirectUrl = viewName.split(COLON)[REDIRECT_URL_IDX];
             httpResponse.setStatusCode(FOUND);
-            return viewName.split(COLON)[REDIRECT_URL_IDX];
+            httpResponse.setRedirectUrl(redirectUrl);
+
+            return REDIRECT_URL_PREFIX;
         }
 
-        httpResponse.setStatusCode(OK);
         // 뷰를 반환하는 정상 요청인 경우
         return viewName;
     }

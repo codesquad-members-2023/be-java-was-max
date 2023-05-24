@@ -14,6 +14,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserSaveControllerTest {
+    @AfterEach
+    void clearDataBase() {
+        Database.deleteAll();
+    }
+
     @Test
     @DisplayName("/user/create 요청이 들어오면 해당 컨트롤러를 호출하여 User를 생성하고 redirect:/ viewName을 반환한다.")
     void process() {
@@ -37,8 +42,5 @@ public class UserSaveControllerTest {
         );
     }
 
-    @AfterEach
-    void clearDataBase() {
-        Database.deleteAll();
-    }
+
 }
