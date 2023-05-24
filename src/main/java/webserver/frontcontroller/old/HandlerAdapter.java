@@ -1,4 +1,4 @@
-package webserver.dispatcher_servlet;
+package webserver.frontcontroller.old;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -8,6 +8,6 @@ public class HandlerAdapter {
 
     public String handle(HttpRequest request, HttpResponse response, Handler handler)
         throws InvocationTargetException, IllegalAccessException {
-        return handler.service(request, response);
+        return handler.process(request, response);
     }
 }

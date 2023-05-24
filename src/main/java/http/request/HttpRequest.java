@@ -15,6 +15,7 @@ import http.session.HttpSession;
 import http.session.SessionContainer;
 import java.util.List;
 import java.util.Optional;
+import webserver.frontcontroller.RequestDispatcher;
 
 public class HttpRequest {
 
@@ -68,6 +69,10 @@ public class HttpRequest {
         return queryString;
     }
 
+    public void setAttribute(String key, Object value) {
+        queryString.getParameter().put(key, value.toString());
+    }
+
     public boolean hasHttpSession() {
         return httpSession != null;
     }
@@ -96,4 +101,8 @@ public class HttpRequest {
         return String.join("\r\n", requestLine.toString(), requestHeader.toString(), messageBody.toString());
     }
 
+    // TODO
+    public RequestDispatcher getRequestDispatcher(String viewPath) {
+        return null;
+    }
 }

@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.dispatcher_servlet.DispatcherServlet;
+import webserver.frontcontroller.old.DispatcherServlet;
 
 public class RequestHandler implements Runnable {
 

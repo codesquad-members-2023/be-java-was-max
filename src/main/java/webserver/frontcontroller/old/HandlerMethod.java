@@ -1,4 +1,4 @@
-package webserver.dispatcher_servlet;
+package webserver.frontcontroller.old;
 
 import http.common.HttpMethod;
 import http.request.HttpRequest;

@@ -1,4 +1,4 @@
-package webserver.dispatcher_servlet;
+package webserver.frontcontroller.old;
 
 import static http.common.HttpStatus.FOUND;
 import static http.common.header.ResponseHeaderType.LOCATION;

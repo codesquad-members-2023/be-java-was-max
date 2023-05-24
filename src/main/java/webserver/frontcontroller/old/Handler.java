@@ -1,4 +1,4 @@
-package webserver.dispatcher_servlet;
+package webserver.frontcontroller.old;
 
 import annotation.RequestMapping;
 import http.common.HttpMethod;
@@ -7,8 +7,9 @@ import http.response.HttpResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import webserver.frontcontroller.controller.RequestMappingController;
 
-public class Handler {
+public class Handler implements RequestMappingController {
 
     private final Object controllerInstance;
 
@@ -20,12 +21,16 @@ public class Handler {
         return find(request).isPresent();
     }
 
-    public String service(HttpRequest request, HttpResponse response)
-        throws InvocationTargetException, IllegalAccessException {
+    @Override
+    public String process(HttpRequest request, HttpResponse response) {
         Optional<Method> optionalMethod = find(request);
         if (optionalMethod.isPresent()) {
             Method method = optionalMethod.get();
-            return (String) method.invoke(controllerInstance, request, response);
+            try {
+                return (String) method.invoke(controllerInstance, request, response);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }

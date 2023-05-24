@@ -53,6 +53,10 @@ public class RequestQueryString {
         this.parameter.putAll(parameter);
     }
 
+    public Map<String, String> getParameter() {
+        return parameter;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
