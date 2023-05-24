@@ -49,6 +49,23 @@ public class RequestQueryString {
         return parameter;
     }
 
+    public String getFormattedQueryString() {
+        StringBuilder sb = new StringBuilder();
+        if (parameter.size() > 0) {
+            sb.append("?");
+        }
+
+        for (String key : parameter.keySet()) {
+            sb.append(key)
+                .append("=")
+                .append(parameter.get(key))
+                .append(" ");
+        }
+        return String.join("&", sb.toString()
+            .trim()
+            .split(" "));
+    }
+
     @Override
     public String toString() {
         return String.format("%s", parameter);

@@ -3,6 +3,7 @@ package http.response.component;
 import http.common.header.HeaderType;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ResponseHeader {
@@ -19,6 +20,10 @@ public class ResponseHeader {
 
     public void put(HeaderType key, String value) {
         header.put(key, value);
+    }
+
+    public Set<HeaderType> keySet() {
+        return header.keySet();
     }
 
     @Override
