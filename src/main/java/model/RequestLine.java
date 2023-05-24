@@ -33,7 +33,7 @@ public class RequestLine {
         }
 
         if (url.equals("/")) {
-            url = "/index.html";
+            url = "/index";
         }
 
         return url;
