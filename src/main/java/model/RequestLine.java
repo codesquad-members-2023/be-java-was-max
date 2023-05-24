@@ -2,8 +2,6 @@ package model;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RequestLine {
     private static final int METHOD_INDEX = 0;
@@ -33,7 +31,7 @@ public class RequestLine {
         }
 
         if (url.equals("/")) {
-            url = "/index";
+            url = "/index.html";
         }
 
         return url;
