@@ -1,8 +1,5 @@
-# java-was-2023
+#### java-was-2023 
+# 학습계획 다시 
 
-Java Web Application Server 2023
-
-## 프로젝트 정보 
-
-이 프로젝트는 우아한 테크코스 박재성님의 허가를 받아 https://github.com/woowacourse/jwp-was 
-를 참고하여 작성되었습니다.
+<was 만들기>
+현재 상황: 진척이 너무 없어서 약간 서두를 필요가 있으므로 힌트 영상 적극적으로 참조 -> 일단 완성 코드 작성에 집중
