@@ -1,7 +1,9 @@
 package webserver;
 
+import controller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import request.RequestBodyParser;
 import request.RequestLineParser;
 import response.ResponseGenerator;
 import response.ViewPathResolver;
@@ -9,6 +11,7 @@ import response.ViewPathResolver;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
     private final Socket connection;
@@ -29,10 +32,11 @@ public class RequestHandler implements Runnable {
 
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-            // RequestLine을 읽어 인스턴스를 생성한다
+            // RequestLine을 읽어 인스턴스 생성
             RequestLineParser requestLineParser = new RequestLineParser(inputReader.readLine());
             logger.info(requestLineParser.getHttpMethod() + requestLineParser.getRequestURI());
 
+            // RequestHeader를 읽음
             String requestHeader;
             StringBuilder requestHeaderBuilder = new StringBuilder();
             while ((requestHeader = inputReader.readLine()) != null && !requestHeader.isEmpty()) {
@@ -40,31 +44,13 @@ public class RequestHandler implements Runnable {
                 requestHeaderBuilder.append(requestHeader).append("\r\n");
             }
 
+            // HTTP method에 따른 처리
             String httpMethod = requestLineParser.getHttpMethod();
             if (httpMethod.equals("GET")) {
                 handleGetRequest(requestLineParser, viewPathResolver, responseGenerator, out);
             }
             if (httpMethod.equals("POST")) {
-                handlePostRequest(requestLineParser, viewPathResolver, responseGenerator, out);
-
-                // TODO : RequestBody에서 입력값 추출하기
-                String requestHeaderString = requestHeaderBuilder.toString();
-                int contentLength = 0;
-                String contentLengthHeader = "Content-Length: ";
-                for (String headerLine : requestHeaderString.split("\r\n")) {
-                    if (headerLine.startsWith(contentLengthHeader)) {
-                        contentLength = Integer.parseInt(headerLine.substring(contentLengthHeader.length()));
-                        break;
-                    }
-                }
-
-                char[] requestBody = new char[contentLength];
-                int bytesRead = inputReader.read(requestBody, 0, contentLength);
-                String requestBodyString = new String(requestBody, 0, bytesRead);
-
-                logger.info("request body: {}", requestBodyString);
-
-                // TODO User에 저장하기
+                handlePostRequest(inputReader, requestHeaderBuilder, requestLineParser, viewPathResolver, responseGenerator, out);
             }
 
         } catch (IOException e) {
@@ -82,8 +68,29 @@ public class RequestHandler implements Runnable {
         responseGenerator.responseBody(dos, responseBody);
     }
 
-    private void handlePostRequest(RequestLineParser requestLineParser, ViewPathResolver viewPathResolver, ResponseGenerator responseGenerator, OutputStream out) throws IOException {
-        logger.info("POST");
+    private void handlePostRequest(BufferedReader inputReader, StringBuilder requestHeaderBuilder, RequestLineParser requestLineParser, ViewPathResolver viewPathResolver, ResponseGenerator responseGenerator, OutputStream out) throws IOException {
+        // request body를 읽음
+        String requestHeaderString = requestHeaderBuilder.toString();
+        int contentLength = 0;
+        String contentLengthHeader = "Content-Length: ";
+        for (String headerLine : requestHeaderString.split("\r\n")) {
+            if (headerLine.startsWith(contentLengthHeader)) {
+                contentLength = Integer.parseInt(headerLine.substring(contentLengthHeader.length()));
+                break;
+            }
+        }
+
+        char[] requestBody = new char[contentLength];
+        int bytesRead = inputReader.read(requestBody, 0, contentLength);
+        String requestBodyString = new String(requestBody, 0, bytesRead);
+
+        // request body를 바탕으로 회원가입 처리
+        RequestBodyParser requestBodyParser = new RequestBodyParser();
+        Map<String, String> queryMap = requestBodyParser.parseQuery(requestBodyString);
+        UserController userController = new UserController();
+        userController.join(queryMap);
+
+        // 응답 전송
         String requestedURI = requestLineParser.getRequestURI();
         String mimeType = viewPathResolver.resolveMimeType(requestedURI);
         byte[] responseBody = viewPathResolver.readViewFile(requestedURI);

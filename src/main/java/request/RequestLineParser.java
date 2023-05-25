@@ -24,6 +24,9 @@ public class RequestLineParser {
         if (requestURI.equals("/user/create")) {
             return requestURI = "/index.html";
         }
+        if (requestURI.contains("user") && !requestURI.contains("html")) {
+            requestURI = requestURI.substring(5);
+        }
         return requestURI;
     }
 }
