@@ -1,8 +1,9 @@
-package servlet;
+package servlet.user;
 
 import annotation.WebServlet;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import servlet.HttpServlet;
 
 import java.io.IOException;
 

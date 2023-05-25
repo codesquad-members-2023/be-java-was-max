@@ -1,4 +1,4 @@
-package servlet;
+package servlet.user;
 
 import annotation.WebServlet;
 import db.Database;
@@ -7,6 +7,7 @@ import http.HttpUtils;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import model.User;
+import servlet.HttpServlet;
 import session.SessionStorage;
 
 import java.io.IOException;
