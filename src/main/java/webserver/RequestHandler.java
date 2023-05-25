@@ -2,92 +2,94 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import request.RequestLineParser;
+import response.ResponseGenerator;
+import response.ViewPathResolver;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Map;
 
 public class RequestHandler implements Runnable {
-    private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private final Socket connection;
-    private final UserController userController;
-    private final HttpRequest httpRequest;
-    private final HttpResponse httpResponse;
+    private final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private final ViewPathResolver viewPathResolver = new ViewPathResolver();
+    private final ResponseGenerator responseGenerator = new ResponseGenerator();
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.userController = new UserController();
-        this.httpRequest = new HttpRequest();
-        this.httpResponse = new HttpResponse();
     }
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+        try (InputStream in = connection.getInputStream();
+             OutputStream out = connection.getOutputStream()) {
 
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            // Request Line을 읽는다
-            String requestLine = inputReader.readLine();
-            logger.debug("request line : {}", requestLine);
-            String[] requestHeader = requestLine.split(" ");
 
-            // TODO 메서드 추출 후 처리
-            String method = requestHeader[0];
+            // RequestLine을 읽어 인스턴스를 생성한다
+            RequestLineParser requestLineParser = new RequestLineParser(inputReader.readLine());
+            logger.info(requestLineParser.getHttpMethod() + requestLineParser.getRequestURI());
 
-            // Request Header를 읽고 로그를 출력한다
-            while (!requestLine.equals("")) {
-                requestLine = inputReader.readLine();
-                logger.debug("header : {}", requestLine);
+            String requestHeader;
+            StringBuilder requestHeaderBuilder = new StringBuilder();
+            while ((requestHeader = inputReader.readLine()) != null && !requestHeader.isEmpty()) {
+                logger.debug("header : {}", requestHeader);
+                requestHeaderBuilder.append(requestHeader).append("\r\n");
             }
 
-            // Request Line에서 요청된 파일의 경로, 확장자, 컨텐트 타입을 추출한다
-            String requestedURI = requestHeader[1];
-            String extension = requestedURI.substring(requestedURI.lastIndexOf(".") + 1);
+            String httpMethod = requestLineParser.getHttpMethod();
+            if (httpMethod.equals("GET")) {
+                handleGetRequest(requestLineParser, viewPathResolver, responseGenerator, out);
+            }
+            if (httpMethod.equals("POST")) {
+                handlePostRequest(requestLineParser, viewPathResolver, responseGenerator, out);
 
-            if (requestedURI.contains("user/create")) {
-                logger.debug("회원가입 " + requestedURI);
-
-                try {
-                    URI uri = new URI(requestedURI);
-                    String query = uri.getQuery();
-                    Map<String, String> queryMap = httpRequest.parseQuery(query);
-                    userController.join(queryMap);
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+                // TODO : RequestBody에서 입력값 추출하기
+                String requestHeaderString = requestHeaderBuilder.toString();
+                int contentLength = 0;
+                String contentLengthHeader = "Content-Length: ";
+                for (String headerLine : requestHeaderString.split("\r\n")) {
+                    if (headerLine.startsWith(contentLengthHeader)) {
+                        contentLength = Integer.parseInt(headerLine.substring(contentLengthHeader.length()));
+                        break;
+                    }
                 }
+
+                char[] requestBody = new char[contentLength];
+                int bytesRead = inputReader.read(requestBody, 0, contentLength);
+                String requestBodyString = new String(requestBody, 0, bytesRead);
+
+                logger.info("request body: {}", requestBodyString);
+
+                // TODO User에 저장하기
             }
-
-            ContentType mediaType; // enum
-            String path = "";
-            String contentType = "";
-
-            for (ContentType type : ContentType.values()) {
-                if (type.getExtension().equals(extension)) {
-                    mediaType = type;
-                    contentType = mediaType.getMimeType();
-                    path = mediaType.getPath() + requestedURI;
-                    break;
-                }
-            }
-
-            // 경로에 해당하는 파일을 읽는다
-            // TODO toPath()가 꼭 필요할지 고민해보기
-            byte[] body = Files.readAllBytes(new File(path).toPath());
-
-            // 요청에 대한 Request Message를 전송한다
-            DataOutputStream dos = new DataOutputStream(out);
-            httpResponse.response200Header(dos, body.length, contentType);
-            httpResponse.responseBody(dos, body);
 
         } catch (IOException e) {
-            logger.error(e.getMessage());   // Is a directory 에러 발생
+            logger.error(e.getMessage());
         }
+    }
+
+    private void handleGetRequest(RequestLineParser requestLineParser, ViewPathResolver viewPathResolver, ResponseGenerator responseGenerator, OutputStream out) throws IOException {
+        String requestedURI = requestLineParser.getRequestURI();
+        String mimeType = viewPathResolver.resolveMimeType(requestedURI);
+        byte[] responseBody = viewPathResolver.readViewFile(requestedURI);
+
+        DataOutputStream dos = new DataOutputStream(out);
+        responseGenerator.response200Header(dos, responseBody.length, mimeType);
+        responseGenerator.responseBody(dos, responseBody);
+    }
+
+    private void handlePostRequest(RequestLineParser requestLineParser, ViewPathResolver viewPathResolver, ResponseGenerator responseGenerator, OutputStream out) throws IOException {
+        logger.info("POST");
+        String requestedURI = requestLineParser.getRequestURI();
+        String mimeType = viewPathResolver.resolveMimeType(requestedURI);
+        byte[] responseBody = viewPathResolver.readViewFile(requestedURI);
+
+        DataOutputStream dos = new DataOutputStream(out);
+        responseGenerator.response302Header(dos, responseBody.length, mimeType);
+        responseGenerator.responseBody(dos, responseBody);
     }
 }
