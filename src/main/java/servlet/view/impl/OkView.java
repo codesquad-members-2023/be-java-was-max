@@ -10,8 +10,6 @@ import templateengine.DynamicViewRenderer;
 
 public class OkView implements View {
 
-	private static final String HEADER_PATH = "src/main/resources/templates/fragments/header.html";
-	private static final String NAVBAR_PATH = "src/main/resources/templates/fragments/navbar.html";
 	private final DynamicViewRenderer dynamicViewRenderer;
 
 	public OkView() {
@@ -32,12 +30,7 @@ public class OkView implements View {
 	}
 
 	private byte[] renderDynamicContent(StringBuilder html, Model model) throws IOException {
-		StringBuilder header = dynamicViewRenderer.renderHeader(HEADER_PATH);
-		StringBuilder navbar = dynamicViewRenderer.renderNavbar(NAVBAR_PATH, model);
-
-		dynamicViewRenderer.renderHTML(html, "{{> header}}", header);
-		dynamicViewRenderer.renderHTML(html, "{{> navbar}}", navbar);
-
+		dynamicViewRenderer.render(html, model);
 		return html.toString().getBytes();
 	}
 

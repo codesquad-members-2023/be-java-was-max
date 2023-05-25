@@ -3,49 +3,87 @@ package templateengine;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import servlet.Model;
-import session.Session;
 
 public class DynamicViewRenderer {
 
-	private static final String LOGGED_IN_TAG = "{{#session}}";
-	private static final String LOGGED_OUT_TAG = "{{^session}}";
-	private static final String END_TAG = "{{/session}}";
+	private static final String LOOP_START_TAG = "$";
+	private static final String CONDITIONAL_TRUE_TAG = "#";
+	private static final String CONDITIONAL_FALSE_TAG = "^";
+	private static final String REAL_END_TAG = "/";
+	private static final String INSERT_TAG = ">";
+	private static final String HEADER_PATH = "src/main/resources/templates/fragments/header.html";
+	private static final String NAVBAR_PATH = "src/main/resources/templates/fragments/navbar.html";
+	private static final Pattern pattern = Pattern.compile("\\{\\{([#$^/>])([^{}]+)\\}\\}");
+	private static String navbarHtml;
+	private static String headerHtml;
 
-	public void renderHTML(StringBuilder html, String placeHolder, StringBuilder revisedHtml) {
-		replacePlaceholderWithContent(html, placeHolder, revisedHtml.toString());
+	static {
+		try {
+			navbarHtml = new String(Files.readAllBytes(new File(NAVBAR_PATH).toPath()));
+			headerHtml = new String(Files.readAllBytes(new File(HEADER_PATH).toPath()));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	public StringBuilder renderHeader(String path) throws IOException {
-		StringBuilder navbar = getFileContent(path);
-		return navbar;
+	public void render(StringBuilder html, Model model) {
+		Matcher matcher = pattern.matcher(html);
+		while (matcher.find()) {
+			String tag = matcher.group(1);
+			String key = matcher.group(2).trim();
+
+			switch (tag) {
+				case CONDITIONAL_TRUE_TAG:
+					handleConditional(html, key, model);
+					break;
+				case LOOP_START_TAG:
+					handleLoop(html, key, model);
+					break;
+				case INSERT_TAG:
+					handleInsertion(html, key, model);
+					break;
+				default:
+					break;
+			}
+			matcher = pattern.matcher(html);
+		}
 	}
 
-	public StringBuilder renderNavbar(String path, Model model) throws IOException {
-		StringBuilder navbar = getFileContent(path);
-		modifyNavbarForSession(navbar, model.getSession());
-		return navbar;
+	private StringBuilder handleConditional(StringBuilder html, String key, Model model) {
+		String truePattern = "{{" + CONDITIONAL_TRUE_TAG + key + "}}";
+		String falsePattern = "{{" + CONDITIONAL_FALSE_TAG + key + "}}";
+		String endPattern = "{{" + REAL_END_TAG + key + "}}";
+		if (model.getBoolTypeValue(key)) {
+			removeSection(html, falsePattern, endPattern);
+			removeTags(html, truePattern, endPattern);
+		} else {
+			removeSection(html, truePattern, endPattern);
+			removeTags(html, falsePattern, endPattern);
+		}
+		return html;
 	}
 
-	private StringBuilder getFileContent(String filepath) throws IOException {
-		return new StringBuilder(new String(Files.readAllBytes(new File(filepath).toPath())));
+	private void handleLoop(StringBuilder html, String key, Model model) {
+
+	}
+
+	private void handleInsertion(StringBuilder html, String key, Model model) {
+		String placeHolder = "{{" + INSERT_TAG + key + "}}";
+		if ("header".equals(key)) {
+			replacePlaceholderWithContent(html, placeHolder, headerHtml);
+		} else if ("navbar".equals(key)) {
+			render(new StringBuilder(navbarHtml), model);
+			replacePlaceholderWithContent(html, placeHolder, navbarHtml);
+		}
 	}
 
 	private void replacePlaceholderWithContent(StringBuilder html, String placeholder, String content) {
 		int index = html.indexOf(placeholder);
 		html.replace(index, index + placeholder.length(), content);
-	}
-
-	//todo session 외 다른 model 값에 대해서도 동작할수 있도록 리팩토링이 필요하다. 
-	private void modifyNavbarForSession(StringBuilder navbar, Session session) {
-		if (session.isExist()) {
-			removeSection(navbar, LOGGED_OUT_TAG, END_TAG);
-			removeTags(navbar, LOGGED_IN_TAG, END_TAG);
-		} else {
-			removeSection(navbar, LOGGED_IN_TAG, END_TAG);
-			removeTags(navbar, LOGGED_OUT_TAG, END_TAG);
-		}
 	}
 
 	/**

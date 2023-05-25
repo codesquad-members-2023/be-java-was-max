@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import request.exception.HttpRequestParsingException;
+import servlet.Model;
 import session.Session;
 
 public class HttpRequest {
@@ -16,6 +17,7 @@ public class HttpRequest {
 	private HttpRequestHeader httpRequestHeader;
 	private HttpRequestBody httpRequestBody;
 	private Session session;
+	private Model model;
 	private static final String GET = "GET";
 
 	public HttpRequest(InputStream in) {
@@ -60,4 +62,5 @@ public class HttpRequest {
 	public Session getSession() {
 		return session;
 	}
+
 }
