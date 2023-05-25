@@ -1,7 +1,6 @@
-package webserver;
+package response;
 
 public enum ContentType {
-    // TODO extension 수정 필요, contentType을 요청 메세지에서 가져올지 고민해보기
     HTML("html", "text/html"),
     CSS("css", "text/css"),
     JS("js", "application/javascript"),
@@ -24,10 +23,6 @@ public enum ContentType {
         this.extension = extension;
         this.mimeType = mimeType;
         this.path = getPath();
-    }
-
-    public String getExtension() {
-        return extension;
     }
 
     public String getMimeType() {
