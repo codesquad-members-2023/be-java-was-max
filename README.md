@@ -36,19 +36,36 @@ https://www.rfc-editor.org/rfc/rfc2616
 - [x] parsing 메서드 분리 #Request 객체
 - [x] join()에 queryMap 직접 넘기기
 - [x] Request, Response 클래스명 수정하기
+
 * 회원가입시 Is a directory 오류 해결하기
-  * 파일을 저장할 때 파일이 아니라 디렉토리가 대상이 됐을 때 발생한다고 한다. 
-* Connect가 계속 이뤄지는 이유 찾기 
-  * 리소스를 가져올 때 마다 새로운 스레드를 생성하는 것 같다. 그런데 회원가입시에는 왜 계속 생성이 될까?
-
-
-
+    * 파일을 저장할 때 파일이 아니라 디렉토리가 대상이 됐을 때 발생한다고 한다.
+* Connect가 계속 이뤄지는 이유 찾기
+    * 리소스를 가져올 때 마다 새로운 스레드를 생성하는 것 같다. 그런데 회원가입시에는 왜 계속 생성이 될까?
 * private 메서드를 테스트 하는 것은 좋지 않다. private 메서드를 포함하고 있는 public 메서드를 테스트하면 동일한 테스트 효과가 있다.
-      * 리플렉션을 활용하는 방법도 있지만 좋은 방법은 아니라고 한다.
+  * 리플렉션을 활용하는 방법도 있지만 좋은 방법은 아니라고 한다.
 * logger에 static 키워드를 붙여야 할까?
 
-
 ### 공부할 것
+
 - [ ] return null -> 예외처리
 - [ ] thread.run() VS. thread.start()
 - [ ] File 클래스 // 지안 블로그 참고
+
+
+## TODO : Step4 - POST로 회원가입
+- [x] 회원가입(user/form) 파일의 form 태그의 HTTP method를 GET -> POST로 수정
+- [ ] Request Body에서 회원가입시 입력한 값 추출
+  - RequestMessage 클래스가 필요할 것 같다.
+- [ ] HTTP Redirection 구현
+  -  HomeController가 필요할 것 같다.
+
+### POST를 처리할 방법
+RequestMessage 클래스를 만든다.   
+message를 line, header, body로 나눠 처리한다.   
+메서드가 GET일 경우 line을 가지고 처리하고,   
+메서드가 POST일 경우 body를 가지고 처리한다.   
+GET일 경우는 경로를 추출해서 해당 파일을 뿌려주면 된다.   
+POST일 경우에는 body에서 입력값을 추출해서 처리 후 리다이렉션 해주어야 한다.   
+리다이렉션은 어떻게 처리하지?   
+---
+
