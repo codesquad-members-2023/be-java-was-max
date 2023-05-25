@@ -3,7 +3,9 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import db.Database;
 import http.response.HttpResponse;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import http.request.HttpRequest;
@@ -27,6 +29,8 @@ public class RequestHandler implements Runnable {
             HttpResponse httpResponse = new HttpResponse();
             DataOutputStream dos = new DataOutputStream(out);
 
+            User user = new User("jianId", "1234", "jian", "jian@gmail.com");
+            Database.addUser(user);
             DispatcherServlet dispatcherServlet = new DispatcherServlet();
             dispatcherServlet.run(httpRequest, httpResponse);
             responseHeader(dos, httpResponse);
