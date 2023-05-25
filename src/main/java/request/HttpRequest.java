@@ -22,6 +22,7 @@ public class HttpRequest {
 
 	public HttpRequest(InputStream in) {
 		session = new Session();
+		model = new Model();
 		BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		try {
 			httpRequestLine = new HttpRequestLine(br.readLine());
@@ -63,4 +64,7 @@ public class HttpRequest {
 		return session;
 	}
 
+	public Model getModel() {
+		return model;
+	}
 }

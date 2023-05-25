@@ -4,15 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import request.HttpRequest;
 import session.Session;
 
 public class Model {
-	private final Map<String, Object> requestAttributes;
+	private Map<String, Object> requestAttributes;
 
-	public Model(HttpRequest request) {
-		this.requestAttributes = new HashMap<>(
-			Map.of("loginUserExist", request.getSession().isExist(), "session", request.getSession()));
+	public Model() {
+		this.requestAttributes = new HashMap<>();
+	}
+
+	public void setSession(Session session) {
+		requestAttributes.put("loginUserExist", session.isExist());
+		requestAttributes.put("session", session);
+	}
+
+	public void setAttribute(String key, Object value) {
+		requestAttributes.put(key, value);
 	}
 
 	public Session getSession() {

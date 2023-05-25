@@ -10,7 +10,8 @@ import session.Session;
 public class LoginCheckInterceptor {
 
 	private static final List<String> WHITESPACE_URLS = new ArrayList<>(
-		Arrays.asList("/user/index.html", "/user/login.html", "/user/form.html", "/", "/user/signIn", "/user/create"));
+		Arrays.asList("/user/index.html", "/user/login.html", "/user/form.html", "/", "/user/signIn", "/user/create",
+			"/user/login_failed.html"));
 
 	public String preHandle(HttpRequest request) {
 		Session session = request.getSession();

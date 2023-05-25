@@ -42,7 +42,10 @@ public class DispatcherServlet {
 		initViewAndViewResolver(viewName);
 
 		String viewPath = viewResolver.viewResolver(viewName);
-		Model model = new Model(request);
+
+		Model model = request.getModel();
+		model.setSession(request.getSession());
+
 		byte[] body = view.render(viewPath, model);
 
 		return new HttpResponse(new HttpResponseParams(viewName, body, request.getSession()));
