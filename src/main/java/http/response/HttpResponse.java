@@ -1,5 +1,6 @@
 package http.response;
 
+import auth.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public class HttpResponse {
         statusLine = new StatusLine(line);
     }
 
-    public void setResponseHeaders(String line){
+    public void addResponseHeaders(String line){
         responseHeaders.add(line);
     }
 
@@ -41,20 +42,13 @@ public class HttpResponse {
         return responseBody.get();
     }
 
-    public Optional<String> getContentType(){
-        return responseHeaders.get("Content-Type");
+    public Optional<String> get(String key){
+        return responseHeaders.get(key);
     }
 
-    public Optional<String> getContentLength(){
-        return responseHeaders.get("Content-Length");
-    }
 
     public String getStatusCode(){
         return statusLine.getStatusCode();
-    }
-
-    public Optional<String> getLocation() {
-        return responseHeaders.get("Location");
     }
 
     public void logResponse(){

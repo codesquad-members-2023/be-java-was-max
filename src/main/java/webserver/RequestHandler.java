@@ -39,15 +39,19 @@ public class RequestHandler implements Runnable {
     private void responseHeader(DataOutputStream dos, HttpResponse httpResponse) {
         try {
             dos.writeBytes(httpResponse.getStatusLine() + "\r\n");
-            if (httpResponse.getContentType().isPresent()) {
-                dos.writeBytes("Content-Type: " + httpResponse.getContentType().get() + ";charset=utf-8\r\n");
+            if (httpResponse.get("Content-Type").isPresent()) {
+                dos.writeBytes("Content-Type: " + httpResponse.get("Content-Type").get() + ";charset=utf-8\r\n");
             }
-            if (httpResponse.getContentLength().isPresent()) {
-                dos.writeBytes("Content-Length: " + httpResponse.getContentLength().get() + ";charset=utf-8\r\n");
+            if (httpResponse.get("Content-Length").isPresent()) {
+                dos.writeBytes("Content-Length: " + httpResponse.get("Content-Length").get() + ";charset=utf-8\r\n");
             }
-            if (httpResponse.getLocation().isPresent()) {
-                dos.writeBytes("Location: " + httpResponse.getLocation().get() + "\r\n");
+            if (httpResponse.get("Location").isPresent()) {
+                dos.writeBytes("Location: " + httpResponse.get("Location").get() + "\r\n");
             }
+            if (httpResponse.get("Set-Cookie").isPresent()) {
+                dos.writeBytes("Set-Cookie: " + httpResponse.get("Set-Cookie").get() + "\r\n");
+            }
+
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
