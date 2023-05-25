@@ -10,8 +10,8 @@ import util.HttpRequestUtils;
 
 
 
-public class UserServlet {
-    private static final Logger logger = LoggerFactory.getLogger(UserServlet.class);
+public class UserCreateServlet {
+    private static final Logger logger = LoggerFactory.getLogger(UserCreateServlet.class);
     public String findViewPath(HttpRequest httpRequest) {
         String method = httpRequest.getMethod();
 
@@ -25,7 +25,7 @@ public class UserServlet {
             String userId = Database.addUser(createUser(httpRequest.getRequestBody()));
             logger.debug("User: {}", Database.findUserById(userId));
         }
-        return "redirect:/index.html"; // 유저 생성하고 home으로 redirect
+        return "redirect:/user/login.html"; // 유저 생성하고 login.html으로 redirect
     }
 
     private User createUser(String userData){

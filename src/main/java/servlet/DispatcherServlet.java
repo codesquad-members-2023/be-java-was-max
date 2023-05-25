@@ -14,10 +14,10 @@ public class DispatcherServlet {
     }
 
     public void run(HttpRequest httpRequest, HttpResponse httpResponse){
-        viewResolver.run(mappingUri(httpRequest), httpResponse);
+        viewResolver.run(mappingUri(httpRequest, httpResponse), httpResponse);
     }
 
-    public String mappingUri(HttpRequest httpRequest){
+    public String mappingUri(HttpRequest httpRequest, HttpResponse httpResponse){
         String path = httpRequest.getPath();  // 컨트롤러에 의해, 가야 할 경로가 바뀔 수도 있다.
         String viewPath = path;  // 컨트롤러에 의해, 가야 할 경로가 바뀔 수도 있다.
         if (path.equals("/index.html")) {
@@ -27,7 +27,10 @@ public class DispatcherServlet {
             viewPath = "/user/form.html";
         }
         if (path.contains("/user/create")){
-            viewPath = new UserServlet().findViewPath(httpRequest);
+            viewPath = new UserCreateServlet().findViewPath(httpRequest);
+        }
+        if (path.contains("/user/login")) {
+            viewPath = new UserLoginServlet().findViewPath(httpRequest, httpResponse);
         }
         return viewPath;
     }
