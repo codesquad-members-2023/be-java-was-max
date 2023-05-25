@@ -17,6 +17,11 @@ import java.util.Map;
 public class UserLoginServlet extends HttpServlet {
 
 	@Override
+	protected void doGet(HttpRequest request, HttpResponse response) throws IOException {
+		viewResolver.resolve("/user/login.html", response);
+	}
+
+	@Override
 	protected void doPost(HttpRequest request, HttpResponse response) throws IOException {
 		Map<String, String> loginInfo = HttpUtils.parseQueryString(request.getBody());
 

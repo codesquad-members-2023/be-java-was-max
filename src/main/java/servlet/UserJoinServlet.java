@@ -14,6 +14,11 @@ import java.util.Map;
 public class UserJoinServlet extends HttpServlet {
 
 	@Override
+	protected void doGet(HttpRequest request, HttpResponse response) throws IOException {
+		viewResolver.resolve("/user/form.html", response);
+	}
+
+	@Override
 	protected void doPost(HttpRequest request, HttpResponse response) throws IOException {
 		Map<String, String> joinInfo = HttpUtils.parseQueryString(request.getBody());
 
