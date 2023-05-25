@@ -1,13 +1,17 @@
 package http;
 
 import model.Body;
-import model.Headers;
 import model.Request;
+import model.RequestHeaders;
 import model.RequestLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
 public class RequestMaker {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestMaker.class);
 
     private BufferedReader br;
 
@@ -17,30 +21,31 @@ public class RequestMaker {
 
     public Request make() throws IOException {
         RequestLine requestLine = makeRequestLine();
-        Headers header = makeHeaders();
+        RequestHeaders requestHeaders = makeHeaders();
         Body body = null;
 
         if (requestLine.hasBody()) {
-            int contentLength = Integer.parseInt(header.getHeaders().get("Content-Length"));
+            int contentLength = Integer.parseInt(requestHeaders.getHeaders().get("Content-Length"));
             body = makeBody(contentLength);
         }
-        return new Request(requestLine, header, body);
+        return new Request(requestLine, requestHeaders, body);
     }
 
     private RequestLine makeRequestLine() throws IOException {
         String rawRequestLine = br.readLine().trim();
+        logger.debug("RequestLine: {}", rawRequestLine);
 
         return new RequestLine(rawRequestLine);
     }
 
-    private Headers makeHeaders() throws  IOException {
+    private RequestHeaders makeHeaders() throws  IOException {
         String input = null;
-        Headers headers = new Headers();
+        RequestHeaders requestHeaders = new RequestHeaders();
 
         while (!(input = br.readLine().trim()).equals("")) {
-            headers.add(input);
+            requestHeaders.add(input);
         }
-        return headers;
+        return requestHeaders;
     }
 
     private Body makeBody(int length) throws IOException {

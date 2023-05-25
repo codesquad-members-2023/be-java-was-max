@@ -3,12 +3,12 @@ package model;
 public class Request {
 
     private final RequestLine requestLine;
-    private final Headers headers;
+    private final RequestHeaders requestHeaders;
     private final Body body;
 
-    public Request(RequestLine requestLine, Headers headers, Body body) {
+    public Request(RequestLine requestLine, RequestHeaders requestHeaders, Body body) {
         this.requestLine = requestLine;
-        this.headers = headers;
+        this.requestHeaders = requestHeaders;
         this.body = body;
     }
 
@@ -16,8 +16,8 @@ public class Request {
         return requestLine;
     }
 
-    public Headers getHeaders() {
-        return headers;
+    public RequestHeaders getHeaders() {
+        return requestHeaders;
     }
 
     public Body getBody() {

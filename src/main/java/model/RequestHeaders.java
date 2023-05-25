@@ -5,13 +5,13 @@ import util.RequestParser;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Headers {
+public class RequestHeaders {
 
     private static final int HEADER_INDEX = 0;
     private static final int CONTENT_INDEX = 1;
     private final Map<String, String> headers;
 
-    public Headers() {
+    public RequestHeaders() {
         this.headers = new HashMap<>();
     }
 

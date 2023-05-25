@@ -2,14 +2,14 @@ package model;
 
 public enum ContentType {
 
-    HTML("Content-Type: text/html; charset=utf-8\r\n"),
-    CSS("Content-Type: text/css; charset=utf-8\r\n"),
-    JS("Content-Type: application/javascript\r\n"),
-    ICO("Content-Type: image/x-icon\r\n"),
-    PNG("Content-Type: image/png\r\n"),
-    JPG("Content-Type: image/jpg\r\n"),
-    WOFF("Content-Type: application/woff\r\n"),
-    TTF("Content-Type: application/x-font-ttf\r\n");
+    HTML("text/html; charset=utf-8"),
+    CSS("text/css; charset=utf-8"),
+    JS("application/javascript"),
+    ICO("image/x-icon"),
+    PNG("image/png"),
+    JPG("image/jpg"),
+    WOFF("application/woff"),
+    TTF("application/x-font-ttf");
 
     private final String typeMessage;
 

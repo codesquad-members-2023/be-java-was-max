@@ -1,20 +1,23 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-
 import http.RequestMaker;
-import http.Responsor;
+import http.ResponseMaker;
 import model.Request;
+import model.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.MainService;
-import util.RequestParser;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 public class RequestHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private final Responsor responsor = new Responsor();
+    private final ResponseMaker responseMaker = new ResponseMaker();
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -30,10 +33,9 @@ public class RequestHandler implements Runnable {
             RequestMaker requestMaker = new RequestMaker(in);
             Request request = requestMaker.make();
             MainService mainService = new MainService(request);
-            mainService.serve();
+            Response response = mainService.serve();
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] response = responsor.makeResponse(request.getRequestLine().getUrl());
-            dos.write(response);
+            dos.write(response.toBytes());
             dos.flush();
         } catch (IOException e) {
             logger.error(e.getMessage());
