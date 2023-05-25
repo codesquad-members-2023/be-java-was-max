@@ -22,10 +22,10 @@ public class ViewRender {
     private void setResponse(String viewPath, HttpResponse httpResponse, byte[] body){
         httpResponse.setStatusLine(setStatusLine(viewPath)); // statusLine
 
-        httpResponse.setResponseHeaders("Content-Type: " + ContentType.get(viewPath) + ";charset=utf-8\r\n"); // responseHeaders
-        httpResponse.setResponseHeaders("Content-Length: " + body.length + "\r\n");
+        httpResponse.addResponseHeaders("Content-Type: " + ContentType.get(viewPath) + ";charset=utf-8\r\n"); // responseHeaders
+        httpResponse.addResponseHeaders("Content-Length: " + body.length + "\r\n");
         if (httpResponse.getStatusCode().equals("302")) {  // redirection이면
-            httpResponse.setResponseHeaders("Location: " + viewPath.replace(REDIRECT, "") + "\r\n");
+            httpResponse.addResponseHeaders("Location: " + viewPath.replace(REDIRECT, "") + "\r\n");
         }
 
         httpResponse.setResponseBody(body); // responseBody
