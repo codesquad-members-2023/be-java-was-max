@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class ServletRegistry {
 
 	private static final Map<String, Class<? extends HttpServlet>> handlers = new HashMap<>();
-	private static final String PACKAGE_NAME = "servlet";
+	private static final String PACKAGE_NAME = "servlet.*";
 
 	static {
 		registerServlets(findAllClassesUsingClassLoader());
@@ -30,7 +30,7 @@ public class ServletRegistry {
 			return ClassPath.from(ClassLoader.getSystemClassLoader())
 					.getAllClasses()
 					.stream()
-					.filter(clazz -> clazz.getPackageName().equalsIgnoreCase(PACKAGE_NAME))
+					.filter(clazz -> clazz.getPackageName().matches(PACKAGE_NAME))
 					.map(clazz -> (Class<? extends HttpServlet>) clazz.load())
 					.collect(Collectors.toUnmodifiableSet());
 		} catch (final IOException e) {
