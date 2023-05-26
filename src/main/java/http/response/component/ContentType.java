@@ -52,6 +52,7 @@ public enum ContentType {
     WEBM("video/webm"),
     WEBP("image/webp"),
     WOFF("application/x-font-woff"),
+    WOFF2("application/x-font-woff"),
     XHTML("application/xhtml+xml"),
     XLS("application/vnd.ms-excel"),
     XML("application/xml"),
