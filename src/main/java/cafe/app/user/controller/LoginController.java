@@ -13,6 +13,7 @@ import cafe.app.user.service.UserService;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.session.HttpSession;
+import http.session.SessionContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +49,13 @@ public class LoginController {
         } catch (Exception e) {
             return "redirect:user/login_failed";
         }
-        return "redirect:index";
+        return "redirect:/";
     }
 
     // 로그아웃
-    // TODO : 구현예정
-    @RequestMapping(path = "/logout", method = POST)
+    @RequestMapping(path = "/logout", method = GET)
     public String logout(HttpRequest request, HttpResponse response) {
-        return "user/login";
+        SessionContainer.removeSession(request.getSessionId());
+        return "redirect:/login";
     }
 }
