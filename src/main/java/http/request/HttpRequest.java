@@ -26,12 +26,13 @@ public class HttpRequest {
     private HttpSession httpSession;
 
     public HttpRequest(RequestLine requestLine, RequestHeader requestHeader, RequestQueryString queryString,
-        RequestMessageBody messageBody) {
+        RequestMessageBody messageBody, HttpSession httpSession) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
         this.queryString = queryString;
         this.messageBody = messageBody;
         this.attributes = new HashMap<>();
+        this.httpSession = httpSession;
     }
 
     public RequestMessageBody getMessageBody() {
@@ -71,6 +72,10 @@ public class HttpRequest {
         return httpSession;
     }
 
+    public void setHttpSession(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
     public String getSessionId() {
         String cookieString = requestHeader.get(COOKIE).orElse(null);
         List<Cookie> cookies = Cookie.parse(cookieString);
@@ -81,7 +86,7 @@ public class HttpRequest {
     }
 
     public RequestDispatcher getRequestDispatcher(String viewPath) {
-        File file = FileUtils.readFile(viewPath).orElseThrow();
+        File file = FileUtils.readFile(viewPath).orElse(null);
         return new RequestDispatcher(file, viewPath);
     }
 
