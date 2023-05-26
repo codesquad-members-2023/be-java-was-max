@@ -1,9 +1,11 @@
-package webserver;
+package request;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpRequest {
+public class RequestBodyParser {
     public Map<String, String> parseQuery(String query) {
         Map<String, String> queryMap = new HashMap<>();
 
@@ -13,12 +15,11 @@ public class HttpRequest {
                 String[] keyValue = param.split("=");
                 if (keyValue.length == 2) {
                     String key = keyValue[0];
-                    String value = keyValue[1];
+                    String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
                     queryMap.put(key, value);
                 }
             }
         }
-
         return queryMap;
     }
 }
