@@ -72,7 +72,7 @@ public class FrontControllerServlet {
 
         ModelAndView mv = handlerAdapter.handle(request, response, handler);
 
-        View view = viewResolver(mv.getViewName());
+        View view = viewResolver(mv);
         view.render(mv.getModel(), request, response);
     }
 
@@ -93,8 +93,13 @@ public class FrontControllerServlet {
             .orElseThrow(() -> new IllegalArgumentException("handler adapter를 찾을 수 없습니다. handler=" + handler));
     }
 
-    private View viewResolver(String viewName) {
+    private View viewResolver(ModelAndView mv) {
+        String viewName = mv.getViewName();
+        boolean redirect = Boolean.parseBoolean(String.valueOf(mv.getModel().get("redirect")));
         if (readFile(viewName).isPresent()) {
+            return new View(viewName);
+        }
+        if (redirect) {
             return new View(viewName);
         }
         return new View(DEFAULT_VIEW_RESOLVER_PREFIX + viewName + DEFAULT_VIEW_RESOLVER_POSTFIX);

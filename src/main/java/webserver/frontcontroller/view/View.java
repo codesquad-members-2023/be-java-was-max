@@ -21,7 +21,7 @@ public class View {
             dispatcher.redirect(response);
             return;
         }
-        dispatcher.forward(response);
+        dispatcher.forward(request, response);
     }
 
     private void modelToRequestAttribute(Map<String, Object> model, HttpRequest request) {
