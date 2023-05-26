@@ -19,37 +19,18 @@ public class ViewResolver {
     private final String STATIC_PATH = RESOURCES_PATH + "/static";
     private final String TEMPLATES_PATH = RESOURCES_PATH + "/templates";
     private final String REDIRECT = "redirect:";
+    private final ViewRender viewRender = new ViewRender();
 
     public void run(String viewPath, HttpResponse httpResponse){
         try {
             Path path = findTotalPath(viewPath.replace(REDIRECT, ""));
             byte[] body = Files.readAllBytes(path);
-            setResponse(viewPath, httpResponse, body);
+            viewRender.render(viewPath, body, httpResponse, REDIRECT);
         } catch (NoSuchFileException e) { // findTotalPath()
             logger.error(e.getMessage());
         } catch (IOException e) { // Files.readAllBytes()
             throw new RuntimeException(e);
         }
-    }
-
-    private void setResponse(String viewPath, HttpResponse httpResponse, byte[] body){
-        httpResponse.setStatusLine(setStatusLine(viewPath)); // statusLine
-
-        httpResponse.setResponseHeaders("Content-Type: " + ContentType.get(viewPath) + ";charset=utf-8\r\n"); // responseHeaders
-        httpResponse.setResponseHeaders("Content-Length: " + body.length + "\r\n");
-        if (httpResponse.getStatusCode().equals("302")) {  // redirection이면
-            httpResponse.setResponseHeaders("Location: " + viewPath.replace(REDIRECT, "") + "\r\n");
-        }
-
-        httpResponse.setResponseBody(body); // responseBody
-        httpResponse.logResponse(); // log
-    }
-
-    private String setStatusLine(String viewPath){
-        if (viewPath.startsWith(REDIRECT)) {
-            return "HTTP/1.1 302 Found \r\n";
-        }
-        return "HTTP/1.1 200 OK \r\n";
     }
 
     private Path findTotalPath(String viewPath) throws NoSuchFileException {
