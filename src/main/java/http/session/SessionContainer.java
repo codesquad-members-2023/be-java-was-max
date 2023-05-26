@@ -20,4 +20,15 @@ public class SessionContainer {
         }
         return sessions.get(sid);
     }
+
+    public static HttpSession get(String sid) {
+        if (sid == null) {
+            return null;
+        }
+        return sessions.get(sid);
+    }
+
+    public static void removeSession(String sid) {
+        sessions.remove(sid);
+    }
 }

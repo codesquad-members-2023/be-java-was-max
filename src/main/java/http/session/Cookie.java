@@ -16,7 +16,7 @@ public class Cookie {
     public static List<Cookie> parse(String cookieString) {
         final int KEY_INDEX = 0;
         final int VALUE_INDEX = 1;
-        final String COOKIE_SEPARATOR = ";";
+        final String COOKIE_SEPARATOR = ";\\s*";
         final String KEY_VALUE_SEPARATOR = "=";
 
         // 쿠키가 없는 경우
