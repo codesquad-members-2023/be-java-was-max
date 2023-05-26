@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import model.Article;
 import session.Session;
 
 public class Model {
@@ -35,6 +36,12 @@ public class Model {
 	}
 
 	public String getStringTypeValue(String key) {
-		return (String)requestAttributes.get(key);
+		return String.valueOf(requestAttributes.get(key));
+	}
+
+	public String getValue(String listKey, String valueKey) {
+		List<Article> list = getListTypeValue(listKey);
+
+		return null;
 	}
 }

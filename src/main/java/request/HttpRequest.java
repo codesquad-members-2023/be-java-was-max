@@ -67,4 +67,8 @@ public class HttpRequest {
 	public Model getModel() {
 		return model;
 	}
+
+	public void setModelAttribute(String key, Object object) {
+		model.setAttribute(key, object);
+	}
 }
