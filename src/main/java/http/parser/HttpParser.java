@@ -20,8 +20,14 @@ public class HttpParser {
 
     public static String readHttpHeader(BufferedReader br) throws IOException {
         StringBuilder sb = new StringBuilder();
-        String line;
-        while (!(line = br.readLine()).isEmpty()) {
+        while (true) {
+            String line = br.readLine();
+            if (line == null) {
+                break;
+            }
+            if (line.isEmpty()) {
+                break;
+            }
             sb.append(line).append(lineSeparator());
         }
         return sb.toString().trim();
