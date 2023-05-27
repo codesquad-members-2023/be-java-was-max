@@ -1,4 +1,4 @@
-package webserver.dispatcher_servlet;
+package webserver.frontcontroller.controller;
 
 import annotation.RequestMapping;
 import http.common.HttpMethod;
@@ -8,11 +8,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-public class Handler {
+public class RequestMappingHandler implements Handler {
 
     private final Object controllerInstance;
 
-    public Handler(Object controllerInstance) {
+    public RequestMappingHandler(Object controllerInstance) {
         this.controllerInstance = controllerInstance;
     }
 
@@ -20,21 +20,24 @@ public class Handler {
         return find(request).isPresent();
     }
 
-    public String service(HttpRequest request, HttpResponse response)
-        throws InvocationTargetException, IllegalAccessException {
+    @Override
+    public String process(HttpRequest request, HttpResponse response) {
         Optional<Method> optionalMethod = find(request);
         if (optionalMethod.isPresent()) {
             Method method = optionalMethod.get();
-            return (String) method.invoke(controllerInstance, request, response);
+            try {
+                return (String) method.invoke(controllerInstance, request, response);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }
 
     private Optional<Method> find(HttpRequest request) {
-        HttpMethod requestHttpMethod = request.getHttpMethod();
-        String requestPath = request.getPath();
-        Method[] methods = controllerInstance.getClass()
-            .getMethods();
+        HttpMethod requestHttpMethod = request.getRequestLine().getHttpMethod();
+        String requestPath = request.getRequestLine().getRequestURI().getPath();
+        Method[] methods = controllerInstance.getClass().getMethods();
         for (Method method : methods) {
             if (!method.isAnnotationPresent(RequestMapping.class)) {
                 continue;

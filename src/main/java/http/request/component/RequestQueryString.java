@@ -18,9 +18,6 @@ public class RequestQueryString {
         this.parameter = parameter;
     }
 
-
-    // queryString = id=kim&pwd=123&...
-    // tokens = [id=kim, pwd=123, ...]
     public static RequestQueryString parseQueryString(String queryString) {
         Map<String, String> queryMap = createQueryMap(queryString);
         return new RequestQueryString(queryMap);
@@ -40,7 +37,6 @@ public class RequestQueryString {
         return queryMap;
     }
 
-
     public String get(String key) {
         return parameter.get(key);
     }
@@ -49,12 +45,11 @@ public class RequestQueryString {
         parameter.put(key, value);
     }
 
-    public void addParameter(Map<String, String> parameter) {
-        this.parameter.putAll(parameter);
+    public Map<String, String> getParameter() {
+        return parameter;
     }
 
-    @Override
-    public String toString() {
+    public String getFormattedQueryString() {
         StringBuilder sb = new StringBuilder();
         if (parameter.size() > 0) {
             sb.append("?");
@@ -69,5 +64,10 @@ public class RequestQueryString {
         return String.join("&", sb.toString()
             .trim()
             .split(" "));
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s", parameter);
     }
 }

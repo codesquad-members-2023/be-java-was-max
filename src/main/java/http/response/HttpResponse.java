@@ -15,7 +15,7 @@ public class HttpResponse {
     public HttpResponse() {
         this.statusLine = null;
         this.responseHeader = new ResponseHeader(new HashMap<>());
-        this.messageBody = null;
+        this.messageBody = new byte[0];
     }
 
     public HttpResponse(StatusLine statusLine, ResponseHeader responseHeader, byte[] messageBody) {

@@ -1,6 +1,7 @@
 package util;
 
 import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,17 +9,14 @@ import java.util.stream.Collectors;
 public final class PackageExplorer {
 
     private PackageExplorer() {
-
+        throw new RuntimeException("PackageExplorer 클래스는 유틸 클래스입니다.");
     }
 
-    // google guava 라이브러리를 이용한 패키지 내의 클래스 탐색
-    public static Set<Class> findAllClassesUsingGoogleGuice(String packageName) throws IOException {
+    public static Set<Class> scanClasses(String basePackage) throws IOException {
         return ClassPath.from(ClassLoader.getSystemClassLoader())
-            .getAllClasses()
+            .getTopLevelClassesRecursive(basePackage)
             .stream()
-            .filter(clazz -> clazz.getPackageName()
-                .equalsIgnoreCase(packageName))
-            .map(clazz -> clazz.load())
+            .map(ClassInfo::load)
             .collect(Collectors.toSet());
     }
 }

@@ -14,20 +14,22 @@ public class Cookie {
     }
 
     public static List<Cookie> parse(String cookieString) {
-        int key_index = 0;
-        int value_index = 1;
+        final int KEY_INDEX = 0;
+        final int VALUE_INDEX = 1;
+        final String COOKIE_SEPARATOR = ";\\s*";
+        final String KEY_VALUE_SEPARATOR = "=";
 
         // 쿠키가 없는 경우
         if (cookieString == null) {
             return new ArrayList<>();
         }
 
-        String[] tokens = cookieString.split(";");
+        String[] tokens = cookieString.split(COOKIE_SEPARATOR);
         List<Cookie> cookies = new ArrayList<>();
 
         for (String token : tokens) {
-            String key = token.split("=")[key_index];
-            String value = token.split("=")[value_index];
+            String key = token.split(KEY_VALUE_SEPARATOR)[KEY_INDEX];
+            String value = token.split(KEY_VALUE_SEPARATOR)[VALUE_INDEX];
             cookies.add(new Cookie(key, value));
         }
         return cookies;

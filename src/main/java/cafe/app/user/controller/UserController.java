@@ -35,6 +35,6 @@ public class UserController {
         String email = messageBody.get("email");
         UserSavedRequest userRequest = new UserSavedRequest(userId, password, name, email);
         userService.signUp(userRequest);
-        return "redirect:user/login";
+        return "redirect:/login";
     }
 }

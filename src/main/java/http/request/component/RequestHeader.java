@@ -3,6 +3,7 @@ package http.request.component;
 import http.common.header.HeaderType;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +19,15 @@ public class RequestHeader {
     }
 
     public Optional<String> get(HeaderType key) {
-
         return Optional.ofNullable(header.get(key));
-    }
-
-    public boolean containsKey(HeaderType key) {
-        return header.containsKey(key);
     }
 
     public String put(HeaderType key, String value) {
         return header.put(key, value);
+    }
+
+    public Set<HeaderType> keySet() {
+        return header.keySet();
     }
 
     @Override

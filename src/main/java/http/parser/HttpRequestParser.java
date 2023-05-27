@@ -1,17 +1,24 @@
 package http.parser;
 
 import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
+import static http.common.header.RequestHeaderType.COOKIE;
 import static http.parser.HttpParser.parseHeaderMap;
 import static http.parser.HttpParser.readHttpHeader;
 import static http.request.component.RequestLine.parseRequestLine;
 
+import http.common.header.HeaderType;
 import http.request.HttpRequest;
 import http.request.component.RequestHeader;
 import http.request.component.RequestLine;
 import http.request.component.RequestMessageBody;
 import http.request.component.RequestQueryString;
+import http.session.Cookie;
+import http.session.HttpSession;
+import http.session.SessionContainer;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,14 +50,25 @@ public final class HttpRequestParser {
         RequestLine requestLine = parseRequestLine(requestLineString);
         RequestQueryString queryString = parseQueryString(requestLineString);
         RequestHeader requestHeader = parseRequestHeader(headerString);
+        HttpSession httpSession = parseHttpSession(headerString);
         int contentLength = getContentLength(requestHeader);
         RequestMessageBody requestMessageBody =
             RequestMessageBody.parseMessageBody(HttpParser.readMessageBody(br, contentLength));
-        return new HttpRequest(requestLine, requestHeader, queryString, requestMessageBody);
+        return new HttpRequest(requestLine, requestHeader, queryString, requestMessageBody, httpSession);
     }
 
     private static RequestHeader parseRequestHeader(String headerString) {
         return new RequestHeader(parseHeaderMap(headerString));
+    }
+
+    private static HttpSession parseHttpSession(String headerString) {
+        Map<HeaderType, String> headerMap = parseHeaderMap(headerString);
+        List<Cookie> cookies = Cookie.parse(headerMap.get(COOKIE));
+        String sid = cookies.stream()
+            .filter(cookie -> cookie.getName().equals("sid"))
+            .map(Cookie::getValue)
+            .findAny().orElse(null);
+        return SessionContainer.get(sid);
     }
 
     private static RequestQueryString parseQueryString(String requestLine) {

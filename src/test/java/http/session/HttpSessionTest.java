@@ -32,7 +32,7 @@ class HttpSessionTest {
         RequestHeader requestHeader = new RequestHeader(new HashMap<>());
         RequestQueryString queryString = new RequestQueryString(new HashMap<>());
         RequestMessageBody requestMessageBody = new RequestMessageBody(new HashMap<>());
-        return new HttpRequest(requestLine, requestHeader, queryString, requestMessageBody);
+        return new HttpRequest(requestLine, requestHeader, queryString, requestMessageBody, null);
     }
 
     @Test
