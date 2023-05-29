@@ -1,10 +1,5 @@
 package webserver;
 
-import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
-import static http.common.header.EntityHeaderType.CONTENT_TYPE;
-import static http.common.header.ResponseHeaderType.SET_COOKIE;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cafe.app.user.entity.User;
 import cafe.app.user.repository.MemoryUserRepository;
 import cafe.app.user.repository.UserRepository;
@@ -12,13 +7,6 @@ import http.parser.HttpResponseParser;
 import http.response.HttpResponse;
 import http.response.component.ContentType;
 import http.session.SessionContainer;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.CompletableFuture;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
@@ -28,6 +16,19 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handler.RequestHandler;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
+
+import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
+import static http.common.header.EntityHeaderType.CONTENT_TYPE;
+import static http.common.header.ResponseHeaderType.SET_COOKIE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestHandlerTest {
 
@@ -84,7 +85,7 @@ class RequestHandlerTest {
             String eof = "";
             String messageBody = "userId=user1&password=user1user1&name=%EA%B9%80%EC%9A%A9%ED%99%98&email=user1%40naver.com";
             String requestString = String.join("\r\n", requestLine, host, connection, contentLength, contentType,
-                accept, eof, messageBody);
+                    accept, eof, messageBody);
 
             // when
             writer.println(requestString);
@@ -92,7 +93,7 @@ class RequestHandlerTest {
             UserRepository userRepository = new MemoryUserRepository();
             serverThreadFuture.thenRun(() -> {
                 User user = userRepository.findByUserId("user1")
-                    .orElseThrow();
+                        .orElseThrow();
                 assertThat(user).isNotNull();
                 assertThat(user.getName()).isEqualTo("김용환");
             });
@@ -100,7 +101,7 @@ class RequestHandlerTest {
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             HttpResponse response = HttpResponseParser.parse(br);
             assertThat(response.getStatusLine()
-                .toString()).isEqualTo("HTTP/1.1 302 FOUND");
+                    .toString()).isEqualTo("HTTP/1.1 302 FOUND");
 
             serverThreadFuture.join();
         }
@@ -111,11 +112,11 @@ class RequestHandlerTest {
             // given
             MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
             memoryUserRepository.save(User.builder()
-                .userId("user1")
-                .password("user1user1")
-                .name("김용환")
-                .email("user1@gmail.com")
-                .build());
+                    .userId("user1")
+                    .password("user1user1")
+                    .name("김용환")
+                    .email("user1@gmail.com")
+                    .build());
             Thread serverThread = createWebServerThread();
             serverThread.start();
             // when
@@ -133,7 +134,7 @@ class RequestHandlerTest {
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             HttpResponse response = HttpResponseParser.parse(br);
             assertThat(response.getStatusLine()
-                .toString()).isEqualTo("HTTP/1.1 302 FOUND");
+                    .toString()).isEqualTo("HTTP/1.1 302 FOUND");
             assertThat(response.getResponseHeader().get(SET_COOKIE).isPresent()).isTrue();
             assertThat(response.getResponseHeader().get(SET_COOKIE).orElseThrow()).matches("sid=\\d{16};Path=/");
             logger.debug("response : {}", response);
@@ -149,11 +150,11 @@ class RequestHandlerTest {
             MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
             // 회원 미리 추가
             memoryUserRepository.save(User.builder()
-                .userId("user1")
-                .password("user1user1")
-                .name("김용환")
-                .email("user1@gmail.com")
-                .build());
+                    .userId("user1")
+                    .password("user1user1")
+                    .name("김용환")
+                    .email("user1@gmail.com")
+                    .build());
             Thread serverThread = createWebServerThread(2);
             serverThread.start();
 
@@ -168,7 +169,7 @@ class RequestHandlerTest {
             String eof = "";
             String messageBody = "userId=user1&password=user1user1";
             String requestHeader = String.join("\r\n", requestLine, host, connection, accept, contentLength, eof,
-                messageBody);
+                    messageBody);
             writer.println(requestHeader);
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             HttpResponse response = HttpResponseParser.parse(br);
@@ -186,7 +187,7 @@ class RequestHandlerTest {
             response = HttpResponseParser.parse(br);
             // then
             Assertions.assertThat(response.getResponseHeader().get(SET_COOKIE).orElse(null))
-                .isEqualTo(String.format("sid=%s;Path=/", sid));
+                    .isEqualTo(String.format("sid=%s;Path=/", sid));
             //cleanup
             socket.close();
             serverThread.join();
@@ -199,11 +200,11 @@ class RequestHandlerTest {
             MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
             // 회원 미리 추가
             memoryUserRepository.save(User.builder()
-                .userId("user1")
-                .password("user1user1")
-                .name("김용환")
-                .email("user1@gmail.com")
-                .build());
+                    .userId("user1")
+                    .password("user1user1")
+                    .name("김용환")
+                    .email("user1@gmail.com")
+                    .build());
             Thread serverThread = createWebServerThread(2);
             serverThread.start();
 
@@ -218,7 +219,7 @@ class RequestHandlerTest {
             String eof = "";
             String messageBody = "userId=user1&password=user1user1";
             String requestHeader = String.join("\r\n", requestLine, host, connection, accept, contentLength, eof,
-                messageBody);
+                    messageBody);
             writer.println(requestHeader);
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             HttpResponse response = HttpResponseParser.parse(br);
@@ -268,13 +269,13 @@ class RequestHandlerTest {
 
             SoftAssertions softAssertions = new SoftAssertions();
             softAssertions.assertThat(response.getStatusLine())
-                .isEqualTo("HTTP/1.1 200 OK");
+                    .isEqualTo("HTTP/1.1 200 OK");
             softAssertions.assertThat(response.get(CONTENT_TYPE))
-                .isEqualTo(ContentType.HTML);
+                    .isEqualTo(ContentType.HTML);
             softAssertions.assertThat(response.get(CONTENT_LENGTH))
-                .isEqualTo("Hello World\r\n".getBytes().length);
+                    .isEqualTo("Hello World\r\n".getBytes().length);
             softAssertions.assertThat(response.getMessageBody())
-                .isEqualTo("Hello World\r\n".getBytes());
+                    .isEqualTo("Hello World\r\n".getBytes());
 
             //cleanup
             socket.close();
@@ -303,7 +304,7 @@ class RequestHandlerTest {
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             HttpResponse response = HttpResponseParser.parse(br);
             assertThat(response.getStatusLine()
-                .toString()).isEqualTo("HTTP/1.1 200 OK");
+                    .toString()).isEqualTo("HTTP/1.1 200 OK");
 
             //cleanup
             socket.close();
@@ -322,11 +323,11 @@ class RequestHandlerTest {
             MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
             // 회원 미리 추가
             memoryUserRepository.save(User.builder()
-                .userId("user1")
-                .password("user1user1")
-                .name("김용환")
-                .email("user1@gmail.com")
-                .build());
+                    .userId("user1")
+                    .password("user1user1")
+                    .name("김용환")
+                    .email("user1@gmail.com")
+                    .build());
             Thread serverThread = createWebServerThread(2);
             serverThread.start();
 
@@ -341,7 +342,7 @@ class RequestHandlerTest {
             String eof = "";
             String messageBody = "userId=user1&password=user1user1";
             String requestHeader = String.join("\r\n", requestLine, host, connection, accept, contentLength, eof,
-                messageBody);
+                    messageBody);
             writer.println(requestHeader);
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             HttpResponse response = HttpResponseParser.parse(br);
@@ -359,8 +360,9 @@ class RequestHandlerTest {
             response = HttpResponseParser.parse(br);
             // then
             messageBody = new String(response.getMessageBody());
-            Assertions.assertThat(messageBody)
-                .contains("<li class=\"hidden\"><a href=\"login\" role=\"button\">로그인</a></li>");
+            SoftAssertions assertions = new SoftAssertions();
+            assertions.assertThat(messageBody).doesNotContain("<li><a href=\"login\" role=\"button\">로그인</a></li>");
+            assertions.assertThat(messageBody).contains("<a href=\"logout\" role=\"button\">로그아웃</a>");
             //cleanup
             socket.close();
             serverThread.join();
