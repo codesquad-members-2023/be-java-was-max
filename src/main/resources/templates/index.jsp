@@ -1,3 +1,17 @@
+<%@ page import="cafe.app.user.controller.dto.UserResponse" %>
+<%@ page import="http.session.HttpSession" %>
+
+<%
+    HttpSession httpSession = request.getHttpSession();
+    UserResponse user = (UserResponse) httpSession.getAttribute("user");
+    String hidden = user == null ? "hidden" : "";
+    String notHidden = user == null ? "" : "hidden";
+    String username = "";
+    if (!hidden.equals("hidden")) {
+        username = user.getName();
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="kr">
 <head>
@@ -26,18 +40,19 @@
         <div class="collapse navbar-collapse" id="navbar-collapse1">
             <form class="navbar-form pull-left">
                 <div class="input-group" style="max-width:470px;">
-                    <input class="form-control" id="srch-term" name="srch-term" placeholder="Search"
-                           type="text">
+                    <input class="form-control" id="srch-term" name="srch-term" placeholder="Search" type="text">
                     <div class="input-group-btn">
-                        <button class="btn btn-default btn-primary" type="submit"><i
-                                class="glyphicon glyphicon-search"></i></button>
+                        <button class="btn btn-default btn-primary" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i
-                            class="glyphicon glyphicon-bell"></i></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="glyphicon glyphicon-bell"></i>
+                    </a>
                     <ul class="dropdown-menu">
                         <li><a href="https://slipp.net" target="_blank">SLiPP</a></li>
                         <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
@@ -52,12 +67,12 @@
     <div class="col-md-12">
         <div class="navbar-header">
             <a class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown"
-               href="#" style="margin-left:15px;"><i
-                    class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i
-                    class="glyphicon glyphicon-chevron-down"></i></small></a>
+               href="#" style="margin-left:15px;">
+                <i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home
+                <small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
             <ul class="nav dropdown-menu">
-                <li><a href="user/profile.html"><i class="glyphicon glyphicon-user"
-                                                   style="color:#1111dd;"></i> Profile</a></li>
+                <li><a href="user/profile.html"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a>
+                </li>
                 <li class="nav-divider"></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Settings</a>
                 </li>
@@ -74,13 +89,21 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="index.html">Posts</a></li>
-                <li class="hidden"><a href="#" role="button"></a></li>
-                <li><a href="login" role="button">로그인</a></li>
-                <li><a href="user/new" role="button">회원가입</a></li>
-                <li class="hidden" id="loginList">
+                <li class="<%=hidden%>">
+                    <a href="#" role="button">
+                        <%=username%>
+                    </a>
+                </li>
+                <li class="<%=notHidden%>">
+                    <a href="login" role="button">로그인</a>
+                </li>
+                <li class="<%=hidden%>">
                     <a href="logout" role="button">로그아웃</a>
                 </li>
-                <li class="hidden"><a href="#" role="button">개인정보수정</a></li>
+                <li class="<%=hidden%>">
+                    <a href="#" role="button">개인정보수정</a>
+                </li>
+                <li><a href="user/new" role="button">회원가입</a></li>
             </ul>
         </div>
     </div>
