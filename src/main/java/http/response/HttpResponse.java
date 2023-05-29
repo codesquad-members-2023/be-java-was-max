@@ -3,19 +3,28 @@ package http.response;
 import http.common.header.HeaderType;
 import http.response.component.ResponseHeader;
 import http.response.component.StatusLine;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Optional;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpResponse {
 
     private StatusLine statusLine;
     private ResponseHeader responseHeader;
     private byte[] messageBody;
+    private ByteArrayOutputStream messageBodyOutputStream;
+    private OutputStreamWriter messageBodyWriter;
 
     public HttpResponse() {
         this.statusLine = null;
         this.responseHeader = new ResponseHeader(new HashMap<>());
         this.messageBody = new byte[0];
+        this.messageBodyOutputStream = new ByteArrayOutputStream();
+        this.messageBodyWriter = new OutputStreamWriter(messageBodyOutputStream, UTF_8);
     }
 
     public HttpResponse(StatusLine statusLine, ResponseHeader responseHeader, byte[] messageBody) {
@@ -50,6 +59,14 @@ public class HttpResponse {
 
     public ResponseHeader getResponseHeader() {
         return responseHeader;
+    }
+
+    public ByteArrayOutputStream getMessageBodyOutputStream() {
+        return messageBodyOutputStream;
+    }
+
+    public OutputStreamWriter getMessageBodyWriter() {
+        return messageBodyWriter;
     }
 
     @Override

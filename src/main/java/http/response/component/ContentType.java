@@ -23,6 +23,7 @@ public enum ContentType {
     JPEG("image/jpeg"),
     JPG("image/jpeg"),
     JS("text/javascript"),
+    JSP("text/html"),
     JSON("application/json"),
     MID("audio/midi"),
     MIDI("audio/midi"),
@@ -68,7 +69,7 @@ public enum ContentType {
     public static ContentType resolve(String uri) {
         for (ContentType c : values()) {
             if (uri.toUpperCase()
-                .endsWith(c.name())) {
+                    .endsWith(c.name())) {
                 return c;
             }
         }
