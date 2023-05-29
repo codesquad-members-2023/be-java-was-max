@@ -2,8 +2,9 @@ package webserver.frontcontroller.view;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import java.util.Map;
 import webserver.frontcontroller.RequestDispatcher;
+
+import java.util.Map;
 
 public class View {
 
@@ -18,7 +19,7 @@ public class View {
         RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
         boolean redirect = Boolean.parseBoolean(String.valueOf(model.get("redirect")));
         if (redirect) {
-            dispatcher.redirect(response);
+            dispatcher.redirect(request, response);
             return;
         }
         dispatcher.forward(request, response);

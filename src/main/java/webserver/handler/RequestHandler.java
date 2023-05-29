@@ -1,13 +1,5 @@
 package webserver.handler;
 
-import static http.common.HttpStatus.OK;
-import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
-import static http.common.header.EntityHeaderType.CONTENT_TYPE;
-import static http.common.header.ResponseHeaderType.SET_COOKIE;
-import static http.common.version.HttpVersion.HTTP_1_1;
-import static http.parser.HttpRequestParser.parseHttpRequest;
-import static http.response.component.ContentType.resolve;
-
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.component.ContentType;
@@ -15,22 +7,25 @@ import http.response.component.ResponseHeader;
 import http.response.component.StatusLine;
 import http.session.Cookie;
 import http.session.HttpSession;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import util.FileUtils;
+import webserver.frontcontroller.FrontControllerServlet;
+
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import util.FileUtils;
-import webserver.frontcontroller.FrontControllerServlet;
+
+import static http.common.HttpStatus.OK;
+import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
+import static http.common.header.EntityHeaderType.CONTENT_TYPE;
+import static http.common.header.ResponseHeaderType.SET_COOKIE;
+import static http.common.version.HttpVersion.HTTP_1_1;
+import static http.parser.HttpRequestParser.parseHttpRequest;
+import static http.response.component.ContentType.resolve;
 
 public class RequestHandler implements Runnable {
 
@@ -46,7 +41,7 @@ public class RequestHandler implements Runnable {
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-            connection.getPort());
+                connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
@@ -83,8 +78,8 @@ public class RequestHandler implements Runnable {
 
     private String createSessionIdCookieString(String sid) {
         return HttpSession.createSessionIdCookie(sid).stream()
-            .map(Cookie::toString)
-            .collect(Collectors.joining(";"));
+                .map(Cookie::toString)
+                .collect(Collectors.joining(";"));
     }
 
     private void responseStaticResource(File file, HttpResponse response) throws IOException {
@@ -121,7 +116,7 @@ public class RequestHandler implements Runnable {
     private void logHttpRequest(HttpRequest request) {
         logger.debug("requestLine : {}", request.getRequestLine());
         request.getRequestHeader().keySet().forEach(headerType ->
-            logger.debug("requestHeader : {}: {}", headerType.value(), request.getRequestHeader().get(headerType)));
+                logger.debug("requestHeader : {}: {}", headerType.value(), request.getRequestHeader().get(headerType)));
         logger.debug("queryString : {}", request.getQueryString().getFormattedQueryString());
         logger.debug("messageBody : {}", request.getMessageBody().toString());
     }
@@ -130,6 +125,6 @@ public class RequestHandler implements Runnable {
         logger.debug("statusLine : {}", response.getStatusLine());
         ResponseHeader responseHeader = response.getResponseHeader();
         response.getResponseHeader().keySet().forEach(headerType ->
-            logger.debug("requestHeader : {}: {}", headerType.value(), response.getResponseHeader().get(headerType)));
+                logger.debug("requestHeader : {}: {}", headerType.value(), response.getResponseHeader().get(headerType)));
     }
 }
