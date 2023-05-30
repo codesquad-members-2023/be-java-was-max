@@ -1,6 +1,6 @@
-package container;
+package servlet;
 
-import container.domain.MappingInfo;
+import servlet.domain.MappingInfo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,15 +18,22 @@ public class HandlerAdapter {
         Method method = mappingInfo.getMethod();
         Object object = mappingInfo.getObject();
 
+        String url = mappingInfo.getUrl();
         if (mappingInfo.isStatic()) {
-            return mappingInfo.getUrl();
+            return url;
         }
 
-        Map<String, String> params = mappingInfo.getParams();
-        if (params.isEmpty()) {
-            return getResult((String) method.invoke(object));
-        } else {
+        if (url.startsWith("/posts/") && !url.equals("/posts/form")) {
+            int index = url.lastIndexOf("/");
+            String id = url.substring(index+1);
+            return getResult((String) method.invoke(object, Integer.valueOf(id)));
+        }
+
+        if (mappingInfo.hasPrams()) {
+            Map<String, String> params = mappingInfo.getParams();
             return getResult((String) method.invoke(object, params.values().toArray(new Object[0])));
+        } else {
+            return getResult((String) method.invoke(object));
         }
     }
 
