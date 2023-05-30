@@ -1,4 +1,11 @@
-package was.request;
+package was;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import was.request.ContentType;
+import was.request.HttpRequest;
+import was.response.HttpResponse;
+import was.spring.servlet.DispatcherServlet;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -8,13 +15,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import was.spring.servlet.DispatcherServlet;
-import was.response.HttpResponse;
 
 public class RequestHandler implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,7 +27,7 @@ public class RequestHandler implements Runnable {
     private final DataOutputStream writer;
 
     public RequestHandler(InputStream in, OutputStream out) {
-        this.reader = new BufferedReader(new InputStreamReader(in));
+        this.reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         this.writer = new DataOutputStream(out);
     }
 
@@ -32,7 +35,7 @@ public class RequestHandler implements Runnable {
         LOGGER.info("HTTP REQUEST PARSING START");
 
         try (reader; writer) {
-            final HttpRequest request = HttpRequest.from(reader);
+            final HttpRequest request = HttpRequest.parse(reader);
             final HttpResponse response = new HttpResponse();
 
             LOGGER.info(request.toString());
@@ -45,6 +48,15 @@ public class RequestHandler implements Runnable {
         }
     }
 
+    private void sendResponse(HttpResponse response, DataOutputStream writer) {
+        try {
+            writer.write(response.getOutputFormat().getBytes(StandardCharsets.UTF_8));
+            writer.flush();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
     private void handle(final HttpRequest request, final HttpResponse response) {
         final String requestUrl = request.getUrl();
 
@@ -52,6 +64,7 @@ public class RequestHandler implements Runnable {
 
         if (contentType.isEmpty()) {
             sendDynamicRequest(request, response);
+            sendResponse(response, writer);
             return;
         }
 
@@ -59,8 +72,6 @@ public class RequestHandler implements Runnable {
     }
 
     private void sendStaticRequest(final String requestPath, final ContentType contentType) {
-        //TODO
-        // html, css, ico 등에 따라 처리 필요
         try {
             final byte[] body = Files.readAllBytes(findStaticPath(requestPath));
             response200Header(contentType.getMimeType(), body.length);

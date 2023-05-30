@@ -7,6 +7,8 @@ import was.common.HttpMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,10 @@ public class HttpRequest {
         return header.getHeaders();
     }
 
+    public List<String> getHeader(String key) {
+        return header.getHeader(key);
+    }
+
     public String getRequestBody() {
         return requestBody;
     }
@@ -50,14 +56,12 @@ public class HttpRequest {
         return startLine.getParameter(name);
     }
 
-    public static HttpRequest from(BufferedReader br) throws IOException {
+    public static HttpRequest parse(BufferedReader br) throws IOException {
         final RequestStartLine startLine = RequestStartLine.parse(br.readLine());
         final HttpHeaders headers = readHeaders(br);
         final String requestBody = readRequestBody(br, headers.getContentLength());
 
-        final HttpRequest request = new HttpRequest(startLine, headers, requestBody);
-
-        return request;
+        return new HttpRequest(startLine, headers, requestBody);
     }
 
     private static HttpHeaders readHeaders(BufferedReader br) throws IOException {
@@ -73,11 +77,11 @@ public class HttpRequest {
     }
 
     private static String readRequestBody(BufferedReader br, final int contentLength) throws IOException {
-        final char[] body = new char[contentLength];
+        char[] body = new char[contentLength];
 
-        br.read(body);
+        br.read(body, 0, contentLength);
 
-        return new String(body);
+        return URLDecoder.decode(String.valueOf(body), StandardCharsets.UTF_8);
     }
 
     private static boolean hasReadLine(String line) {
