@@ -1,15 +1,13 @@
 package webserver.frontcontroller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ModelAndView {
 
     private String viewName;
-    private Map<String, Object> model = new HashMap<>();
+    private Model model;
 
-    public ModelAndView(String viewName) {
+    public ModelAndView(String viewName, Model model) {
         this.viewName = viewName;
+        this.model = model;
     }
 
     public String getViewName() {
@@ -20,11 +18,19 @@ public class ModelAndView {
         this.viewName = viewName;
     }
 
-    public Map<String, Object> getModel() {
+    public Model getModel() {
         return model;
     }
 
-    public void setModel(Map<String, Object> model) {
+    public void setModel(Model model) {
         this.model = model;
+    }
+
+    public boolean containsAttribute(String key) {
+        return model.containsAttribute(key);
+    }
+
+    public Object getAttribute(String key) {
+        return model.getAttribute(key);
     }
 }
