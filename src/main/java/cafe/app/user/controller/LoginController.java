@@ -1,9 +1,6 @@
 package cafe.app.user.controller;
 
 
-import static http.common.HttpMethod.GET;
-import static http.common.HttpMethod.POST;
-
 import annotation.Controller;
 import annotation.RequestMapping;
 import cafe.app.user.controller.dto.UserLoginRequest;
@@ -16,6 +13,10 @@ import http.session.HttpSession;
 import http.session.SessionContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.frontcontroller.Model;
+
+import static http.common.HttpMethod.GET;
+import static http.common.HttpMethod.POST;
 
 @Controller
 public class LoginController {
@@ -29,18 +30,16 @@ public class LoginController {
 
     // 로그인 페이지
     @RequestMapping(path = "/login", method = GET)
-    public String loginForm(HttpRequest request, HttpResponse response) {
+    public String loginForm(HttpRequest request, HttpResponse response, Model model) {
         return "user/login";
     }
 
     // 로그인
     @RequestMapping(path = "/login", method = POST)
-    public String login(HttpRequest request, HttpResponse response) {
+    public String login(HttpRequest request, HttpResponse response, Model model) {
         HttpSession httpSession = request.getHttpSession();
-        String userId = request.getMessageBody()
-            .get("userId");
-        String password = request.getMessageBody()
-            .get("password");
+        String userId = request.getMessageBody().get("userId");
+        String password = request.getMessageBody().get("password");
         UserLoginRequest requestDto = new UserLoginRequest(userId, password);
         try {
             User user = userService.login(requestDto);
@@ -54,7 +53,7 @@ public class LoginController {
 
     // 로그아웃
     @RequestMapping(path = "/logout", method = GET)
-    public String logout(HttpRequest request, HttpResponse response) {
+    public String logout(HttpRequest request, HttpResponse response, Model model) {
         SessionContainer.removeSession(request.getSessionId());
         return "redirect:/login";
     }
