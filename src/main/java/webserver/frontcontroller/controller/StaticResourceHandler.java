@@ -2,6 +2,7 @@ package webserver.frontcontroller.controller;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import webserver.frontcontroller.Model;
 
 public class StaticResourceHandler implements Handler {
 
@@ -12,7 +13,7 @@ public class StaticResourceHandler implements Handler {
     }
 
     @Override
-    public String process(HttpRequest request, HttpResponse response) {
+    public String process(HttpRequest request, HttpResponse response, Model model) {
         return path;
     }
 }

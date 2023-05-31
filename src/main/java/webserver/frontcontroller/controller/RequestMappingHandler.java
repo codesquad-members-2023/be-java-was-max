@@ -4,6 +4,8 @@ import annotation.RequestMapping;
 import http.common.HttpMethod;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
+import webserver.frontcontroller.Model;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -21,12 +23,12 @@ public class RequestMappingHandler implements Handler {
     }
 
     @Override
-    public String process(HttpRequest request, HttpResponse response) {
+    public String process(HttpRequest request, HttpResponse response, Model model) {
         Optional<Method> optionalMethod = find(request);
         if (optionalMethod.isPresent()) {
             Method method = optionalMethod.get();
             try {
-                return (String) method.invoke(controllerInstance, request, response);
+                return (String) method.invoke(controllerInstance, request, response, model);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
