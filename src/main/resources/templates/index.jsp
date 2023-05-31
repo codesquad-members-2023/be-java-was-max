@@ -32,8 +32,7 @@
         <div class="navbar-header">
 
             <a class="navbar-brand" href="/">SLiPP</a>
-            <button class="navbar-toggle" data-target="#navbar-collapse1" data-toggle="collapse"
-                    type="button">
+            <button class="navbar-toggle" data-target="#navbar-collapse1" data-toggle="collapse" type="button">
                 <i class="glyphicon glyphicon-search"></i>
             </button>
         </div>
@@ -66,8 +65,8 @@
 <div class="navbar navbar-default" id="subnav">
     <div class="col-md-12">
         <div class="navbar-header">
-            <a class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown"
-               href="#" style="margin-left:15px;">
+            <a class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown" href="#"
+               style="margin-left:15px;">
                 <i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home
                 <small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
             <ul class="nav dropdown-menu">
