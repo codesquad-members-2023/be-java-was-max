@@ -1,7 +1,5 @@
 package http.request;
 
-import static http.common.header.RequestHeaderType.COOKIE;
-
 import http.request.component.RequestHeader;
 import http.request.component.RequestLine;
 import http.request.component.RequestMessageBody;
@@ -9,12 +7,15 @@ import http.request.component.RequestQueryString;
 import http.session.Cookie;
 import http.session.HttpSession;
 import http.session.SessionContainer;
+import util.FileUtils;
+import webserver.frontcontroller.RequestDispatcher;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import util.FileUtils;
-import webserver.frontcontroller.RequestDispatcher;
+
+import static http.common.header.RequestHeaderType.COOKIE;
 
 public class HttpRequest {
 
@@ -26,7 +27,7 @@ public class HttpRequest {
     private HttpSession httpSession;
 
     public HttpRequest(RequestLine requestLine, RequestHeader requestHeader, RequestQueryString queryString,
-        RequestMessageBody messageBody, HttpSession httpSession) {
+                       RequestMessageBody messageBody, HttpSession httpSession) {
         this.requestLine = requestLine;
         this.requestHeader = requestHeader;
         this.queryString = queryString;
@@ -80,13 +81,13 @@ public class HttpRequest {
         String cookieString = requestHeader.get(COOKIE).orElse(null);
         List<Cookie> cookies = Cookie.parse(cookieString);
         return cookies.stream()
-            .filter(cookie -> cookie.getName().equals("sid"))
-            .map(Cookie::getValue)
-            .findAny().orElse(null);
+                .filter(cookie -> cookie.getName().equals("sid"))
+                .map(Cookie::getValue)
+                .findAny().orElse(null);
     }
 
     public RequestDispatcher getRequestDispatcher(String viewPath) {
-        File file = FileUtils.readFile(viewPath).orElse(null);
+        File file = FileUtils.getFileFromPath(viewPath).orElse(null);
         return new RequestDispatcher(file, viewPath);
     }
 
