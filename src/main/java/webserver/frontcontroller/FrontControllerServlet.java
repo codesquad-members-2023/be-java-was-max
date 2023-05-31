@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static http.common.version.HttpVersion.HTTP_1_1;
-import static util.FileUtils.readFile;
+import static util.FileUtils.getFileFromPath;
 
 public class FrontControllerServlet {
 
@@ -93,7 +93,7 @@ public class FrontControllerServlet {
     private View viewResolver(ModelAndView mv) {
         String viewName = mv.getViewName();
         boolean redirect = Boolean.parseBoolean(String.valueOf(mv.getModel().get("redirect")));
-        if (readFile(viewName).isPresent()) {
+        if (getFileFromPath(viewName).isPresent()) {
             return new View(viewName);
         }
         if (redirect) {

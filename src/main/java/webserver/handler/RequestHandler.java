@@ -1,8 +1,8 @@
 package webserver.handler;
 
+import http.common.ContentType;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import http.response.component.ContentType;
 import http.response.component.ResponseHeader;
 import http.response.component.StatusLine;
 import http.session.Cookie;
@@ -19,13 +19,13 @@ import java.nio.file.Files;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static http.common.ContentType.resolve;
 import static http.common.HttpStatus.OK;
 import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
 import static http.common.header.EntityHeaderType.CONTENT_TYPE;
 import static http.common.header.ResponseHeaderType.SET_COOKIE;
 import static http.common.version.HttpVersion.HTTP_1_1;
 import static http.parser.HttpRequestParser.parseHttpRequest;
-import static http.response.component.ContentType.resolve;
 
 public class RequestHandler implements Runnable {
 
@@ -50,7 +50,7 @@ public class RequestHandler implements Runnable {
             HttpResponse response = new HttpResponse();
             logHttpRequest(request);
 
-            Optional<File> optionalFile = FileUtils.readFile(request.getRequestLine().getRequestURI().getPath());
+            Optional<File> optionalFile = FileUtils.getFileFromPath(request.getRequestLine().getRequestURI().getPath());
             if (optionalFile.isPresent()) {
                 File file = optionalFile.get();
                 responseStaticResource(file, response);
