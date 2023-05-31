@@ -2,6 +2,7 @@ package http.session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpSession {
@@ -27,6 +28,10 @@ public class HttpSession {
 
     public void setAttribute(String name, Object value) {
         attributes.put(name, value);
+    }
+
+    public Set<String> keySet() {
+        return attributes.keySet();
     }
 
     public String getId() {
