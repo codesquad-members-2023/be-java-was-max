@@ -6,7 +6,9 @@ import http.common.HttpStatus;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.component.StatusLine;
-import webserver.frontcontroller.adapter.*;
+import webserver.frontcontroller.adapter.MyHandlerAdapter;
+import webserver.frontcontroller.adapter.RequestMappingHandlerAdapter;
+import webserver.frontcontroller.adapter.StaticResourceHandlerAdapter;
 import webserver.frontcontroller.controller.Handler;
 import webserver.frontcontroller.handler_mapping.HandlerMapping;
 import webserver.frontcontroller.handler_mapping.RequestMappingExplorer;
@@ -25,7 +27,7 @@ public class FrontControllerServlet {
 
     private static final String BASE_PACKAGE = "cafe";
     private static final String DEFAULT_VIEW_RESOLVER_PREFIX = "/";
-    private static final String DEFAULT_VIEW_RESOLVER_POSTFIX = ".jsp";
+    private static final String DEFAULT_VIEW_RESOLVER_POSTFIX = ".html";
     private final List<MyHandlerAdapter> handlerAdapters = new ArrayList<>();
     private List<HandlerMapping> handlerMappings;
 
@@ -51,8 +53,6 @@ public class FrontControllerServlet {
     }
 
     private void initHandlerAdapters() {
-        handlerAdapters.add(new ViewNameHandlerAdapter());
-        handlerAdapters.add(new ModelAndViewHandlerAdapter());
         handlerAdapters.add(new RequestMappingHandlerAdapter());
         handlerAdapters.add(new StaticResourceHandlerAdapter());
     }
@@ -70,7 +70,7 @@ public class FrontControllerServlet {
         ModelAndView mv = handlerAdapter.handle(request, response, handler);
 
         View view = viewResolver(mv);
-        view.render(mv.getModel(), request, response);
+        view.render(mv, request, response);
     }
 
     private Handler getHandler(HttpRequest request) {
@@ -92,7 +92,7 @@ public class FrontControllerServlet {
 
     private View viewResolver(ModelAndView mv) {
         String viewName = mv.getViewName();
-        boolean redirect = Boolean.parseBoolean(String.valueOf(mv.getModel().get("redirect")));
+        boolean redirect = Boolean.parseBoolean(String.valueOf(mv.getModel().getAttribute("redirect")));
         if (getFileFromPath(viewName).isPresent()) {
             return new View(viewName);
         }

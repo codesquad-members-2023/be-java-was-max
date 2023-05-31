@@ -1,16 +1,13 @@
 package webserver.frontcontroller;
 
 import http.common.ContentType;
-import http.request.HttpRequest;
 import http.response.HttpResponse;
 import http.response.component.StatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.jsp.JspCompiler;
-import webserver.jsp.JspServlet;
+import webserver.TemplateEngineParser;
 
-import java.io.*;
-import java.util.stream.Collectors;
+import java.io.File;
 
 import static http.common.ContentType.resolve;
 import static http.common.HttpStatus.FOUND;
@@ -19,7 +16,6 @@ import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
 import static http.common.header.EntityHeaderType.CONTENT_TYPE;
 import static http.common.header.ResponseHeaderType.LOCATION;
 import static http.common.version.HttpVersion.HTTP_1_1;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RequestDispatcher {
 
@@ -34,27 +30,18 @@ public class RequestDispatcher {
         this.viewPath = viewPath;
     }
 
-    public void forward(HttpRequest request, HttpResponse response) {
-        try {
-            JspServlet servlet = JspCompiler.service(file);
-            servlet.service(request, response);
+    public void forward(HttpResponse response, ModelAndView modelAndView) {
+        TemplateEngineParser engine = TemplateEngineParser.getInstance();
+        byte[] messageBodyBytes = engine.parseHtmlDynamically(file.toPath(), modelAndView);
 
-            response.getMessageBodyWriter().close();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getMessageBodyOutputStream().toByteArray()), UTF_8));
-            String messageBody = reader.lines().collect(Collectors.joining());
-            byte[] messageBodyBytes = messageBody.getBytes(UTF_8);
-
-            ContentType contentType = resolve(file.getPath());
-            response.setStatusLine(new StatusLine(HTTP_1_1, OK));
-            response.addHeader(CONTENT_TYPE, contentType.toString());
-            response.addHeader(CONTENT_LENGTH, String.valueOf(messageBodyBytes.length));
-            response.setMessageBody(messageBodyBytes);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ContentType contentType = resolve(file.getPath());
+        response.setStatusLine(new StatusLine(HTTP_1_1, OK));
+        response.addHeader(CONTENT_TYPE, contentType.toString());
+        response.addHeader(CONTENT_LENGTH, String.valueOf(messageBodyBytes.length));
+        response.setMessageBody(messageBodyBytes);
     }
 
-    public void redirect(HttpRequest request, HttpResponse response) {
+    public void redirect(HttpResponse response) {
         response.addHeader(LOCATION, viewPath);
         response.setStatusLine(new StatusLine(HTTP_1_1, FOUND));
     }
