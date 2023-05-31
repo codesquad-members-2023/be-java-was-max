@@ -31,6 +31,10 @@ public final class FileUtils {
         return Optional.empty();
     }
 
+    public static Optional<File> getFileFromPath(Path path) {
+        return Optional.of(path.toFile());
+    }
+
     /**
      * 파일 경로에 따른 파일이 존재하는지 검사합니다.
      */
