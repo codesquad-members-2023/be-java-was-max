@@ -1,4 +1,4 @@
-package http.response.component;
+package http.common;
 
 public enum ContentType {
     AAC("audio/aac"),
