@@ -26,7 +26,7 @@ public class TemplateEngineParser {
     private static final Pattern PRINT_PATTERN = Pattern.compile("\\{\\{fn-print:\\s?(.*?)\\}\\}");
     private static final Pattern IF_NOT_NULL_PATTERN = Pattern.compile("\\{\\{fn-ifNotNull:\\s?(.*?)\\}\\}([\\s\\S]*?)\\{\\{/fn-ifNotNull\\}\\}");
     private static final Pattern IF_NULL_PATTERN = Pattern.compile("\\{\\{fn-ifNull:\\s?(.*?)\\}\\}([\\s\\S]*?)\\{\\{/fn-ifNull\\}\\}");
-    private static final Pattern FOREACH_LIST_PATTERN = Pattern.compile("\\{\\{fn-forEachList:\\s*(.*?)\\}\\}}([\\s\\S]*?)\\{\\{/fn-forEachList\\}\\}");
+    private static final Pattern FOREACH_LIST_PATTERN = Pattern.compile("\\{\\{fn-forEachList:\\s*(.*?)\\}\\}([\\s\\S]*?)\\{\\{/fn-forEachList\\}\\}");
     private static final Pattern GET_STRING_PATTERN = Pattern.compile("\\{\\{fn-get:\\s?(.*?)\\}\\}");
     private static final Pattern OBJECT_GET_STRING_PATTERN = Pattern.compile("\\{\\{fn-obj-get:\\s?(.*?)\\s(.*?)\\}\\}");
 
