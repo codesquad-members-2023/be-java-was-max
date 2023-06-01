@@ -27,6 +27,16 @@ public class UserController {
         return "user/form";
     }
 
+    @RequestMapping(path = "/users", method = GET)
+    public String listUser(HttpRequest request, HttpResponse response, Model model) {
+        // 로그인 하지 않은 경우 로그인 페이지로 이동
+        if (!request.hasHttpSession()) {
+            return "redirect:user/login";
+        }
+        model.addAttribute("users", userService.getAllUsers());
+        return "user/list";
+    }
+
     @RequestMapping(path = "/users", method = POST)
     public String createUser(HttpRequest request, HttpResponse response, Model model) {
         RequestMessageBody messageBody = request.getMessageBody();
