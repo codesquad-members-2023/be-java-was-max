@@ -23,16 +23,16 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="index.html">Posts</a></li>
+                <li class="active"><a href="/">Posts</a></li>
                 <li>
                     {{fn-ifNotNull: user}}<a href="#" role="button">{{fn-obj-get: user name}}</a>{{/fn-ifNotNull}}
                 </li>
                 <li>
-                    {{fn-ifNull: user}}<a href="login" role="button">로그인</a>{{/fn-ifNull}}
+                    {{fn-ifNull: user}}<a href="/login" role="button">로그인</a>{{/fn-ifNull}}
                 </li>
-                <li><a href="user/new" role="button">회원가입</a></li>
+                <li><a href="/user/new" role="button">회원가입</a></li>
                 <li id="loginList">
-                    {{fn-ifNotNull: user}}<a href="logout" role="button">로그아웃</a>{{/fn-ifNotNull}}
+                    {{fn-ifNotNull: user}}<a href="/logout" role="button">로그아웃</a>{{/fn-ifNotNull}}
                 </li>
                 <li>
                     {{fn-ifNotNull: user}}<a href="#" role="button">개인정보수정</a>{{/fn-ifNotNull}}

@@ -21,11 +21,11 @@
                 <tbody>
                 {{fn-forEachList: users}}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{fn-forEachStatus}}</th>
                     <td>{{fn-get: userId}}</td>
                     <td>{{fn-get: name}}</td>
                     <td>{{fn-get: email}}</td>
-                    <td><a class="btn btn-success" href="/users/1" role="button">수정</a></td>
+                    <td><a class="btn btn-success" href="/users/{{fn-get: id}}" role="button">수정</a></td>
                 </tr>
                 {{/fn-forEachList}}
                 </tbody>

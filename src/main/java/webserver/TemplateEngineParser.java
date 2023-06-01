@@ -22,13 +22,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class TemplateEngineParser {
     private static final Logger logger = LoggerFactory.getLogger(TemplateEngineParser.class);
 
-    private static final Pattern INCLUDE_PATTERN = Pattern.compile("\\{\\{fn-include:\\s?(.*?)\\}\\}");
-    private static final Pattern PRINT_PATTERN = Pattern.compile("\\{\\{fn-print:\\s?(.*?)\\}\\}");
-    private static final Pattern IF_NOT_NULL_PATTERN = Pattern.compile("\\{\\{fn-ifNotNull:\\s?(.*?)\\}\\}([\\s\\S]*?)\\{\\{/fn-ifNotNull\\}\\}");
-    private static final Pattern IF_NULL_PATTERN = Pattern.compile("\\{\\{fn-ifNull:\\s?(.*?)\\}\\}([\\s\\S]*?)\\{\\{/fn-ifNull\\}\\}");
-    private static final Pattern FOREACH_LIST_PATTERN = Pattern.compile("\\{\\{fn-forEachList:\\s*(.*?)\\}\\}([\\s\\S]*?)\\{\\{/fn-forEachList\\}\\}");
-    private static final Pattern GET_STRING_PATTERN = Pattern.compile("\\{\\{fn-get:\\s?(.*?)\\}\\}");
-    private static final Pattern OBJECT_GET_STRING_PATTERN = Pattern.compile("\\{\\{fn-obj-get:\\s?(.*?)\\s(.*?)\\}\\}");
+    private static final Pattern INCLUDE_PATTERN = Pattern.compile("\\{\\{fn-include:\\s?(.*?)}}");
+    private static final Pattern PRINT_PATTERN = Pattern.compile("\\{\\{fn-print:\\s?(.*?)}}");
+    private static final Pattern IF_NOT_NULL_PATTERN = Pattern.compile("\\{\\{fn-ifNotNull:\\s?(.*?)}}([\\s\\S]*?)\\{\\{/fn-ifNotNull}}");
+    private static final Pattern IF_NULL_PATTERN = Pattern.compile("\\{\\{fn-ifNull:\\s?(.*?)}}([\\s\\S]*?)\\{\\{/fn-ifNull}}");
+    private static final Pattern FOREACH_LIST_PATTERN = Pattern.compile("\\{\\{fn-forEachList:\\s*(.*?)}}([\\s\\S]*?)\\{\\{/fn-forEachList}}");
+    private static final Pattern FOREACH_STATUS_PATTERN = Pattern.compile("\\{\\{fn-forEachStatus}}");
+    private static final Pattern GET_STRING_PATTERN = Pattern.compile("\\{\\{fn-get:\\s?(.*?)}}");
+    private static final Pattern OBJECT_GET_STRING_PATTERN = Pattern.compile("\\{\\{fn-obj-get:\\s?(.*?)\\s(.*?)}}");
 
     private static TemplateEngineParser instance;
 
@@ -132,10 +133,19 @@ public class TemplateEngineParser {
     private String forEach(String tagBlock, List<?> list) {
         StringBuilder sb = new StringBuilder();
 
-        for (Object object : list) {
-            sb.append(replaceGet(tagBlock, object)).append(lineSeparator());
+        for (int i = 0; i < list.size(); i++) {
+            String tagBlockTemplate = replaceForEachStatus(tagBlock, i);
+            sb.append(replaceGet(tagBlockTemplate, list.get(i))).append(lineSeparator());
         }
         return sb.toString();
+    }
+
+    private String replaceForEachStatus(String tagBlock, int idx) {
+        Matcher matcher = FOREACH_STATUS_PATTERN.matcher(tagBlock);
+        if (matcher.find()) {
+            tagBlock = tagBlock.replaceAll(replaceMetaToEscape(matcher.group(0)), String.valueOf(idx));
+        }
+        return tagBlock;
     }
 
     private String replaceGet(String tagBlock, Object object) {
