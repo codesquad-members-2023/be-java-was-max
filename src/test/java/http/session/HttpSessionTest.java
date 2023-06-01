@@ -1,22 +1,21 @@
 package http.session;
 
-import static http.common.HttpMethod.GET;
-import static http.common.HttpMethod.POST;
-import static http.common.header.RequestHeaderType.COOKIE;
-
-import http.common.HttpMethod;
-import http.common.version.HttpVersion;
-import http.request.HttpRequest;
-import http.request.component.RequestHeader;
-import http.request.component.RequestLine;
-import http.request.component.RequestMessageBody;
-import http.request.component.RequestQueryString;
-import http.request.component.RequestURI;
-import java.util.HashMap;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.http.common.HttpMethod;
+import webserver.http.common.version.HttpVersion;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.component.*;
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionContainer;
+
+import java.util.HashMap;
+
+import static webserver.http.common.HttpMethod.GET;
+import static webserver.http.common.HttpMethod.POST;
+import static webserver.http.common.header.RequestHeaderType.COOKIE;
 
 class HttpSessionTest {
 

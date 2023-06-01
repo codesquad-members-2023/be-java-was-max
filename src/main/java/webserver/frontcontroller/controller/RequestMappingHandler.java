@@ -1,10 +1,10 @@
 package webserver.frontcontroller.controller;
 
-import annotation.RequestMapping;
-import http.common.HttpMethod;
-import http.request.HttpRequest;
-import http.response.HttpResponse;
+import webserver.annotation.RequestMapping;
 import webserver.frontcontroller.Model;
+import webserver.http.common.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

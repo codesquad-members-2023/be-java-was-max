@@ -1,13 +1,14 @@
 package webserver.frontcontroller.handler_mapping;
 
-import static util.PackageExplorer.scanClasses;
+import cafe.config.CafeAppContainer;
+import webserver.annotation.Controller;
+import webserver.frontcontroller.controller.RequestMappingHandler;
 
-import annotation.Controller;
-import config.CafeAppContainer;
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
-import webserver.frontcontroller.controller.RequestMappingHandler;
+
+import static webserver.util.PackageExplorer.scanClasses;
 
 public class RequestMappingExplorer {
 
@@ -19,9 +20,9 @@ public class RequestMappingExplorer {
 
     public HandlerMapping scanRequestMapping(String packageName) throws IOException {
         Set<RequestMappingHandler> handlers = scanClasses(packageName).stream()
-            .filter(aClass -> aClass.isAnnotationPresent(Controller.class))
-            .map(aClass -> new RequestMappingHandler(container.get(aClass)))
-            .collect(Collectors.toSet());
+                .filter(aClass -> aClass.isAnnotationPresent(Controller.class))
+                .map(aClass -> new RequestMappingHandler(container.get(aClass)))
+                .collect(Collectors.toSet());
         return new RequestMappingHandlerMapping(handlers);
     }
 }

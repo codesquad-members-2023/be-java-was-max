@@ -1,17 +1,17 @@
 package cafe.app.user.controller;
 
 
-import annotation.Controller;
-import annotation.RequestMapping;
 import cafe.app.user.controller.dto.UserSavedRequest;
 import cafe.app.user.service.UserService;
-import http.request.HttpRequest;
-import http.request.component.RequestMessageBody;
-import http.response.HttpResponse;
+import webserver.annotation.Controller;
+import webserver.annotation.RequestMapping;
 import webserver.frontcontroller.Model;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.component.RequestMessageBody;
+import webserver.http.response.HttpResponse;
 
-import static http.common.HttpMethod.GET;
-import static http.common.HttpMethod.POST;
+import static webserver.http.common.HttpMethod.GET;
+import static webserver.http.common.HttpMethod.POST;
 
 @Controller
 public class UserController {

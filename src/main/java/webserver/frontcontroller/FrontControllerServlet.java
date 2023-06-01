@@ -1,11 +1,7 @@
 package webserver.frontcontroller;
 
-import config.CafeAppConfig;
-import config.CafeAppContainer;
-import http.common.HttpStatus;
-import http.request.HttpRequest;
-import http.response.HttpResponse;
-import http.response.component.StatusLine;
+import cafe.config.CafeAppConfig;
+import cafe.config.CafeAppContainer;
 import webserver.frontcontroller.adapter.MyHandlerAdapter;
 import webserver.frontcontroller.adapter.RequestMappingHandlerAdapter;
 import webserver.frontcontroller.adapter.StaticResourceHandlerAdapter;
@@ -14,14 +10,18 @@ import webserver.frontcontroller.handler_mapping.HandlerMapping;
 import webserver.frontcontroller.handler_mapping.RequestMappingExplorer;
 import webserver.frontcontroller.handler_mapping.StaticResourceHandlerMapping;
 import webserver.frontcontroller.view.View;
+import webserver.http.common.HttpStatus;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.component.StatusLine;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static http.common.version.HttpVersion.HTTP_1_1;
-import static util.FileUtils.getFileFromPath;
+import static webserver.http.common.version.HttpVersion.HTTP_1_1;
+import static webserver.util.FileUtils.getFileFromPath;
 
 public class FrontControllerServlet {
 

@@ -1,7 +1,7 @@
 package webserver.frontcontroller.handler_mapping;
 
-import http.request.HttpRequest;
 import webserver.frontcontroller.controller.Handler;
+import webserver.http.request.HttpRequest;
 
 public interface HandlerMapping {
 

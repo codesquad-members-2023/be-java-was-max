@@ -3,10 +3,6 @@ package webserver;
 import cafe.app.user.entity.User;
 import cafe.app.user.repository.MemoryUserRepository;
 import cafe.app.user.repository.UserRepository;
-import http.common.ContentType;
-import http.parser.HttpResponseParser;
-import http.response.HttpResponse;
-import http.session.SessionContainer;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handler.RequestHandler;
+import webserver.http.common.ContentType;
+import webserver.http.parser.HttpResponseParser;
+import webserver.http.response.HttpResponse;
+import webserver.http.session.SessionContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,10 +25,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 
-import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
-import static http.common.header.EntityHeaderType.CONTENT_TYPE;
-import static http.common.header.ResponseHeaderType.SET_COOKIE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static webserver.http.common.header.EntityHeaderType.CONTENT_LENGTH;
+import static webserver.http.common.header.EntityHeaderType.CONTENT_TYPE;
+import static webserver.http.common.header.ResponseHeaderType.SET_COOKIE;
 
 class RequestHandlerTest {
 

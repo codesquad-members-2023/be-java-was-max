@@ -1,8 +1,8 @@
 package webserver.frontcontroller.adapter;
 
-import http.request.HttpRequest;
-import http.response.HttpResponse;
 import webserver.frontcontroller.ModelAndView;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 public interface MyHandlerAdapter {
 

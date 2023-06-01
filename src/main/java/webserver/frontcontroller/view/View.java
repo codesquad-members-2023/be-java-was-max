@@ -1,9 +1,9 @@
 package webserver.frontcontroller.view;
 
-import http.request.HttpRequest;
-import http.response.HttpResponse;
 import webserver.frontcontroller.ModelAndView;
 import webserver.frontcontroller.RequestDispatcher;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 public class View {
 

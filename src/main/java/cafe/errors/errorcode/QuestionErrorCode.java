@@ -1,6 +1,6 @@
 package cafe.errors.errorcode;
 
-import http.common.HttpStatus;
+import webserver.http.common.HttpStatus;
 
 public enum QuestionErrorCode implements ErrorCode {
     NOT_FOUND_QUESTION(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다.");

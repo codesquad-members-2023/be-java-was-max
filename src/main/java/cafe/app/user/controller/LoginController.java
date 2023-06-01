@@ -1,22 +1,22 @@
 package cafe.app.user.controller;
 
 
-import annotation.Controller;
-import annotation.RequestMapping;
 import cafe.app.user.controller.dto.UserLoginRequest;
 import cafe.app.user.controller.dto.UserResponse;
 import cafe.app.user.entity.User;
 import cafe.app.user.service.UserService;
-import http.request.HttpRequest;
-import http.response.HttpResponse;
-import http.session.HttpSession;
-import http.session.SessionContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.annotation.Controller;
+import webserver.annotation.RequestMapping;
 import webserver.frontcontroller.Model;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+import webserver.http.session.HttpSession;
+import webserver.http.session.SessionContainer;
 
-import static http.common.HttpMethod.GET;
-import static http.common.HttpMethod.POST;
+import static webserver.http.common.HttpMethod.GET;
+import static webserver.http.common.HttpMethod.POST;
 
 @Controller
 public class LoginController {

@@ -1,10 +1,10 @@
 package webserver;
 
-import config.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.FileUtils;
+import webserver.config.WebConfig;
 import webserver.frontcontroller.ModelAndView;
+import webserver.util.FileUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

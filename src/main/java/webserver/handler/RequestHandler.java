@@ -1,16 +1,16 @@
 package webserver.handler;
 
-import http.common.ContentType;
-import http.request.HttpRequest;
-import http.response.HttpResponse;
-import http.response.component.ResponseHeader;
-import http.response.component.StatusLine;
-import http.session.Cookie;
-import http.session.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.FileUtils;
 import webserver.frontcontroller.FrontControllerServlet;
+import webserver.http.common.ContentType;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.component.ResponseHeader;
+import webserver.http.response.component.StatusLine;
+import webserver.http.session.Cookie;
+import webserver.http.session.HttpSession;
+import webserver.util.FileUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,13 +19,13 @@ import java.nio.file.Files;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static http.common.ContentType.resolve;
-import static http.common.HttpStatus.OK;
-import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
-import static http.common.header.EntityHeaderType.CONTENT_TYPE;
-import static http.common.header.ResponseHeaderType.SET_COOKIE;
-import static http.common.version.HttpVersion.HTTP_1_1;
-import static http.parser.HttpRequestParser.parseHttpRequest;
+import static webserver.http.common.ContentType.resolve;
+import static webserver.http.common.HttpStatus.OK;
+import static webserver.http.common.header.EntityHeaderType.CONTENT_LENGTH;
+import static webserver.http.common.header.EntityHeaderType.CONTENT_TYPE;
+import static webserver.http.common.header.ResponseHeaderType.SET_COOKIE;
+import static webserver.http.common.version.HttpVersion.HTTP_1_1;
+import static webserver.http.parser.HttpRequestParser.parseHttpRequest;
 
 public class RequestHandler implements Runnable {
 

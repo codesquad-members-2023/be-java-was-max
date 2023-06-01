@@ -1,21 +1,21 @@
 package webserver.frontcontroller;
 
-import http.common.ContentType;
-import http.response.HttpResponse;
-import http.response.component.StatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.TemplateEngineParser;
+import webserver.http.common.ContentType;
+import webserver.http.response.HttpResponse;
+import webserver.http.response.component.StatusLine;
 
 import java.io.File;
 
-import static http.common.ContentType.resolve;
-import static http.common.HttpStatus.FOUND;
-import static http.common.HttpStatus.OK;
-import static http.common.header.EntityHeaderType.CONTENT_LENGTH;
-import static http.common.header.EntityHeaderType.CONTENT_TYPE;
-import static http.common.header.ResponseHeaderType.LOCATION;
-import static http.common.version.HttpVersion.HTTP_1_1;
+import static webserver.http.common.ContentType.resolve;
+import static webserver.http.common.HttpStatus.FOUND;
+import static webserver.http.common.HttpStatus.OK;
+import static webserver.http.common.header.EntityHeaderType.CONTENT_LENGTH;
+import static webserver.http.common.header.EntityHeaderType.CONTENT_TYPE;
+import static webserver.http.common.header.ResponseHeaderType.LOCATION;
+import static webserver.http.common.version.HttpVersion.HTTP_1_1;
 
 public class RequestDispatcher {
 

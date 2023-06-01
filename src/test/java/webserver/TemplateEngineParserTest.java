@@ -1,12 +1,12 @@
 package webserver;
 
-import config.WebConfig;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import util.FileUtils;
+import webserver.config.WebConfig;
 import webserver.frontcontroller.Model;
 import webserver.frontcontroller.ModelAndView;
+import webserver.util.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
