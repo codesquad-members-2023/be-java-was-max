@@ -50,9 +50,17 @@ public class RequestHandler implements Runnable {
                 return;
             }
 
+            if (path.startsWith("/js") || path.startsWith("/css") || path.startsWith("/favicon")) {
+                DataOutputStream dos = new DataOutputStream(out);
+                byte[] body = Files.readAllBytes(new File("src/main/resources/static" + path).toPath());
+                response200Header(dos, body.length);
+                responseBody(dos, body);
+                return;
+            }
+
             while(!line.equals("")) {
                 logger.debug("header: {}", line);
-                line = br.readLine();   // line을 br.readLine()에 넣어줘야 빈 공백의 문자열을 만날 수 있다
+                line = br.readLine();   // line을 br.readLine()에 넣어줘야 빈 공백의 문자열을 만날 수 있다 -> 무슨 말인지 잘 모르겠음
             }
 
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
@@ -66,9 +74,9 @@ public class RequestHandler implements Runnable {
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
+        try { // 이게 응답 메시지
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n"); // content-type
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
