@@ -1,9 +1,8 @@
-package util;
+package webserver.util;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.util.PackageExplorer;
 
 import java.io.IOException;
 import java.util.Set;

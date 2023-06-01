@@ -1,4 +1,4 @@
-package http.session;
+package webserver.http.session;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +8,6 @@ import webserver.http.common.HttpMethod;
 import webserver.http.common.version.HttpVersion;
 import webserver.http.request.HttpRequest;
 import webserver.http.request.component.*;
-import webserver.http.session.HttpSession;
-import webserver.http.session.SessionContainer;
 
 import java.util.HashMap;
 
