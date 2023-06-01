@@ -2,15 +2,18 @@ package http.response;
 
 import http.HttpHeaders;
 
+import java.util.List;
+import java.util.Map;
+
 public class HttpResponse {
 
 	private StatusLine statusLine;
-	private ContentType contentType;
 	private HttpHeaders httpHeaders;
 	private byte[] body;
 
 	public HttpResponse() {
 		this.httpHeaders = new HttpHeaders();
+		this.body = new byte[1];
 	}
 
 	public StatusLine getResponseLine() {
@@ -19,14 +22,6 @@ public class HttpResponse {
 
 	public void setResponseLine(StatusLine statusLine) {
 		this.statusLine = statusLine;
-	}
-
-	public ContentType getContentType() {
-		return contentType;
-	}
-
-	public void setContentType(ContentType contentType) {
-		this.contentType = contentType;
 	}
 
 	public HttpHeaders getHttpHeaders() {
@@ -38,6 +33,7 @@ public class HttpResponse {
 	}
 
 	public void setBody(byte[] body) {
+		httpHeaders.addHeader(Map.of("Content-Length", List.of(String.valueOf(body.length))));
 		this.body = body;
 	}
 }

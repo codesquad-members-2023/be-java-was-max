@@ -33,7 +33,7 @@ public class ViewResolver {
 
 	private void forward(final String viewName, final HttpResponse httpResponse) throws IOException {
 		httpResponse.setResponseLine(new StatusLine("HTTP/1.1", 200, "OK"));
-		httpResponse.setContentType(ContentType.findContentType(viewName));
+		httpResponse.getHttpHeaders().addHeader(Map.of("Content-Type", List.of(ContentType.findContentType(viewName).getValue())));
 
 		if (isDynamicRequest(viewName)) {
 			httpResponse.setBody(Files.readAllBytes(new File(TEMPLATE_PATH + viewName).toPath()));

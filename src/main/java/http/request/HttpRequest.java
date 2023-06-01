@@ -32,6 +32,10 @@ public class HttpRequest {
 		return queryParameter.getQueryParameter();
 	}
 
+	public String getSessionId() {
+		return httpHeaders.getSessionId();
+	}
+
 	public String getBody() {
 		return body;
 	}

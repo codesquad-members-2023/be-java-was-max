@@ -2,28 +2,17 @@ package servlet;
 
 import http.request.HttpRequest;
 import http.response.HttpResponse;
-import view.ViewResolver;
+import registry.ServletRegistry;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class DispatcherServlet {
 
-	private static final ViewResolver viewResolver = new ViewResolver();
-
-	public void dispatch(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException {
+	public void dispatch(final HttpRequest httpRequest, final HttpResponse httpResponse) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 		String path = httpRequest.getUri().getPath();
-		String viewName = path;
 
-		if (path.equals("/")) {
-			viewName = new HomeServlet().home(httpRequest, httpResponse);
-		}
-		if (path.equals("/user/create")) {
-			viewName = new UserJoinServlet().join(httpRequest, httpResponse);
-		}
-		if (path.equals("/user/login")) {
-			viewName = new UserLoginServlet().login(httpRequest, httpResponse);
-		}
-
-		viewResolver.resolve(viewName, httpResponse);
+		HttpServlet httpServlet = ServletRegistry.getHttpServlet(path).getDeclaredConstructor().newInstance();
+		httpServlet.service(httpRequest, httpResponse);
 	}
 }
