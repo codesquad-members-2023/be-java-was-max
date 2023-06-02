@@ -1,6 +1,9 @@
 package cafe.config;
 
-import cafe.app.user.controller.HomeController;
+import cafe.app.question.controller.QuestionController;
+import cafe.app.question.repository.MemoryQuestionRepository;
+import cafe.app.question.repository.QuestionRepository;
+import cafe.app.question.service.QuestionService;
 import cafe.app.user.controller.LoginController;
 import cafe.app.user.controller.UserController;
 import cafe.app.user.repository.MemoryUserRepository;
@@ -30,7 +33,15 @@ public class CafeAppConfig {
         return new LoginController(userService());
     }
 
-    public HomeController homeController() {
-        return new HomeController();
+    public QuestionController questionController() {
+        return new QuestionController(questionService());
+    }
+
+    public QuestionService questionService() {
+        return new QuestionService(questionRepository());
+    }
+
+    public QuestionRepository questionRepository() {
+        return new MemoryQuestionRepository(userRepository());
     }
 }
