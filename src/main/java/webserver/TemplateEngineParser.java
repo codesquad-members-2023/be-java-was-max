@@ -125,6 +125,8 @@ public class TemplateEngineParser {
                     modelAndView.getAttribute(matcher.group(1)) instanceof List) {
                 List<?> list = (List<?>) modelAndView.getAttribute(matcher.group(1));
                 html = html.replaceAll(replaceMetaToEscape(matcher.group(0)), forEach(matcher.group(2), list));
+            } else {
+                html = html.replaceAll(replaceMetaToEscape(matcher.group(0)), "");
             }
         }
         return html;
