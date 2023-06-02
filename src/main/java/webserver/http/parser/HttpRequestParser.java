@@ -28,12 +28,12 @@ public final class HttpRequestParser {
     public static final String QUERYSTRING_SEPARATOR = "&";
     public static final String HEADER_SEPARATOR_REGEX = ":\\s+";
     public static final String REQUEST_LINE_SEPARATOR_REGEX = "\\s";
-    public static final String QUERYSTRING_SEPARATOR_REGEX = "\\?";
+    public static final String QUERYSTRING_SEPARATOR_REGEX = "[?\\s]";
     public static final int HTTP_METHOD_INDEX = 0;
     public static final int PATH_INDEX = 0;
     public static final int REQUEST_URI_INDEX = 1;
     public static final int HTTP_VER_INDEX = 2;
-    public static final int QUERYSTRING_INDEX = 1;
+    public static final int QUERYSTRING_INDEX = 2;
     public static final int KEY_INDEX = 0;
     public static final int VALUE_INDEX = 1;
     private static final String EMPTY = "";
@@ -74,7 +74,7 @@ public final class HttpRequestParser {
     private static RequestQueryString parseQueryString(String requestLine) {
         String[] tokens = requestLine.split(QUERYSTRING_SEPARATOR_REGEX);
         String queryString = EMPTY;
-        if (tokens.length >= 2) {
+        if (tokens.length >= 4) {
             queryString = tokens[QUERYSTRING_INDEX];
         }
         return RequestQueryString.parseQueryString(queryString);

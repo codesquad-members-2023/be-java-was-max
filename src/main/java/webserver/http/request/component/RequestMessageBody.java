@@ -27,7 +27,10 @@ public class RequestMessageBody {
         for (String param : params) {
             String[] tokens = param.split(HttpRequestParser.KEY_VALUE_SEPARATOR);
             String key = URLDecoder.decode(tokens[HttpRequestParser.KEY_INDEX], UTF_8);
-            String value = URLDecoder.decode(tokens[HttpRequestParser.VALUE_INDEX], UTF_8);
+            String value = "";
+            if (tokens.length == 2) {
+                value = URLDecoder.decode(tokens[HttpRequestParser.VALUE_INDEX], UTF_8);
+            }
             messageBodyMap.put(key, value);
         }
         return new RequestMessageBody(messageBodyMap);

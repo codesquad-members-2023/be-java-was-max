@@ -1,5 +1,7 @@
 package webserver.http.request.component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.http.parser.HttpRequestParser;
 
 import java.util.HashMap;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 public class RequestQueryString {
 
+    private static final Logger logger = LoggerFactory.getLogger(RequestQueryString.class);
 
     private static final int QUERYSTRING_INDEX = 1;
     private Map<String, String> parameter;

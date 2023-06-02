@@ -22,6 +22,13 @@ public class StatusLine {
         return new StatusLine(protocolVersion, httpStatus);
     }
 
+    public ProtocolVersion getProtocolVersion() {
+        return protocolVersion;
+    }
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
+    }
 
     @Override
     public String toString() {
