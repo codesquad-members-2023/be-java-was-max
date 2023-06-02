@@ -3,6 +3,9 @@ package cafe.app.user.controller;
 
 import cafe.app.user.controller.dto.UserSavedRequest;
 import cafe.app.user.service.UserService;
+import cafe.errors.exception.RestApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.annotation.Controller;
 import webserver.annotation.RequestMapping;
 import webserver.frontcontroller.Model;
@@ -15,6 +18,8 @@ import static webserver.http.common.HttpMethod.POST;
 
 @Controller
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
@@ -31,7 +36,7 @@ public class UserController {
     public String listUser(HttpRequest request, HttpResponse response, Model model) {
         // 로그인 하지 않은 경우 로그인 페이지로 이동
         if (!request.hasHttpSession()) {
-            return "redirect:user/login";
+            return "redirect:/login";
         }
         model.addAttribute("users", userService.getAllUsers());
         return "user/list";
@@ -45,7 +50,15 @@ public class UserController {
         String name = messageBody.get("name");
         String email = messageBody.get("email");
         UserSavedRequest userRequest = new UserSavedRequest(userId, password, name, email);
-        userService.signUp(userRequest);
+        try {
+            userService.signUp(userRequest);
+        } catch (RestApiException e) {
+            logger.error(e.toString());
+            model.addAttribute("statusCode", e.getErrorCode().getHttpStatus().value());
+            model.addAttribute("message", e.getErrorCode().getMessage());
+            return "error/4xx";
+        }
+
         return "redirect:/login";
     }
 }
