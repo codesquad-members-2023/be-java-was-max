@@ -34,6 +34,11 @@ public class LoginController {
         return "user/login";
     }
 
+    @RequestMapping(path = "/login_failed", method = GET)
+    public String loginFailedForm(HttpRequest request, HttpResponse response, Model model) {
+        return "user/login_failed";
+    }
+
     // 로그인
     @RequestMapping(path = "/login", method = POST)
     public String login(HttpRequest request, HttpResponse response, Model model) {
@@ -46,7 +51,7 @@ public class LoginController {
             UserResponse userResponse = new UserResponse(user);
             httpSession.setAttribute("user", userResponse);
         } catch (Exception e) {
-            return "redirect:user/login_failed";
+            return "redirect:/login_failed";
         }
         return "redirect:/";
     }
