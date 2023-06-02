@@ -1,5 +1,7 @@
 package webserver.util;
 
+import model.ContentType;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,10 +14,11 @@ public class HttpResponseUtils {
     private static final String HTTP_VERSION = "HTTP/1.1";
     private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
 
-    private int statusCode;
+    private int statusCode = OK;
     private Map<String, String> headers = new HashMap<>();
     private byte[] messageBody = {};
     private String redirectUrl;
+    private ContentType contentType;
 
     public void setStatusCode(int code) {
         statusCode = code;
@@ -33,27 +36,27 @@ public class HttpResponseUtils {
         return statusCode / 100 == 3;
     }
 
+    public void setContentType(String viewName) {
+        this.contentType = ContentType.findByUrl(viewName);
+    }
+
     public void setCookie(String cookieName, String cookieValue) {
         addHeader("Set-Cookie", cookieName + "=" + cookieValue + "; Path=/");
     }
 
-    public void setContent(String absolutePath, HttpRequestUtils httpRequest) throws IOException {
+    public void setContent(String viewName) throws IOException {
         if (isRedirect()) {
             addHeader("Location", redirectUrl);
             return;
         }
 
-        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
-        addHeader("Content-Type", httpRequest.getContentType().getMimeType());
+        this.messageBody = Files.readAllBytes(new File(viewName).toPath());
+        addHeader("Content-Type", contentType.getMimeType());
         addHeader("Content-Length", String.valueOf(messageBody.length));
     }
 
     public byte[] toBytes() {
         StringBuilder sb = new StringBuilder();
-
-        if (!isRedirect()) {
-            statusCode = OK;
-        }
 
         sb.append(HTTP_VERSION).append(" ").append(statusCode).append(" ").append(STATUS_MESSAGE.get(statusCode)).append(" \r\n");
 

@@ -29,10 +29,8 @@ public class RequestHandler implements Runnable {
             HttpRequestUtils httpRequest = RequestSeparator.askHttpRequest(br);
             HttpResponseUtils httpResponse = new HttpResponseUtils();
 
-            String viewName = DispatcherServlet.service(httpRequest, httpResponse);             // 컨트롤러가 반환한 viewName
-            String path = resolveView(viewName, httpRequest);
+            DispatcherServlet.service(httpRequest, httpResponse);
 
-            httpResponse.setContent(path, httpRequest);
             sendResponseMessage(out, httpResponse);
 
         } catch (IOException | RuntimeException e) {
@@ -46,10 +44,6 @@ public class RequestHandler implements Runnable {
             }
             */
         }
-    }
-
-    private static String resolveView(String viewName, HttpRequestUtils httpRequest) {
-        return httpRequest.getPath(viewName);
     }
 
     private static void sendResponseMessage(OutputStream out, HttpResponseUtils httpResponse) throws IOException {

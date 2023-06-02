@@ -80,16 +80,8 @@ public class HttpRequestUtils {
         return requestLine.getMethod();
     }
 
-    public String getPath(String viewName) {
-        return getContentType().separatePath(viewName);
-    }
-
     public String getUrl() {
         return requestLine.getUrl();
-    }
-
-    public ContentType getContentType() {
-        return requestLine.getContentType();
     }
 
     public RequestLine getRequestLine() {

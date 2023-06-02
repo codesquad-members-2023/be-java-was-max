@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import servlet.controller.LoginController;
+import webserver.util.HttpRequestUtils;
 import webserver.util.HttpResponseUtils;
 
 import java.util.Map;
@@ -21,9 +22,9 @@ public class LoginControllerTest {
     void loginSuccess() {
         LoginController loginController = new LoginController();
 
-        Database.addUser(new User("sully", "1234", "설리", "sully@naver.com"));
+        Database.addUser(new User("sully1234", "1234", "sully", "sully@naver.com"));
 
-        String viewName = loginController.process(Map.of(USER_ID, "sully", PASSWORD, "1234"), new HttpResponseUtils());
+        String viewName = loginController.process(new HttpRequestUtils("POST /user/login HTTP/1.1", Map.of("mock", "mock"), "userId=sully1234&password=1234"), new HttpResponseUtils());
         assertThat(viewName).isEqualTo("redirect:/");
     }
 
@@ -32,9 +33,9 @@ public class LoginControllerTest {
     void loginFail() {
         LoginController loginController = new LoginController();
 
-        Database.addUser(new User("sully", "1234", "설리", "sully@naver.com"));
+        Database.addUser(new User("sully12345", "12345", "sullyy", "sullyy@naver.com"));
 
-        String viewName = loginController.process(Map.of(USER_ID, "sulla", PASSWORD, "4321"), new HttpResponseUtils());
+        String viewName = loginController.process(new HttpRequestUtils("POST /user/login HTTP/1.1", Map.of("mock", "mock"), "userId=sully&password=1234"), new HttpResponseUtils());
         assertThat(viewName).isEqualTo("user/login_failed");
     }
 

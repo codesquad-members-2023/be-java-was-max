@@ -3,8 +3,8 @@ package servlet;
 import servlet.controller.*;
 import webserver.util.HttpRequestUtils;
 import webserver.util.HttpResponseUtils;
-import webserver.util.HttpStatus;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,28 +29,22 @@ public class DispatcherServlet {
         return controllerMap;
     }
 
-    public static String service(HttpRequestUtils httpRequest, HttpResponseUtils httpResponse) {
+    public static void service(HttpRequestUtils httpRequest, HttpResponseUtils httpResponse) throws IOException {
         String requestUrl = httpRequest.getUrl();
 
-        Controller controller = controllerMap.get(requestUrl);
-        // CSS, JS 와 같은 static 타입 요청이 올 경우
-        if (controller == null) {
-            return requestUrl;
-        }
+        Controller controller = controllerMap.getOrDefault(requestUrl, new DefaultController());
 
-        String viewName = controller.process(httpRequest.getParameters(), httpResponse);
+        String viewName = controller.process(httpRequest, httpResponse);
 
         // redirect 요청일 경우
         if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
             String redirectUrl = viewName.split(COLON)[REDIRECT_URL_IDX];
             httpResponse.setStatusCode(FOUND);
             httpResponse.setRedirectUrl(redirectUrl);
-
-            return REDIRECT_URL_PREFIX;
         }
 
-        // 뷰를 반환하는 정상 요청인 경우
-        return viewName;
+        httpResponse.setContentType(viewName);
+        httpResponse.setContent(viewName);
     }
 }
 

@@ -2,6 +2,7 @@ package servlet.controller;
 
 import db.Database;
 import model.User;
+import webserver.util.HttpRequestUtils;
 import webserver.util.HttpResponseUtils;
 import webserver.util.UserSession;
 
@@ -15,7 +16,8 @@ public class LoginController implements Controller {
     private static final String COOKIE_NAME = "sid";
 
     @Override
-    public String process(Map<String, String> parameters, HttpResponseUtils httpResponse) {
+    public String process(HttpRequestUtils httpRequest, HttpResponseUtils httpResponse) {
+        Map<String, String> parameters = httpRequest.getParameters();
         String userId = parameters.get(USER_ID);
         String password = parameters.get(PASSWORD);
 
