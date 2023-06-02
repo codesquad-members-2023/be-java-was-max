@@ -1,0 +1,9 @@
+POST /qna HTTP/1.1
+Host: localhost:8080
+Content-Length: 30
+Content-Type: application/x-www-form-urlencoded
+Connection: keep-alive
+Accept: */*
+
+title=제목&content=내용&userId=100
+

@@ -1,0 +1,9 @@
+POST /users HTTP/1.1
+Host: localhost:8080
+Content-Length: 84
+Content-Type: application/x-www-form-urlencoded
+Connection: keep-alive
+Accept: */*
+
+userId=yonghwankim1107&password=yonghwankim1107&name=김용환&email=yonghwankim@naver.com
+
