@@ -11,7 +11,6 @@ import java.io.File;
 
 import static webserver.http.common.ContentType.resolve;
 import static webserver.http.common.HttpStatus.FOUND;
-import static webserver.http.common.HttpStatus.OK;
 import static webserver.http.common.header.EntityHeaderType.CONTENT_LENGTH;
 import static webserver.http.common.header.EntityHeaderType.CONTENT_TYPE;
 import static webserver.http.common.header.ResponseHeaderType.LOCATION;
@@ -35,7 +34,7 @@ public class RequestDispatcher {
         byte[] messageBodyBytes = engine.parseHtmlDynamically(file.toPath(), modelAndView);
 
         ContentType contentType = resolve(file.getPath());
-        response.setStatusLine(new StatusLine(HTTP_1_1, OK));
+        response.setStatusLine(new StatusLine(HTTP_1_1, modelAndView.getStatus()));
         response.addHeader(CONTENT_TYPE, contentType.toString());
         response.addHeader(CONTENT_LENGTH, String.valueOf(messageBodyBytes.length));
         response.setMessageBody(messageBodyBytes);

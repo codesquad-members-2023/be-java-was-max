@@ -7,6 +7,8 @@ import webserver.frontcontroller.controller.StaticResourceHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
+import static webserver.http.common.HttpStatus.OK;
+
 public class StaticResourceHandlerAdapter implements MyHandlerAdapter {
 
     @Override
@@ -19,6 +21,6 @@ public class StaticResourceHandlerAdapter implements MyHandlerAdapter {
         Handler controller = (Handler) handler;
         Model model = new Model();
         String viewName = controller.process(request, response, model);
-        return new ModelAndView(viewName, model);
+        return new ModelAndView(viewName, model, OK);
     }
 }

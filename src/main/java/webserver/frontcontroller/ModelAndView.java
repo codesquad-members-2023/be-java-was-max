@@ -1,13 +1,17 @@
 package webserver.frontcontroller;
 
+import webserver.http.common.HttpStatus;
+
 public class ModelAndView {
 
     private String viewName;
     private Model model;
+    private HttpStatus status;
 
-    public ModelAndView(String viewName, Model model) {
+    public ModelAndView(String viewName, Model model, HttpStatus status) {
         this.viewName = viewName;
         this.model = model;
+        this.status = status;
     }
 
     public String getViewName() {
@@ -24,6 +28,14 @@ public class ModelAndView {
 
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
     }
 
     public boolean containsAttribute(String key) {
