@@ -10,17 +10,15 @@ import webserver.frontcontroller.handler_mapping.HandlerMapping;
 import webserver.frontcontroller.handler_mapping.RequestMappingExplorer;
 import webserver.frontcontroller.handler_mapping.StaticResourceHandlerMapping;
 import webserver.frontcontroller.view.View;
-import webserver.http.common.HttpStatus;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
-import webserver.http.response.component.StatusLine;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static webserver.http.common.version.HttpVersion.HTTP_1_1;
+import static webserver.http.common.HttpStatus.NOT_FOUND;
 import static webserver.util.FileUtils.getFileFromPath;
 
 public class FrontControllerServlet {
@@ -61,7 +59,7 @@ public class FrontControllerServlet {
         Object handler = getHandler(request);
 
         if (handler == null) {
-            response.setStatusLine(new StatusLine(HTTP_1_1, HttpStatus.NOT_FOUND));
+            response404(request, response);
             return;
         }
 
@@ -69,6 +67,15 @@ public class FrontControllerServlet {
 
         ModelAndView mv = handlerAdapter.handle(request, response, handler);
 
+        View view = viewResolver(mv);
+        view.render(mv, request, response);
+    }
+
+    private void response404(HttpRequest request, HttpResponse response) {
+        Model model = new Model();
+        model.addAttribute("statusCode", NOT_FOUND.value());
+        model.addAttribute("message", "페이지를 찾을 수 없습니다.");
+        ModelAndView mv = new ModelAndView("error/4xx", model, NOT_FOUND);
         View view = viewResolver(mv);
         view.render(mv, request, response);
     }

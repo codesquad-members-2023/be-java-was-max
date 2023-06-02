@@ -6,7 +6,6 @@ import webserver.http.common.HttpMethod;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -29,8 +28,10 @@ public class RequestMappingHandler implements Handler {
             Method method = optionalMethod.get();
             try {
                 return (String) method.invoke(controllerInstance, request, response, model);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                model.addAttribute("statusCode", 500);
+                model.addAttribute("message", "서버 에러");
+                return "error/5xx";
             }
         }
         return null;
