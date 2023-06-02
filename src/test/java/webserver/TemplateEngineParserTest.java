@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+import static webserver.http.common.HttpStatus.OK;
+
 class TemplateEngineParserTest {
 
     private final WebConfig webConfig = WebConfig.getInstance();
@@ -25,7 +27,7 @@ class TemplateEngineParserTest {
         // given
         TemplateEngineParser templateEngineParser = TemplateEngineParser.getInstance();
         Path resource = Paths.get(webConfig.getTemplatesResourcePath() + "/index.html");
-        ModelAndView modelAndView = new ModelAndView("index", new Model());
+        ModelAndView modelAndView = new ModelAndView("index", new Model(), OK);
         // when
         byte[] actual = templateEngineParser.parseHtmlDynamically(resource, modelAndView);
         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(actual)));
