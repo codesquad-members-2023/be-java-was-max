@@ -11,11 +11,11 @@ public class User {
     private User() {
     }
 
-    public User(Map<String, String> paramMap) {
-        this.userId = paramMap.get("userId");
-        this.password = paramMap.get("password");
-        this.name = paramMap.get("name");
-        this.email = paramMap.get("email");
+    public User(Map<String, String> queryMap) {
+        this.userId = queryMap.get("userId");
+        this.password = queryMap.get("password");
+        this.name = queryMap.get("name");
+        this.email = queryMap.get("email");
     }
 
     public User(String userId, String password, String name, String email) {

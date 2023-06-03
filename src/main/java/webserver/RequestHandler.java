@@ -1,16 +1,14 @@
 package webserver;
 
-import model.Line;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.DispatcherServlet;
 import webserver.util.HttpRequestUtils;
 import webserver.util.HttpResponseUtils;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 public class RequestHandler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -28,29 +26,29 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // https://docs.oracle.com/javase/8/docs/api/java/nio/charset/StandardCharsets.html
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            // 라인별로 http header 읽기
-            String line = br.readLine();
-            Line requestLine = HttpRequestUtils.parseLine(line);
+            HttpRequestUtils httpRequest = RequestSeparator.askHttpRequest(br);
+            HttpResponseUtils httpResponse = new HttpResponseUtils();
 
-            if (requestLine.getMethod().equals("GET") && requestLine.getQueryMap() != null) {
-                User user = new User(requestLine.getQueryMap());
-                log.debug("user : {}", user);
-            }
+            DispatcherServlet.service(httpRequest, httpResponse);
 
-            // request 마지막에 빈 공백 문자열이 들어오니 그때까지 반복
-            while (!line.equals("")) {
-                line = br.readLine();
-                log.debug("header : {}", line);
-            }
+            sendResponseMessage(out, httpResponse);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            // https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#readAllBytes-java.nio.file.Path-
-            byte[] body = Files.readAllBytes(new File(requestLine.separateAbsolutePath()).toPath());
-
-            HttpResponseUtils.responseBody(dos, body, requestLine);
-
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
             log.error(e.getMessage());
+            // TODO: 500 에러 처리
+            /*
+            try {
+                DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            */
         }
+    }
+
+    private static void sendResponseMessage(OutputStream out, HttpResponseUtils httpResponse) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.write(httpResponse.toBytes());
+        dos.write(httpResponse.getMessageBody());
     }
 }

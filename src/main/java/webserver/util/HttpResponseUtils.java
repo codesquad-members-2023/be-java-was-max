@@ -1,39 +1,72 @@
 package webserver.util;
 
-import model.Line;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
+import model.ContentType;
 
-import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.Map;
 
+import static webserver.util.HttpStatus.OK;
+
 public class HttpResponseUtils {
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
-    private static final Map<String, String> mimeTypes = Map.of("css", "text/css",
-            "js", "application/javascript",
-            "fonts", "application/octet-stream",
-            "html", "text/html;charset=utf=8");
+    private static final String HTTP_VERSION = "HTTP/1.1";
+    private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
 
-    private HttpResponseUtils() {
+    private int statusCode = OK;
+    private Map<String, String> headers = new HashMap<>();
+    private byte[] messageBody = {};
+    private String redirectUrl;
+    private ContentType contentType;
+
+    public void setStatusCode(int code) {
+        statusCode = code;
     }
 
-    public static void responseBody(DataOutputStream dos, byte[] body, Line line) {
-        try {
-            dos.writeBytes(response200Header(line, body.length));
-            dos.write(body, 0, body.length);
-            dos.flush();
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
+    }
 
-        } catch (IOException e) {
-            log.error(e.getMessage());
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public boolean isRedirect() {
+        return statusCode / 100 == 3;
+    }
+
+    public void setContentType(String viewName) {
+        this.contentType = ContentType.findByUrl(viewName);
+    }
+
+    public void setCookie(String cookieName, String cookieValue) {
+        addHeader("Set-Cookie", cookieName + "=" + cookieValue + "; Path=/");
+    }
+
+    public void setContent(String viewName) throws IOException {
+        if (isRedirect()) {
+            addHeader("Location", redirectUrl);
+            return;
         }
+
+        this.messageBody = Files.readAllBytes(new File(viewName).toPath());
+        addHeader("Content-Type", contentType.getMimeType());
+        addHeader("Content-Length", String.valueOf(messageBody.length));
     }
 
-    private static String response200Header(Line line, int lengthOfBodyContent) {
-        return "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: " + mimeTypes.get(line.separateRequestType()) + "\r\n" +
-                "Content-Length: " + lengthOfBodyContent + "\r\n" +
-                "\r\n";
+    public byte[] toBytes() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(HTTP_VERSION).append(" ").append(statusCode).append(" ").append(STATUS_MESSAGE.get(statusCode)).append(" \r\n");
+
+        headers.forEach((k, v) -> sb.append(k).append(": ").append(v).append("\r\n"));
+        sb.append("\r\n");
+
+        return sb.toString().getBytes();
+    }
+
+    public byte[] getMessageBody() {
+        return messageBody;
     }
 }
