@@ -1,11 +1,15 @@
 package webserver.frontcontroller.view;
 
-import http.request.HttpRequest;
-import http.response.HttpResponse;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.frontcontroller.ModelAndView;
 import webserver.frontcontroller.RequestDispatcher;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 public class View {
+
+    private static final Logger logger = LoggerFactory.getLogger(View.class);
 
     private String viewPath;
 
@@ -13,18 +17,14 @@ public class View {
         this.viewPath = viewPath;
     }
 
-    public void render(Map<String, Object> model, HttpRequest request, HttpResponse response) {
-        modelToRequestAttribute(model, request);
+    public void render(ModelAndView modelAndView, HttpRequest request, HttpResponse response) {
+        logger.debug("viewPath : {}", viewPath);
         RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
-        boolean redirect = Boolean.parseBoolean(String.valueOf(model.get("redirect")));
+        boolean redirect = Boolean.parseBoolean(String.valueOf(modelAndView.getModel().getAttribute("redirect")));
         if (redirect) {
             dispatcher.redirect(response);
             return;
         }
-        dispatcher.forward(request, response);
-    }
-
-    private void modelToRequestAttribute(Map<String, Object> model, HttpRequest request) {
-        model.forEach(request::setAttribute);
+        dispatcher.forward(response, modelAndView);
     }
 }

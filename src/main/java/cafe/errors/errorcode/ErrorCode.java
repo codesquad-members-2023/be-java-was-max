@@ -1,7 +1,7 @@
 package cafe.errors.errorcode;
 
 
-import http.common.HttpStatus;
+import webserver.http.common.HttpStatus;
 
 public interface ErrorCode {
 

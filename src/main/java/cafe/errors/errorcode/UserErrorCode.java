@@ -1,7 +1,7 @@
 package cafe.errors.errorcode;
 
 
-import http.common.HttpStatus;
+import webserver.http.common.HttpStatus;
 
 public enum UserErrorCode implements ErrorCode {
     ALREADY_EXIST_USERID(HttpStatus.CONFLICT, "이미 존재하는 아이디입니다."),
@@ -37,8 +37,8 @@ public enum UserErrorCode implements ErrorCode {
     @Override
     public String toString() {
         return "UserErrorCode{" +
-            "httpStatus=" + httpStatus +
-            ", message='" + message + '\'' +
-            '}';
+                "httpStatus=" + httpStatus +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

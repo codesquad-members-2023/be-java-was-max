@@ -1,27 +1,24 @@
 package com.baeldung.reflection.access.packages.search;
 
 import com.google.common.reflect.ClassPath;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.io.*;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AccessingAllClassesInPackage {
 
     public Set<Class> findAllClassesUsingClassLoader(String packageName) {
         InputStream stream = ClassLoader.getSystemClassLoader()
-            .getResourceAsStream(packageName.replaceAll("[.]", "/"));
+                .getResourceAsStream(packageName.replaceAll("[.]", "/"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         return reader.lines()
-            .filter(line -> line.endsWith(".class"))
-            .map(line -> getClass(line, packageName))
-            .collect(Collectors.toSet());
+                .filter(line -> line.endsWith(".class"))
+                .map(line -> getClass(line, packageName))
+                .collect(Collectors.toSet());
     }
 
     private Class getClass(String className, String packageName) {
@@ -36,18 +33,18 @@ public class AccessingAllClassesInPackage {
     // google guava 라이브러리를 이용한 패키지 내의 클래스 탐색
     public Set<Class> findAllClassesUsingGoogleGuice(String packageName) throws IOException {
         return ClassPath.from(ClassLoader.getSystemClassLoader())
-            .getAllClasses()
-            .stream()
-            .filter(clazz -> clazz.getPackageName()
-                .equalsIgnoreCase(packageName))
-            .map(clazz -> clazz.load())
-            .collect(Collectors.toSet());
+                .getAllClasses()
+                .stream()
+                .filter(clazz -> clazz.getPackageName()
+                        .equalsIgnoreCase(packageName))
+                .map(clazz -> clazz.load())
+                .collect(Collectors.toSet());
     }
 
     public Set<Class> findAllClassesUnderPackage(String packageName) throws IOException {
         String path = ClassLoader.getSystemClassLoader()
-            .getResource(packageName)
-            .getPath();
+                .getResource(packageName)
+                .getPath();
         File basePackage = new File(path);
         System.out.println(path);
         return null;
@@ -73,15 +70,4 @@ public class AccessingAllClassesInPackage {
 
         Assertions.assertEquals(4, classes.size());
     }
-
-    @Test
-    @DisplayName("")
-    public void test() throws IOException {
-        // given
-
-        // when
-        Set<Class> cafe = findAllClassesUnderPackage("cafe");
-        // then
-    }
-
 }

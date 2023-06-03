@@ -1,28 +1,25 @@
 package webserver.frontcontroller;
 
-import static http.common.version.HttpVersion.HTTP_1_1;
-import static util.FileUtils.readFile;
-
-import config.CafeAppConfig;
-import config.CafeAppContainer;
-import http.common.HttpStatus;
-import http.request.HttpRequest;
-import http.response.HttpResponse;
-import http.response.component.StatusLine;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import webserver.frontcontroller.adapter.ModelAndViewHandlerAdapter;
+import cafe.config.CafeAppConfig;
+import cafe.config.CafeAppContainer;
 import webserver.frontcontroller.adapter.MyHandlerAdapter;
 import webserver.frontcontroller.adapter.RequestMappingHandlerAdapter;
 import webserver.frontcontroller.adapter.StaticResourceHandlerAdapter;
-import webserver.frontcontroller.adapter.ViewNameHandlerAdapter;
 import webserver.frontcontroller.controller.Handler;
 import webserver.frontcontroller.handler_mapping.HandlerMapping;
 import webserver.frontcontroller.handler_mapping.RequestMappingExplorer;
 import webserver.frontcontroller.handler_mapping.StaticResourceHandlerMapping;
 import webserver.frontcontroller.view.View;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static webserver.http.common.HttpStatus.NOT_FOUND;
+import static webserver.util.FileUtils.getFileFromPath;
 
 public class FrontControllerServlet {
 
@@ -54,8 +51,6 @@ public class FrontControllerServlet {
     }
 
     private void initHandlerAdapters() {
-        handlerAdapters.add(new ViewNameHandlerAdapter());
-        handlerAdapters.add(new ModelAndViewHandlerAdapter());
         handlerAdapters.add(new RequestMappingHandlerAdapter());
         handlerAdapters.add(new StaticResourceHandlerAdapter());
     }
@@ -64,7 +59,7 @@ public class FrontControllerServlet {
         Object handler = getHandler(request);
 
         if (handler == null) {
-            response.setStatusLine(new StatusLine(HTTP_1_1, HttpStatus.NOT_FOUND));
+            response404(request, response);
             return;
         }
 
@@ -73,7 +68,16 @@ public class FrontControllerServlet {
         ModelAndView mv = handlerAdapter.handle(request, response, handler);
 
         View view = viewResolver(mv);
-        view.render(mv.getModel(), request, response);
+        view.render(mv, request, response);
+    }
+
+    private void response404(HttpRequest request, HttpResponse response) {
+        Model model = new Model();
+        model.addAttribute("statusCode", NOT_FOUND.value());
+        model.addAttribute("message", "페이지를 찾을 수 없습니다.");
+        ModelAndView mv = new ModelAndView("error/4xx", model, NOT_FOUND);
+        View view = viewResolver(mv);
+        view.render(mv, request, response);
     }
 
     private Handler getHandler(HttpRequest request) {
@@ -88,15 +92,15 @@ public class FrontControllerServlet {
 
     private MyHandlerAdapter getHandlerAdapter(Object handler) {
         return handlerAdapters.stream()
-            .filter(ha -> ha.supports(handler))
-            .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("handler adapter를 찾을 수 없습니다. handler=" + handler));
+                .filter(ha -> ha.supports(handler))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("handler adapter를 찾을 수 없습니다. handler=" + handler));
     }
 
     private View viewResolver(ModelAndView mv) {
         String viewName = mv.getViewName();
-        boolean redirect = Boolean.parseBoolean(String.valueOf(mv.getModel().get("redirect")));
-        if (readFile(viewName).isPresent()) {
+        boolean redirect = Boolean.parseBoolean(String.valueOf(mv.getModel().getAttribute("redirect")));
+        if (getFileFromPath(viewName).isPresent()) {
             return new View(viewName);
         }
         if (redirect) {

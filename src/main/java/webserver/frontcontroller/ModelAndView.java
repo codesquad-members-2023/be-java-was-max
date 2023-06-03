@@ -1,15 +1,17 @@
 package webserver.frontcontroller;
 
-import java.util.HashMap;
-import java.util.Map;
+import webserver.http.common.HttpStatus;
 
 public class ModelAndView {
 
     private String viewName;
-    private Map<String, Object> model = new HashMap<>();
+    private Model model;
+    private HttpStatus status;
 
-    public ModelAndView(String viewName) {
+    public ModelAndView(String viewName, Model model, HttpStatus status) {
         this.viewName = viewName;
+        this.model = model;
+        this.status = status;
     }
 
     public String getViewName() {
@@ -20,11 +22,27 @@ public class ModelAndView {
         this.viewName = viewName;
     }
 
-    public Map<String, Object> getModel() {
+    public Model getModel() {
         return model;
     }
 
-    public void setModel(Map<String, Object> model) {
+    public void setModel(Model model) {
         this.model = model;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
+    }
+
+    public boolean containsAttribute(String key) {
+        return model.containsAttribute(key);
+    }
+
+    public Object getAttribute(String key) {
+        return model.getAttribute(key);
     }
 }

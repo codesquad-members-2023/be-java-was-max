@@ -1,6 +1,6 @@
 package cafe.errors.errorcode;
 
-import http.common.HttpStatus;
+import webserver.http.common.HttpStatus;
 
 public enum CommonErrorCode implements ErrorCode {
     INVALID_INPUT_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력 형식입니다.");

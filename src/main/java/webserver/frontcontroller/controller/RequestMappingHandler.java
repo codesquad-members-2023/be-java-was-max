@@ -1,10 +1,11 @@
 package webserver.frontcontroller.controller;
 
-import annotation.RequestMapping;
-import http.common.HttpMethod;
-import http.request.HttpRequest;
-import http.response.HttpResponse;
-import java.lang.reflect.InvocationTargetException;
+import webserver.annotation.RequestMapping;
+import webserver.frontcontroller.Model;
+import webserver.http.common.HttpMethod;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
+
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -21,14 +22,16 @@ public class RequestMappingHandler implements Handler {
     }
 
     @Override
-    public String process(HttpRequest request, HttpResponse response) {
+    public String process(HttpRequest request, HttpResponse response, Model model) {
         Optional<Method> optionalMethod = find(request);
         if (optionalMethod.isPresent()) {
             Method method = optionalMethod.get();
             try {
-                return (String) method.invoke(controllerInstance, request, response);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+                return (String) method.invoke(controllerInstance, request, response, model);
+            } catch (Exception e) {
+                model.addAttribute("statusCode", 500);
+                model.addAttribute("message", "서버 에러");
+                return "error/5xx";
             }
         }
         return null;

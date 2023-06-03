@@ -1,15 +1,30 @@
 package cafe.app.user.repository;
 
 import cafe.app.user.entity.User;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class MemoryUserRepository implements UserRepository {
 
     private static final List<User> store = new ArrayList<>();
     private static long sequence = 0;
+
+    static {
+        // 샘플 유저 데이터 초기화
+        IntStream.range(0, 100)
+                .mapToObj(i -> User.builder()
+                        .id(++sequence)
+                        .userId("user" + i)
+                        .password("useruser" + i)
+                        .name("김용환" + i)
+                        .email("user" + i + "@naver.com")
+                        .build())
+                .forEach(store::add);
+    }
 
     @Override
     public List<User> findAll() {
@@ -34,12 +49,12 @@ public class MemoryUserRepository implements UserRepository {
     @Override
     public User save(User user) {
         User newUser = User.builder()
-            .id(nextId())
-            .userId(user.getUserId())
-            .password(user.getPassword())
-            .name(user.getName())
-            .email(user.getEmail())
-            .build();
+                .id(nextId())
+                .userId(user.getUserId())
+                .password(user.getPassword())
+                .name(user.getName())
+                .email(user.getEmail())
+                .build();
         store.add(newUser);
         return newUser;
     }
