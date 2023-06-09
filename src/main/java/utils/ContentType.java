@@ -4,13 +4,14 @@ import java.util.Arrays;
 
 public enum ContentType {
 
-	HTML("text/html", "html"),
-	CSS("text/css", "css"),
+	HTML("text/html;charset=utf-8", "html"),
+	CSS("text/css;charset=utf-8", "css"),
 	JAVASCRIPT("application/javascript", "js"),
 	ICO("image/x-icon", "ico"),
 	PNG("image/png", "png"),
 	JPG("image/jpeg", "jpg"),
 	WOFF("application/octet-stream", "woff"),
+	WOFF2("application/octet-stream", "woff2"),
 	TTF("application/octet-stream", "ttf");
 
 	private final String value;
