@@ -4,13 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import controller.Controller;
+import interceptor.LoginCheckInterceptor;
+import request.HttpRequest;
+import response.HttpResponse;
+import response.HttpResponseParams;
 import servlet.mapper.ControllerMapper;
 import servlet.mapper.HandlerMapper;
 import servlet.view.View;
 import servlet.viewResolver.ViewResolver;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
-import webserver.response.HttpResponseParams;
 
 public class DispatcherServlet {
 
@@ -18,10 +19,12 @@ public class DispatcherServlet {
 	private ViewResolver viewResolver;
 	private final ControllerMapper controllerMapper;
 	private final HandlerMapper handlerMapper;
+	private final LoginCheckInterceptor loginCheckInterceptor;
 
 	public DispatcherServlet() {
 		this.controllerMapper = new ControllerMapper();
 		this.handlerMapper = new HandlerMapper();
+		loginCheckInterceptor = new LoginCheckInterceptor();
 	}
 
 	/**
@@ -30,12 +33,20 @@ public class DispatcherServlet {
 	 * @return
 	 */
 	public HttpResponse doDispatch(HttpRequest request) {
-		String viewName = getViewName(request);
+
+		String viewName = loginCheckInterceptor.preHandle(request);
+		if (viewName == null) {
+			viewName = getViewName(request);
+		}
 
 		initViewAndViewResolver(viewName);
 
 		String viewPath = viewResolver.viewResolver(viewName);
-		byte[] body = view.render(viewPath);
+
+		Model model = request.getModel();
+		model.setSession(request.getSession());
+
+		byte[] body = view.render(viewPath, model);
 
 		return new HttpResponse(new HttpResponseParams(viewName, body, request.getSession()));
 	}

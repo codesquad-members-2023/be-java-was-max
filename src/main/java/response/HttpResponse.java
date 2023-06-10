@@ -1,7 +1,7 @@
-package webserver.response;
+package response;
 
-import webserver.response.header.HttpResponseHeader;
-import webserver.response.statusline.HttpResponseStatusLine;
+import response.header.HttpResponseHeader;
+import response.statusline.HttpResponseStatusLine;
 
 public class HttpResponse {
 

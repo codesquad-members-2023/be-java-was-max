@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import annotation.MethodType;
 import controller.Controller;
-import webserver.request.HttpRequest;
+import request.HttpRequest;
 
 public class HandlerMapper {
 

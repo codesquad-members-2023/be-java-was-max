@@ -10,9 +10,9 @@ import annotation.RequestMapping;
 import controller.Controller;
 import db.UserRepository;
 import model.User;
+import request.HttpRequest;
 import session.Session;
 import webserver.RequestHandler;
-import webserver.request.HttpRequest;
 
 @RequestMapping("/user/signIn")
 public class UserSignInController implements Controller {
@@ -50,6 +50,7 @@ public class UserSignInController implements Controller {
 	 */
 	private void addUserToSessionMap(HttpRequest request, String requestId) {
 		Session session = request.getSession();
+		session.createSession();
 		session.setAttribute("user", requestId);
 	}
 

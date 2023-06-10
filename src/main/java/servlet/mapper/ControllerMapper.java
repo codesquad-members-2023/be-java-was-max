@@ -1,24 +1,21 @@
 package servlet.mapper;
 
+import static servlet.mapper.ControllerClassLoader.*;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import annotation.RequestMapping;
 import controller.Controller;
 import controller.usercontroller.UserController;
-import controller.usercontroller.UserSignInController;
-import controller.usercontroller.UserSignUpController;
-import webserver.request.HttpRequest;
+import request.HttpRequest;
 
 public class ControllerMapper {
 
-	private final List<Controller> controllers;
+	private static List<Controller> controllers = new ArrayList<>();
 
-	//todo classLoader를 사용해 자동으로 controller가 추가되도록 만들자.
-	public ControllerMapper() {
-		this.controllers = new ArrayList<>(
-			Arrays.asList(new UserSignUpController(), new UserSignInController()));
+	static {
+		loadControllersFromDirectory();
 	}
 
 	/**
@@ -27,6 +24,7 @@ public class ControllerMapper {
 	 * @return
 	 */
 	public Controller mapController(HttpRequest request) {
+
 		for (Controller controller : controllers) {
 
 			//controller에 존재하는 RequestMapping Annotation의 인스턴스를 가져온다.
@@ -43,5 +41,13 @@ public class ControllerMapper {
 		 * UserController를 return해준다.
 		 */
 		return new UserController();
+	}
+
+	/**
+	 * 디렉토리에서 읽은 Controller를 Controllers에 추가하기 위한 메서드이다.
+	 * @param controller
+	 */
+	public static void addController(Controller controller) {
+		controllers.add(controller);
 	}
 }

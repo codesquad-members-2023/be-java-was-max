@@ -1,4 +1,4 @@
-package webserver.request;
+package request;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,8 +7,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import request.exception.HttpRequestParsingException;
+import servlet.Model;
 import session.Session;
-import webserver.request.exception.HttpRequestParsingException;
 
 public class HttpRequest {
 
@@ -16,10 +17,12 @@ public class HttpRequest {
 	private HttpRequestHeader httpRequestHeader;
 	private HttpRequestBody httpRequestBody;
 	private Session session;
+	private Model model;
 	private static final String GET = "GET";
 
 	public HttpRequest(InputStream in) {
 		session = new Session();
+		model = new Model();
 		BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		try {
 			httpRequestLine = new HttpRequestLine(br.readLine());
@@ -59,5 +62,13 @@ public class HttpRequest {
 
 	public Session getSession() {
 		return session;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModelAttribute(String key, Object object) {
+		model.setAttribute(key, object);
 	}
 }

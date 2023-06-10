@@ -7,7 +7,7 @@ import annotation.RequestMapping;
 import controller.Controller;
 import db.UserRepository;
 import model.User;
-import webserver.request.HttpRequest;
+import request.HttpRequest;
 
 @RequestMapping("/user/create")
 public class UserSignUpController implements Controller {

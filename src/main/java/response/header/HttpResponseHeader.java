@@ -1,4 +1,4 @@
-package webserver.response.header;
+package response.header;
 
 public interface HttpResponseHeader {
 	String toString();

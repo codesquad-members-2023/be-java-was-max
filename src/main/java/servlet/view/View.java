@@ -1,5 +1,7 @@
 package servlet.view;
 
+import servlet.Model;
+
 public interface View {
 
 	/**
@@ -7,5 +9,5 @@ public interface View {
 	 * @param viewPath
 	 * @return byte[]
 	 */
-	byte[] render(String viewPath);
+	byte[] render(String viewPath, Model model);
 }

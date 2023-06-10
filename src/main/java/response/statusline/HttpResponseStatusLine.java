@@ -1,4 +1,4 @@
-package webserver.response.statusline;
+package response.statusline;
 
 public interface HttpResponseStatusLine {
 	String toString();

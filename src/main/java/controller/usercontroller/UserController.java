@@ -2,7 +2,7 @@ package controller.usercontroller;
 
 import annotation.MethodType;
 import controller.Controller;
-import webserver.request.HttpRequest;
+import request.HttpRequest;
 
 public class UserController implements Controller {
 

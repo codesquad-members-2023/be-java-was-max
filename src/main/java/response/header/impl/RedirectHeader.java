@@ -1,8 +1,8 @@
-package webserver.response.header.impl;
+package response.header.impl;
 
+import response.HttpResponseParams;
+import response.header.HttpResponseHeader;
 import session.Session;
-import webserver.response.HttpResponseParams;
-import webserver.response.header.HttpResponseHeader;
 
 public class RedirectHeader implements HttpResponseHeader {
 
@@ -29,7 +29,7 @@ public class RedirectHeader implements HttpResponseHeader {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Location: ").append(redirectLocation).append("\r\n");
 
-		if (session.getUUID() != null) {
+		if (session.isExist()) {
 			sb.append(String.format("Set-Cookie: sid=%s; Path=/\r\n", session.getUUID()));
 		}
 

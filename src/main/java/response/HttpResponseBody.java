@@ -1,4 +1,4 @@
-package webserver.response;
+package response;
 
 public class HttpResponseBody {
 

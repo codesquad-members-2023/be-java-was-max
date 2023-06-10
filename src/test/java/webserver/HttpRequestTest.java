@@ -10,7 +10,7 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import webserver.request.HttpRequest;
+import request.HttpRequest;
 
 class HttpRequestTest {
 
